@@ -21,8 +21,8 @@ public class MyJsonType implements UserType {
     }
 
     @Override
-    public Class<Questionairre> returnedClass() {
-        return Questionairre.class;
+    public Class<Questionnairre> returnedClass() {
+        return Questionnairre.class;
     }
 
    /* @Override

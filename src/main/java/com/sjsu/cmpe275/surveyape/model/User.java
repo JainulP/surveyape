@@ -2,9 +2,7 @@ package com.sjsu.cmpe275.surveyape.model;
 
 import lombok.Data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -25,7 +23,7 @@ public class User {
     @Column
     private boolean isActivated;
 
-    @Column
-    private List<Survey>  surveys;
+    @OneToMany(mappedBy = "owner")
+    private List<Survey> surveys;
 
 }

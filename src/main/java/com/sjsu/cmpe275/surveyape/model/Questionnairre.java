@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class Questionairre implements Serializable {
+public class Questionnairre implements Serializable {
     private List<Question> questions;
-
 }
