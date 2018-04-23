@@ -1,7 +1,8 @@
-package com.sjsu.cmpe275.surveyape.model;
+package com.sjsu.cmpe275.surveyape.hibernate;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sjsu.cmpe275.surveyape.model.Questionnairre;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.UserType;
@@ -13,11 +14,11 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Objects;
 
-public class MyJsonType implements UserType {
+public class MyJsonType implements UserType,Serializable {
 
     @Override
     public int[] sqlTypes() {
-        return new int[] { Types.VARCHAR };
+        return new int[] { Types.JAVA_OBJECT };
     }
 
     @Override
@@ -28,6 +29,7 @@ public class MyJsonType implements UserType {
    /* @Override
     public Object nullSafeGet(final ResultSet rs, final String[] names, final SessionImplementor session, final Object owner)
             throws HibernateException, SQLException {
+
         final String cellContent = rs.getString(names[0]);
         if (cellContent == null) {
             return null;
@@ -122,7 +124,7 @@ public class MyJsonType implements UserType {
     @Override
     public void nullSafeSet(PreparedStatement ps, Object value, int idx, SharedSessionContractImplementor session) throws HibernateException, SQLException {
         if (value == null) {
-            ps.setNull(idx, Types.VARCHAR);
+            ps.setNull(idx, Types.JAVA_OBJECT);
             return;
         }
         try {
@@ -130,7 +132,7 @@ public class MyJsonType implements UserType {
             final StringWriter w = new StringWriter();
             mapper.writeValue(w, value);
             w.flush();
-            ps.setObject(idx, w.toString(), Types.VARCHAR);
+            ps.setObject(idx, w.toString(), Types.JAVA_OBJECT);
         } catch (final Exception ex) {
             throw new RuntimeException("Failed to convert Invoice to String: " + ex.getMessage(), ex);
         }
