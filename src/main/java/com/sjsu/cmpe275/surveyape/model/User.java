@@ -26,4 +26,6 @@ public class User {
     @OneToMany(mappedBy = "owner")
     private List<Survey> surveys;
 
+    private int verificationCode;
+
 }
