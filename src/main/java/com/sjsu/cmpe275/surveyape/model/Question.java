@@ -15,6 +15,8 @@ public class Question {
     private String choiceType;//text or image
     private String answerType;//single or multiple
 
+    private int questionType;//0 for multiple choice, 1 for yes/no question, 2 for short answer question, 3 for datetime question, 4 for star rating question
+
     @ManyToOne(targetEntity = Survey.class, fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     private Survey survey;
 
