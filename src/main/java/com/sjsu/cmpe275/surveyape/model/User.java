@@ -1,5 +1,6 @@
 package com.sjsu.cmpe275.surveyape.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -23,7 +24,9 @@ public class User {
     @Column
     private boolean isActivated;
 
-    @OneToMany(mappedBy = "owner")
+
+    @JsonBackReference
+    @OneToMany( cascade = CascadeType.ALL,mappedBy = "owner")
     private List<Survey> surveys;
 
     private int verificationCode;

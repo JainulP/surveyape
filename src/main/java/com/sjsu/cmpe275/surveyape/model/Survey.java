@@ -1,5 +1,7 @@
 package com.sjsu.cmpe275.surveyape.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -14,18 +16,13 @@ public class Survey {
 
     private String surveyName;
 
-//    @Type(type = "JsonUserType")
-//    //@Convert(converter = JpaConverterJson.class)
-//    private MyJsonType questionnaire;
-
+    @JsonManagedReference
     @ManyToOne
     @JoinColumn(name="userId")
     private User owner;
 
-//    @Column
-//    @ElementCollection(targetClass=Questionnairre.class)
-//    private Questionnairre questionnairre;
 
+   @JsonManagedReference
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
 
@@ -39,4 +36,7 @@ public class Survey {
 
 //    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private  List<Responses responses;
+
+
+
 }
