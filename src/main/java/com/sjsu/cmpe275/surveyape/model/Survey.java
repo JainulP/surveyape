@@ -33,8 +33,16 @@ public class Survey {
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SurveyLinkDistribution> links;
 
+    public Survey() {
+    }
 
-//    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
+    public Survey(String surveyName,Date endTime, boolean published,User owner) {
+        this.surveyName = surveyName;
+        this.owner = owner;
+        this.published = published;
+        this.endTime = endTime;
+    }
+    //    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private  List<Responses responses;
 
 
