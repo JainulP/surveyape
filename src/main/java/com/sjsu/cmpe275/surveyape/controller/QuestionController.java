@@ -34,7 +34,7 @@ public class QuestionController {
                                              @RequestParam(value = "options") List<String> options,
                                              @RequestParam(value = "surveyId") String surveyId){
 
-            Survey survey = surveyRepository.findById(surveyId).get();
+            Survey survey = surveyRepository.findById(Integer.parseInt(surveyId)).get();
 
             Question question = questionRepository.save(new Question(questionStr, answerType, choiceType, Integer.parseInt(questionType), options, survey));
 
@@ -54,7 +54,7 @@ public class QuestionController {
 
         Question question = questionRepository.findById(Integer.parseInt(questionId)).get();
         if (question != null) {
-            Survey survey = surveyRepository.findById(surveyId).get();
+            Survey survey = surveyRepository.findById(Integer.parseInt(surveyId)).get();
             if(questionStr != null){
                 question.setQuestionStr(questionStr);
             }
@@ -119,8 +119,8 @@ public class QuestionController {
         } else {
             // write to db
             questionRepository.delete(question);
-            return new ResponseEntity<>(new String( "Question with id " + questionId +
-                    " is deleted successfully"), HttpStatus.OK);
+            return new ResponseEntity<>(new BadRequestController( new BadRequest(200,"Question with id " + questionId +
+                    " is deleted successfully")), HttpStatus.OK);
         }
     }
 }

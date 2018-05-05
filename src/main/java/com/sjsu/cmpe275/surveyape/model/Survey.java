@@ -12,7 +12,8 @@ import java.util.List;
 @Data
 public class Survey {
     @Id
-    private String surveyId;
+    @GeneratedValue
+    private int surveyId;
 
     private String surveyName;
 
@@ -46,5 +47,59 @@ public class Survey {
 //    private  List<Responses responses;
 
 
+    public int getSurveyId() {
+        return surveyId;
+    }
 
+    public void setSurveyId(int surveyId) {
+        this.surveyId = surveyId;
+    }
+
+    public String getSurveyName() {
+        return surveyName;
+    }
+
+    public void setSurveyName(String surveyName) {
+        this.surveyName = surveyName;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public List<Question> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<Question> questions) {
+        this.questions = questions;
+    }
+
+    public boolean isPublished() {
+        return published;
+    }
+
+    public void setPublished(boolean published) {
+        this.published = published;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public List<SurveyLinkDistribution> getLinks() {
+        return links;
+    }
+
+    public void setLinks(List<SurveyLinkDistribution> links) {
+        this.links = links;
+    }
 }
