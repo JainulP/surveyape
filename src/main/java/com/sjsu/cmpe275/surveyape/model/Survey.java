@@ -31,19 +31,21 @@ public class Survey {
 
     private Date endTime;
 
+    private Date startTime;
 
     private int surveyType;//0 for open survey, 1 for closed survey, 2 for open unique survey
 
+    @JsonBackReference
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SurveyLinkDistribution> links;
+    private List<SurveyLinks> links;
 
     public Survey() {
     }
 
-    public Survey(String surveyName,Date endTime,int surveyType, boolean published,User owner) {
+    public Survey(String surveyName,Date endTime,int surveyType,User owner) {
         this.surveyName = surveyName;
         this.owner = owner;
-        this.published = published;
+        this.published = false;
         this.endTime = endTime;
         this.surveyType = surveyType;
     }
@@ -99,11 +101,11 @@ public class Survey {
         this.endTime = endTime;
     }
 
-    public List<SurveyLinkDistribution> getLinks() {
+    public List<SurveyLinks> getLinks() {
         return links;
     }
 
-    public void setLinks(List<SurveyLinkDistribution> links) {
+    public void setLinks(List<SurveyLinks> links) {
         this.links = links;
     }
 
@@ -113,5 +115,13 @@ public class Survey {
 
     public void setSurveyType(int surveyType) {
         this.surveyType = surveyType;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 }
