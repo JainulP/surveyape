@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,8 +31,9 @@ public class UserControllerTest {
         this.mockMvc.perform(post("/register?username=Ara&password=podangadai&email=havok.aravind@gmail.com&age=26")).andDo(print()).andExpect(status().isOk());
     }
 
-
-
-
-
+    @Test
+    public void loginUserTest() throws Exception{
+        this.mockMvc.perform(get("/login?email=havok.aravind@gmail.com&password=podandgadai")).andDo(print()).andExpect(status().isOk());
+    }
 }
+

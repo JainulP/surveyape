@@ -1,6 +1,9 @@
 package com.sjsu.cmpe275.surveyape.controller;
 
-import com.sjsu.cmpe275.surveyape.model.*;
+import com.sjsu.cmpe275.surveyape.model.BadRequest;
+import com.sjsu.cmpe275.surveyape.model.BadRequestController;
+import com.sjsu.cmpe275.surveyape.model.Survey;
+import com.sjsu.cmpe275.surveyape.model.User;
 import com.sjsu.cmpe275.surveyape.repository.SurveyRepository;
 import com.sjsu.cmpe275.surveyape.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/survey")
@@ -29,7 +31,7 @@ public class SurveyController {
     public ResponseEntity<?> createSurvey(@RequestParam(value = "surveyName") String surveyName,
                                           @RequestParam(value = "endTime", required = false) String endTime,
                                           @RequestParam(value = "published") String published,
-                                          @RequestParam(value = "userId") String userId,
+                                          @RequestParam(value = "userId") int userId,
                                           @RequestParam(value = "surveyType") String surveyType) {
 
         User user = userRepository.findById(userId).get();
