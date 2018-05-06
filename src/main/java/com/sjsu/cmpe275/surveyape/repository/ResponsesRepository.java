@@ -1,14 +1,12 @@
 package com.sjsu.cmpe275.surveyape.repository;
 
-import java.util.List;
-
+import com.sjsu.cmpe275.surveyape.model.Responses;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.List;
 
-import com.sjsu.cmpe275.surveyape.model.Responses;
-
-public interface ResponsesRepository extends CrudRepository<Responses, String> {
+public interface ResponsesRepository extends CrudRepository<Responses, Integer> {
 	
-	public List<Responses> findByUserIdAndQuestion(String userId, String question);
+	public List<Responses> findByUserIdAndQuestion(int userId, int question);
 
 }

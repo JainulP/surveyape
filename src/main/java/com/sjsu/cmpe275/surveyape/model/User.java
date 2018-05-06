@@ -8,17 +8,19 @@ import java.util.List;
 @Entity
 
 public class User {
+
     @Id
-    private String userId;
+    @GeneratedValue
+    private int userId;
+
+    @Column(unique = true)
+    private String email;
 
     @Column
     private String username;
 
     @Column
     private String password;
-
-    @Column(unique = true)
-    private String email;
 
     @Column
     private String age;
@@ -38,8 +40,7 @@ public class User {
 
     }
 
-    public User(String userId, String username, String password, String email, String age, boolean isActivated, String verificationCode) {
-        this.userId = userId;
+    public User(String username, String password, String email, String age, boolean isActivated, String verificationCode) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -48,11 +49,11 @@ public class User {
         this.verificationCode = verificationCode;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 

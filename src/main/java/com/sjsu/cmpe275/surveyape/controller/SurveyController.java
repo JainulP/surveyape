@@ -39,7 +39,7 @@ public class SurveyController {
                                           @RequestParam(value = "userId") String userId,
                                           @RequestParam(value = "surveyType") String surveyType) {
 
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(Integer.parseInt(userId)).get();
         String format = "yyyy-MM-dd-HH";
 
         SimpleDateFormat sdf = new SimpleDateFormat(format);
@@ -183,6 +183,10 @@ public class SurveyController {
                         List<String> emails = surveyLinksRepository.getEmailsBySurvey(Integer.toString(survey.getSurveyId()));
                         String url = emailService.sendUniqueInvitationForGeneralSurveyUsers(emails, null, surveyId);
 
+                    }
+                    else if(survey.getSurveyType() == 1){//closed surveey
+                        List<String> emails = surveyLinksRepository.getEmailsBySurvey(Integer.toString(survey.getSurveyId()));
+                        List<String> urls = emailService.sendUniqueInvitationForClosedSurveyUsers(emails, null, surveyId);
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();

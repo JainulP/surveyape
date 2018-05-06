@@ -1,12 +1,9 @@
 package com.sjsu.cmpe275.surveyape.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.List;
 
 @Entity
@@ -33,10 +30,10 @@ public class Question {
 
     @Column
     @ElementCollection(targetClass=String.class)
-    @OneToMany(targetEntity=Responses.class, mappedBy="responses", fetch=FetchType.EAGER)
     private List<String> options;
 
-    
+
+
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Responses> responses;
 
