@@ -1,6 +1,5 @@
 package com.sjsu.cmpe275.surveyape.model;
 
-
 import javax.persistence.*;
 
 @Entity
