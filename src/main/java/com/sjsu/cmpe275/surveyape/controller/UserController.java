@@ -36,15 +36,16 @@ public class UserController {
                                            @RequestParam(value = "age") String age) {
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (!userOptional.isPresent()) {
-           // String userId = UUID.nameUUIDFromBytes(email.getBytes()).toString();
+            // String userId = UUID.nameUUIDFromBytes(email.getBytes()).toString();
             String encodedPassword = Base64.getEncoder().encodeToString(password.getBytes());
             String activationCode = String.valueOf(new Random(System.nanoTime()).nextInt(100000));
             User user = new User(username, encodedPassword, email, age, false, activationCode);
+            String encodedEmail = Base64.getEncoder().encodeToString(email.getBytes());
 
             // sending verification email
-            String text = "Please click on the below link to activate and your verification code is " + activationCode + "\n" + "http://127.0.0.1/activate/" + user.getUserId();
-            emailService.sendInvitationForUser(email, "Verification email for surveyApe", text);
             userRepository.save(user);
+            String text = "Please click on the below link to activate and your verification code is " + activationCode + "\n" + "http://127.0.0.1/activate/" + encodedEmail;
+            emailService.sendInvitationForUser(email, "Verification email for surveyApe", text);
 
             return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
@@ -52,9 +53,10 @@ public class UserController {
         }
     }
 
-    @PutMapping(value = "/activate/{userId}", produces = "application/json")
-    private ResponseEntity<?> activateUser(@PathVariable("userId") int userID, @RequestParam(value = "vCode", required = false) String activationCode) {
-        Optional<User> userOptional = userRepository.findById(userID);
+    @PutMapping(value = "/activate/{email}", produces = "application/json")
+    private ResponseEntity<?> activateUser(@PathVariable("email") String email, @RequestParam(value = "vCode", required = false) String activationCode) {
+        String decodedEmail = new String(Base64.getDecoder().decode(email.getBytes()));
+        Optional<User> userOptional = userRepository.findByEmail(decodedEmail);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             if (user.getVerificationCode().equals(activationCode)) {
