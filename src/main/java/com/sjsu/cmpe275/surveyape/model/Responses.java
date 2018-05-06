@@ -1,5 +1,6 @@
 package com.sjsu.cmpe275.surveyape.model;
 
+
 import javax.persistence.*;
 
 @Entity
@@ -23,9 +24,6 @@ public class Responses {
 
     @Column
     private String email;
-
-    @Column
-    private String surveyId;
 
     public Responses() {
 
@@ -52,7 +50,7 @@ public class Responses {
     }
 
     public void setAnswers(String responses) {
-        this.answers = responses;
+        this.answers = answers;
     }
 
     public User getUserId() {
