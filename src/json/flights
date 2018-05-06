@@ -1,0 +1,114 @@
+get flight input json: {"source":"LAX", "destination":"NYC","travelDate": "2017-12-06"}
+
+flight output: {
+                   "flights": [
+                       {
+                           "FlightId": "EK 170",
+                           "AirlinesName": "Emirates",
+                           "SourceAirport": "LAX",
+                           "DestinationAirport": "NYC",
+                           "FirstClassFares": 600,
+                           "BusinessClassFares": 500,
+                           "EconomyClassFares": 300,
+                           "TakeOffTime": "23:50:00",
+                           "LandingTime": "01:00:00",
+                           "Description": "Narrow-body Jet",
+                           "Plane": "Airbus A321-100/200",
+                           "FirstClassSeats": 200,
+                           "BusinessClassSeats": 200,
+                           "EconomyClassSeats": 200,
+                           "duration": "2:10"
+                       },
+                       {
+                           "FlightId": "BA 222",
+                           "AirlinesName": "British Airways",
+                           "SourceAirport": "LAX",
+                           "DestinationAirport": "NYC",
+                           "FirstClassFares": 665,
+                           "BusinessClassFares": 444,
+                           "EconomyClassFares": 234,
+                           "TakeOffTime": "04:10:00",
+                           "LandingTime": "09:00:00",
+                           "Description": "Wide-body Jet",
+                           "Plane": "Boeing 737-800",
+                           "FirstClassSeats": 10,
+                           "BusinessClassSeats": 10,
+                           "EconomyClassSeats": 1,
+                           "duration": "4:50"
+                       }
+                   ]
+               }
+
+
+
+filter flight input:
+
+{
+            "source" : "LAX",
+            "destination" : "NYC",
+            "travelDate": "2017-12-06",
+            "minTakeOffTime":"1:00",
+            "maxTakeOffTime":"23:00",
+            "minLandingTime": "1:00",
+            "maxLandingTime": "23:00",
+            "airlines": null,
+            "minPrice": 50,
+            "maxPrice":1000
+        }
+
+
+
+        output:
+        {
+            "flights": [
+                {
+                    "FlightId": "BA 222",
+                    "AirlinesName": "British Airways",
+                    "SourceAirport": "LAX",
+                    "DestinationAirport": "NYC",
+                    "FirstClassFares": 665,
+                    "BusinessClassFares": 444,
+                    "EconomyClassFares": 234,
+                    "TakeOffTime": "04:10:00",
+                    "LandingTime": "09:00:00",
+                    "Description": "Wide-body Jet",
+                    "Plane": "Boeing 737-800",
+                    "FirstClassSeats": 10,
+                    "BusinessClassSeats": 10,
+                    "EconomyClassSeats": 1
+                }
+            ]
+        }
+
+
+
+
+
+ flight booking input
+ {
+         "userid":"1",
+         "flightidto":"EK 179",
+         "seattype":"3",
+         "travelerid": "1,2",
+         "cardid": "1",
+         "street": "201 S 4th Street",
+         "city": "San Jose",
+         "state": "CA",
+         "country": "USA",
+         "zip": "95112",
+         "totalcost":"300",
+         "numberofseats": "2",
+         "numberofadults":"1",
+         "numberofchildren":"1",
+         "bookingdate": "2017-11-25 23:50",
+         "traveldateto": "2017-11-28"
+     }
+
+
+
+     round trip flights input json
+
+     {"source":"BOS", "destination":"SEA","travelDate": "2017-12-06","travelDateReturn": "2017-12-07"}
+
+
+     url: http://localhost:3001/getFlights
