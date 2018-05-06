@@ -10,22 +10,35 @@ public class Responses {
     @GeneratedValue
     private int resId;
 
+    @Column
     private String answers;
 
+
     @ManyToOne(targetEntity = Question.class, fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @JoinColumn(name="question_id")
     private Question question;
 
     @OneToOne
-    @JoinColumn(name = "email", referencedColumnName = "userId")
+    @JoinColumn(name = "userId", referencedColumnName = "userId")
     private User userId;
+
+    @Column
+    private String email;
 
     public Responses() {
 
     }
 
-    public Responses(int resId, User userId, Question question, String answers) {
-        super();
-        this.resId = resId;
+    public Responses(Question question, String answers,User userId, String email) {
+        this.userId = userId;
+        this.setQuestion(question);
+        this.answers = answers;
+        this.email = email;
+
+    }
+
+    public Responses(User userId, Question question, String answers) {
+
         this.userId = userId;
         this.setQuestion(question);
         this.answers = answers;
