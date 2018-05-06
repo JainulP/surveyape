@@ -8,6 +8,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -31,35 +32,42 @@ public class EmailService {
         }
     }
 
-    public void sendUniqueInvitationForGeneralSurveyUsers(List<String> emails, String text,String surveyId) {
+    public String sendUniqueInvitationForGeneralSurveyUsers(List<String> emails, String text,String surveyId) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setSubject("Invitation to the survey");
+            String url = "127.0.0.1:8080/"+surveyId;
             for (String email : emails) {
-                message.setText("127.0.0.1:8080/"+surveyId);
+                message.setText(url);
                 message.setTo(email);
                 emailSender.send(message);
             }
+            return url;
         } catch (MailException exception) {
             logger.debug("Unable to send uniqueMessage for users");
             exception.printStackTrace();
         }
+        return  null;
     }
 
 
-    public void sendUniqueInvitationForClosedSurveyUsers(List<String> emails, String text,String surveyId) {
+    public List<String> sendUniqueInvitationForClosedSurveyUsers(List<String> emails, String text,String surveyId) {
+        List<String> urls = new ArrayList<>();
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setSubject("Invitation to the closed survey");
             for (String email : emails) {
-                message.setText("127.0.0.1:8080/"+surveyId+"/"+ Base64.getEncoder().encodeToString(email.getBytes()));
+                String url = "127.0.0.1:8080/"+surveyId+"/"+ Base64.getEncoder().encodeToString(email.getBytes());
+                message.setText(url);
                 message.setTo(email);
                 emailSender.send(message);
+                urls.add(url);
             }
         } catch (MailException exception) {
             logger.debug("Unable to send uniqueMessage for users");
             exception.printStackTrace();
         }
+        return urls;
     }
 
 }
