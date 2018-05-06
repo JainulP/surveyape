@@ -23,7 +23,7 @@ public class Survey {
     private User owner;
 
 
-   @JsonManagedReference
+    @JsonManagedReference
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
 
@@ -31,17 +31,21 @@ public class Survey {
 
     private Date endTime;
 
+
+    private int surveyType;//0 for open survey, 1 for closed survey, 2 for open unique survey
+
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SurveyLinkDistribution> links;
 
     public Survey() {
     }
 
-    public Survey(String surveyName,Date endTime, boolean published,User owner) {
+    public Survey(String surveyName,Date endTime,int surveyType, boolean published,User owner) {
         this.surveyName = surveyName;
         this.owner = owner;
         this.published = published;
         this.endTime = endTime;
+        this.surveyType = surveyType;
     }
     //    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private  List<Responses responses;
@@ -101,5 +105,13 @@ public class Survey {
 
     public void setLinks(List<SurveyLinkDistribution> links) {
         this.links = links;
+    }
+
+    public int getSurveyType() {
+        return surveyType;
+    }
+
+    public void setSurveyType(int surveyType) {
+        this.surveyType = surveyType;
     }
 }
