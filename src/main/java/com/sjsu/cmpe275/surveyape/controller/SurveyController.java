@@ -29,7 +29,8 @@ public class SurveyController {
     public ResponseEntity<?> createSurvey(@RequestParam(value = "surveyName") String surveyName,
                                           @RequestParam(value = "endTime", required = false) String endTime,
                                           @RequestParam(value = "published") String published,
-                                          @RequestParam(value = "userId") String userId) {
+                                          @RequestParam(value = "userId") String userId,
+                                          @RequestParam(value = "surveyType") String surveyType) {
 
         User user = userRepository.findById(userId).get();
         String format = "yyyy-MM-dd-HH";
@@ -38,7 +39,7 @@ public class SurveyController {
 
         Survey survey = null;
         try {
-            survey = surveyRepository.save(new Survey(surveyName, sdf.parse(endTime), Boolean.getBoolean(published), user));
+            survey = surveyRepository.save(new Survey(surveyName, sdf.parse(endTime),Integer.parseInt(surveyType), Boolean.getBoolean(published), user));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -99,7 +100,7 @@ public class SurveyController {
                 if(survey.getEndTime() != null) {
                      date1 = sdf.parse(survey.getEndTime().toString());
                 }
-               
+
                 Date date2 = sdf.parse(sdf.format(new Date()));
 
                 if (date1 == null || date1.compareTo(date2) < 0) {
