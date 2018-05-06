@@ -25,6 +25,9 @@ public class Responses {
     @Column
     private String email;
 
+    @Column
+    private String surveyId;
+
     public Responses() {
 
     }
@@ -50,7 +53,7 @@ public class Responses {
     }
 
     public void setAnswers(String responses) {
-        this.answers = answers;
+        this.answers = responses;
     }
 
     public User getUserId() {

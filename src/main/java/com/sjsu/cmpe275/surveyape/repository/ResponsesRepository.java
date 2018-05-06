@@ -18,4 +18,6 @@ public interface ResponsesRepository extends JpaRepository<Responses, Integer> {
     @Query(value = "SELECT answers from responses where user_id=:uid")
     List<String> getAnswersByUser(@Param("uid") int userId);
 
+    List<String> findAllByBySurveyId(int surveyId);
+
 }
