@@ -1,13 +1,11 @@
 package com.sjsu.cmpe275.surveyape.controller;
 
 import com.sjsu.cmpe275.surveyape.model.BadRequest;
-import com.sjsu.cmpe275.surveyape.model.BadRequestController;
 import com.sjsu.cmpe275.surveyape.model.Question;
 import com.sjsu.cmpe275.surveyape.model.Survey;
 import com.sjsu.cmpe275.surveyape.repository.QuestionRepository;
 import com.sjsu.cmpe275.surveyape.repository.SurveyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -76,7 +74,7 @@ public class QuestionController {
         }
         else
         {
-            return new ResponseEntity<>(new BadRequestController(new BadRequest(404, "Question with id " + questionId + " does not exist")),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new BadRequest(404, "Question with id " + questionId + " does not exist"),HttpStatus.NOT_FOUND);
 
         }
 
@@ -99,9 +97,7 @@ public class QuestionController {
         Question question = questionRepository.findById(Integer.parseInt(id)).get();
 
         if (question == null) {
-            return new ResponseEntity<>( new BadRequestController(new BadRequest(404, "Sorry, the requested question with id " +
-                    id + " does not exist"))
-                    , HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new BadRequest(404, "Sorry, the requested question with id " +id + " does not exist"), HttpStatus.NOT_FOUND);
         } else {
             return new ResponseEntity<>(question, HttpStatus.OK);
 
@@ -115,12 +111,11 @@ public class QuestionController {
 
         Question question = questionRepository.findById(Integer.parseInt(questionId)).get();
         if (question == null) {
-           return new ResponseEntity<>(new BadRequestController(new BadRequest(404, "Question with id " + questionId + " does not exist")),HttpStatus.NOT_FOUND);
+           return new ResponseEntity<>(new BadRequest(404, "Question with id " + questionId + " does not exist"),HttpStatus.NOT_FOUND);
         } else {
             // write to db
             questionRepository.delete(question);
-            return new ResponseEntity<>(new BadRequestController( new BadRequest(200,"Question with id " + questionId +
-                    " is deleted successfully")), HttpStatus.OK);
+            return new ResponseEntity<>(new BadRequest(200,"Question with id " + questionId +" is deleted successfully"), HttpStatus.OK);
         }
     }
 }
