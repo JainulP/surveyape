@@ -29,11 +29,14 @@ public class Question {
     @JsonBackReference
     @ManyToOne(targetEntity = Survey.class, fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     private Survey survey;
+    
 
     @Column
     @ElementCollection(targetClass=String.class)
+    @OneToMany(targetEntity=Responses.class, mappedBy="responses", fetch=FetchType.EAGER)
     private List<String> options;
 
+    
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Responses> responses;
 
