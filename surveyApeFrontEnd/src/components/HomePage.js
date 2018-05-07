@@ -15,11 +15,19 @@ import TakeSurvey from './TakeSurvey.js';
 import ViewSurvey from './ViewSurvey.js';
 
 class HomePage extends Component {
-    state = {
-        hotelsList: [],
-        admin: localStorage.getItem("admin")
-
+    constructor(props) {
+        super(props);
+        var surveyIdTemp = null;
+        if(props.location.pathname.indexOf("survey") > 0){
+            var loc = props.location.pathname;
+            surveyIdTemp = loc.substr(loc.lastIndexOf('/') + 1);
+           // this.props.history.push("/survey");
+        }
+        this.state = {
+            surveyId: surveyIdTemp
+        }
     }
+
 
     loginUser = (data) => {
         API.login(data)
@@ -123,6 +131,12 @@ class HomePage extends Component {
                             <TopMenu/>
                             <Dashboard/>
                             <Footer/>
+                        </div>
+                    )}/>
+                <Route exact path="/survey/*" render={() =>
+                    (
+                        <div>
+                            <TakeSurvey surveyId={this.state.surveyId} />
                         </div>
                     )}/>
             </div>

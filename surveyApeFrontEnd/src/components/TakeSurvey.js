@@ -22,7 +22,7 @@ class TakeSurvey extends Component {
     render() {
         return (
             <div>
-                Take Survey
+                Take Survey {this.props.surveyId}
             </div>
         );
     }
