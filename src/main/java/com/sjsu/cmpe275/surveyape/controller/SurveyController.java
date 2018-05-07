@@ -5,7 +5,6 @@ import com.sjsu.cmpe275.surveyape.repository.SurveyLinksRepository;
 import com.sjsu.cmpe275.surveyape.repository.SurveyRepository;
 import com.sjsu.cmpe275.surveyape.repository.UserRepository;
 import com.sjsu.cmpe275.surveyape.service.EmailService;
-import com.sjsu.cmpe275.surveyape.utils.CloseSurveyAtEndTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
