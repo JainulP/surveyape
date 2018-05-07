@@ -38,12 +38,19 @@ public class AddParticipantsController {
         if(survey != null) {
             if(survey.getSurveyType() == 0){//general open survey
                  String url = "127.0.0.1:8080/"+surveyId;
+                if(survey.getPublished() == true){
+                    emailService.sendUniqueInvitationForGeneralSurveyUsers(emails, null, surveyId);
+                }
                    for(String email : emails) {
                          SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey,email,url));
                          surveyLinks.add(links);
+
                     }
                 return new ResponseEntity<>(new BadRequest(200, "Participants have been successfully added"), HttpStatus.OK);
             }else if(survey.getSurveyType() == 1){//closed survey
+                if(survey.getPublished() == true){
+                    emailService.sendUniqueInvitationForClosedSurveyUsers(emails, null, surveyId);
+                }
                 for(String email : emails) {
                     String url = "127.0.0.1:8080/"+surveyId+"/"+ Base64.getEncoder().encodeToString(email.getBytes());
                     SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey,email,url));
