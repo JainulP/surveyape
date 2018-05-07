@@ -20,8 +20,8 @@ class Footer extends Component {
                           <ul>
                               <li><i className="icon-home"></i> 1110 Bates Avenue Los Angeles, CA 90029, US</li>
                               <li><i className="icon-phone"></i> Telephone: 00.00.00.99.00 </li>
-                              <li><i className="icon-envelope"></i> Email: <a href="#">info@surveyape.com </a></li>
-                              <li><i className="icon-skype"></i> Skype name: Survey_Ape</li>
+                              <li><i className="icon-envelope"></i> Email: <a href="#">surveyape135@gmail.com </a></li>
+                              <li><i className="icon-skype"></i> Skype name: Survey_Ape_135</li>
                           </ul>
                       </div>
 
