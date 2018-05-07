@@ -1,19 +1,18 @@
 package com.sjsu.cmpe275.surveyape.controller;
 
-import com.sjsu.cmpe275.surveyape.model.BadRequest;
-import com.sjsu.cmpe275.surveyape.model.Question;
-import com.sjsu.cmpe275.surveyape.model.Responses;
-import com.sjsu.cmpe275.surveyape.model.User;
-import com.sjsu.cmpe275.surveyape.repository.QuestionRepository;
-import com.sjsu.cmpe275.surveyape.repository.ResponsesRepository;
-import com.sjsu.cmpe275.surveyape.repository.UserRepository;
+import com.sjsu.cmpe275.surveyape.model.*;
+import com.sjsu.cmpe275.surveyape.repository.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,9 +20,19 @@ import java.util.Optional;
 public class ResponseController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private ResponsesRepository responsesRepository;
     private QuestionRepository questionRepository;
     private UserRepository userRepository;
+
+    @Autowired
+    private SurveyRepository surveyRepository;
+
+    @Autowired
+    private SurveyLinksRepository surveyLinksRepository;
+
+    @Autowired
+    private SurveyController surveyController;
 
     @Autowired
     public ResponseController(ResponsesRepository responsesRepository, QuestionRepository questionRepository, UserRepository userRepository) {
@@ -112,6 +121,32 @@ public class ResponseController {
 
 
     }
+
+    @RequestMapping(value = "/responses/{surveyId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> completeSurvey(@PathVariable("surveyId") String surveyId,
+                                            @RequestParam(value = "email") String userEmail) {
+
+            Survey survey = surveyRepository.findById(Integer.parseInt(surveyId)).get();
+
+            if (survey == null) {
+                return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
+            } else {
+                SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey,userEmail);
+                if(survey.getSurveyType() != 0 && surveyLinks != null) {
+                    //mark all the links invalid
+                    surveyLinks.setActivated(false);
+                    surveyLinksRepository.save(surveyLinks);
+                    return new ResponseEntity<>(new BadRequest(200, "Survey is completed successfully"), HttpStatus.OK);
+                }
+                else {//for general surveys
+                    return new ResponseEntity<>(new BadRequest(200, "Survey is completed successfully"), HttpStatus.OK);
+                }
+
+            }
+
+
+    }
+
 
 
 }

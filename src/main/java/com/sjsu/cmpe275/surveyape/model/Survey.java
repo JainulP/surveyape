@@ -35,7 +35,7 @@ public class Survey {
 
     private int surveyType;//0 for open survey, 1 for closed survey, 2 for open unique survey
 
-    private boolean completed;
+//    private boolean completed;
 
     @JsonBackReference
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -131,11 +131,11 @@ public class Survey {
         return published;
     }
 
-    public boolean isCompleted() {
-        return completed;
-    }
-
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
+//    public boolean isCompleted() {
+//        return completed;
+//    }
+//
+//    public void setCompleted(boolean completed) {
+//        this.completed = completed;
+//    }
 }

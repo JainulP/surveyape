@@ -16,4 +16,6 @@ public interface SurveyLinksRepository extends CrudRepository<SurveyLinks, Integ
             nativeQuery = true)
     List<String> getEmailsBySurvey(@Param("surveyId") String surveyId);
 
+    SurveyLinks getSurveyLinksBySurveyAndUserEmail(Survey survey, String userEmail);
+
 }
