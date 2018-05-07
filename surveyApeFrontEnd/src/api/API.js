@@ -46,9 +46,6 @@ export const login = (payload) =>
         },
         credentials:'include'})
         .then(res => {
-            localStorage.setItem("userid1",res.json());
-            debugger;
-            localStorage.getItem("userid1");
             return res.json();
         })
         .catch(error => {
@@ -75,7 +72,7 @@ export const verifyUser = (code, emailId) =>
 
 export const createSurvey = (payload) =>
     fetch(`${api}/survey?surveyName=`+payload.surveyName+`&endTime=`+payload.endTime+
-            `&userId=`+1/*localStorage.getItem("userId")*/+`&surveyType=`+payload.surveyType, {
+            `&userId=`+localStorage.getItem("userId")+`&surveyType=`+payload.surveyType, {
         method: 'POST',
         headers: {
             ...headers,
@@ -142,11 +139,59 @@ export const updateSurvey = (payload) =>
             return error;
         });
 
+export const publishSurvey = (payload) =>
+    fetch(`${api}/survey/`+payload+`?published=true`, {
+        method: 'POST',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        credentials:'include'})
+        .then(res => {
+            return res.json();
+        })
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
+
+export const addParticipants = (payload) =>
+    fetch(`${api}/participants/`+payload.surveyId+`?emails=`+payload.participants, {
+        method: 'POST',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        credentials:'include'})
+        .then(res => {
+            return res.json();
+        })
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
 
 export const createQuestion = (payload) =>
     fetch(`${api}/question?questionStr=`+payload.questionStr+`&answerType=`+payload.answerType+`&choiceType=`+payload.choiceType+`&questionType=`+payload.questionType+
-            `&options=`+payload.options+`&surveyId=`+payload.surveyId, {
+        `&options=`+payload.options+`&surveyId=`+payload.surveyId +`&visualStyle=` +payload.visualStyle, {
         method: 'POST',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        credentials:'include'})
+        .then(res => {
+            return res.json();
+        })
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
+
+export const updateQuestion = (payload) =>
+    fetch(`${api}/question?questionId=`+payload.questionId+`questionStr=`+payload.questionStr+`&answerType=`+payload.answerType+`&choiceType=`+payload.choiceType+`&questionType=`+payload.questionType+
+        `&options=`+payload.options+`&surveyId=`+payload.surveyId+`&visualStyle=` +payload.visualStyle, {
+        method: 'PUT',
         headers: {
             ...headers,
             'Content-Type': 'application/json'

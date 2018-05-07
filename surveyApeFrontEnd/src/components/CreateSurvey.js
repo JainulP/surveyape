@@ -15,27 +15,11 @@ class CreateSurvey extends Component {
         super(props);
         this.state = {
             surveyId: null,
+            participants : '',
+            participantsAdded : '',
             date: new Date(),
             questions:[],
-            createSurveyResponse:{surveyId: 15,
-                surveyName: "hh",
-                endTime: "0118-04-18T08:00:00.000+0000",
-                owner: {
-                    userId: 1,
-                    email: "yediremanasa@gmail.com",
-                    username: "manasa",
-                    password: "MTIz",
-                    age: "1",
-                    verificationCode: "38187",
-                    activated: true
-                },
-                published: false,
-                questions: null,
-                startTime: null,
-                surveyId: 15,
-                surveyName: "hh",
-                surveyType: 2
-            },
+            createSurveyResponse:null,
             surveyData:{
                 surveyName:null,
                 endTime:null,
@@ -49,7 +33,8 @@ class CreateSurvey extends Component {
                 questionType:null,
                 options:null,
                 surveyId:null,
-                visualStyle:null
+                visualStyle:null,
+                questionId:null
             }
         }
     }
@@ -70,13 +55,20 @@ class CreateSurvey extends Component {
         this.setState(self)
     }
 
-    saveQuestion =(data) =>{
-        API.createQuestion(data)
+    addParticipants = () =>{
+        var data = {
+            surveyId :this.state.createSurveyResponse.surveyId,
+            participants : this.state.participants
+        }
+        var self = this.state;
+        API.addParticipants(data)
             .then((res) => {
                 console.log(res)
+                self.participantsAdded = self.participantsAdded +","+ self.participants;
+                self.participants = '';
+                this.setState(self);
             });
     }
-
     createBasicSurvey = () =>{
         // date format required yyyy-MM-dd-HH
         var data = this.state;
@@ -92,22 +84,38 @@ class CreateSurvey extends Component {
                 alert("Survey successfully created! Pleas add questions to the survey!")
             });
     }
+    publishSurvey = () =>{
+        API.publishSurvey(this.state.createSurveyResponse.surveyId)
+            .then((res) => {
+            console.log(res)
+            });
+    }
+    renderSurveyTypeSwitch(param) {
+        switch(param) {
+            case 0:
+                return 'General';
+            case 1:
+                return 'Closed invitation-only';
+            case 2:
+                return 'Open unique';
+            default:
+                return '';
+        }
+    }
     render() {
         var questionList = [];
         var data = this.state.questions;
         if(data && data.length > 0){
             data.map(function (temp, index) {
                 questionList.push(
-                    <Question data = {temp} number={index} saveQuestion={this.saveQuestion}/>
+                    <Question data = {temp} number = {index}/>
                 );
             },this);
         }
         return (
-
 <div>
         {
-            (this.state.createSurveyResponse === null)?
-
+            (this.state.questionData.surveyId === null)?
                 <div className="row">
                     <div className="col-md-6 margin-70">
                         <form>
@@ -144,9 +152,10 @@ class CreateSurvey extends Component {
                                             });
                                         }}
                                 >
-                                    <option value="1">General</option>
-                                    <option value="2">Closed invitation-only</option>
-                                    <option value="3">Open unique</option>
+                                    <option value=""></option>
+                                    <option value="0">General</option>
+                                    <option value="1">Closed invitation-only</option>
+                                    <option value="2">Open unique</option>
                                 </select>
                             </div>
                         </form>
@@ -158,7 +167,7 @@ class CreateSurvey extends Component {
                 :
                 <div>
                     <div className="row">
-                        <div className="col-md-6 margin-70">
+                        <div className="col-md-10 margin-70">
                             <div>SURVEY DETAILS</div>
                             <div>
                                 <span>Name: </span>
@@ -170,21 +179,55 @@ class CreateSurvey extends Component {
                             </div>
                             <div>
                                 <span>Type: </span>
-                                <span>{this.state.createSurveyResponse.surveyType}</span>
+                                <span>
+                                    {this.renderSurveyTypeSwitch(this.state.createSurveyResponse.surveyType)}</span>
                             </div>
                         </div>
-                        <div className="col-md-6 margin-70">
+                    </div>
+                    <div className="row">
+                        <div className="col-md-10 margin-70">
                             <span>
                                 QUESTIONS
                             </span>
                             <div>
-                                {questionList}
+                                <button type="button" className="surveyape-button" id = "addQuestion" onClick={()=>this.addQuestion()}>ADD QUESTION</button>
                             </div>
                             <div>
-                                <button type="button" className="surveyape-button" id = "saveUsrInfo" onClick={()=>this.addQuestion()}>ADD QUESTION</button>
+                                {questionList}
                             </div>
                         </div>
                     </div>
+                    <div className="row">
+                        <div className="col-md-10 margin-70">
+                            <span>
+                                PARTICIPANTS
+                            </span>
+                            <div>
+                                <input type="text" className="form-control surveyape-input" id="Participants" aria-describedby="Participants" placeholder="Participants"
+                                       onChange={(event) => {
+                                           this.setState({
+                                               participants: event.target.value
+                                           });
+                                       }}
+                                       value={this.state.participants}
+                                />
+                                <button type="button" className="surveyape-button" id = "addParticipants" onClick={()=>this.addParticipants()}>ADD PARTICIPANTS</button>
+                           <div>
+                               <span>
+                                   Participants :
+                               </span>
+                               {
+                                   (this.state.participantsAdded)
+                                       ? this.state.participantsAdded.split(",").map(email => <p> {email} </p>)
+                                       : ""
+                               }
+                           </div>
+                            </div>
+                        </div>
+                    </div>
+<div className="row margin-70">
+    <button type="button" className="surveyape-button" id = "publishSurvey" onClick={()=>this.publishSurvey()}>PUBLISH</button>
+</div>
                 </div>
              }
 </div>
