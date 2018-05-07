@@ -124,21 +124,24 @@ public class ResponseController {
 
     @RequestMapping(value = "/responses/{surveyId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> completeSurvey(@PathVariable("surveyId") String surveyId,
-                                            @RequestParam(value = "email") String userEmail) {
+                                            @RequestParam(value = "email", required = false) String userEmail) {
 
             Survey survey = surveyRepository.findById(Integer.parseInt(surveyId)).get();
 
             if (survey == null) {
                 return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
-            } else {
+            }
+            else {
                 SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey,userEmail);
-                if(survey.getSurveyType() != 0 && surveyLinks != null) {
+//                if(survey.getSurveyType() != 0 && surveyLinks != null) {
+                if(surveyLinks!= null){
+
                     //mark all the links invalid
                     surveyLinks.setActivated(false);
                     surveyLinksRepository.save(surveyLinks);
                     return new ResponseEntity<>(new BadRequest(200, "Survey is completed successfully"), HttpStatus.OK);
                 }
-                else {//for general surveys
+                else {
                     return new ResponseEntity<>(new BadRequest(200, "Survey is completed successfully"), HttpStatus.OK);
                 }
 

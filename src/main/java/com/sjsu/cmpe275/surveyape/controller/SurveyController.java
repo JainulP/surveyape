@@ -5,7 +5,7 @@ import com.sjsu.cmpe275.surveyape.repository.SurveyLinksRepository;
 import com.sjsu.cmpe275.surveyape.repository.SurveyRepository;
 import com.sjsu.cmpe275.surveyape.repository.UserRepository;
 import com.sjsu.cmpe275.surveyape.service.EmailService;
-import com.sjsu.cmpe275.surveyape.utils.CloseSurveyAtEndTime;
+//import com.sjsu.cmpe275.surveyape.utils.CloseSurveyAtEndTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -108,13 +108,18 @@ public class SurveyController {
             try {
                 Date date1 = null;
                 if(survey.getEndTime() != null) {
-                     date1 = sdf.parse(survey.getEndTime().toString());
+                     date1 =sdf.parse(sdf.format(survey.getEndTime()));
                 }
 
                 Date date2 = sdf.parse(sdf.format(new Date()));
 
-                if (date1 == null || date1.compareTo(date2) < 0) {
+                if (date1 == null || date1.compareTo(date2) > 0) {
                     survey.setEndTime(sdf.parse(endTime));
+//                    //Now create the time and schedule it
+//                    Timer timer = new Timer();
+//
+//                    //Use this if you want to execute it once
+//                    timer.schedule(new CloseSurveyAtEndTime(survey), sdf.parse(endTime));
                     Survey updatedSurvey = surveyRepository.save(survey);
                     return new ResponseEntity<>(updatedSurvey, HttpStatus.OK);
                 }
@@ -179,13 +184,13 @@ public class SurveyController {
             if (survey == null) {
                 return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
             }
-//            if(survey.getEndTime()!= null) {
+            if(survey.getEndTime()!= null) {
 //                //Now create the time and schedule it
 //                Timer timer = new Timer();
 //
 //                //Use this if you want to execute it once
 //                timer.schedule(new CloseSurveyAtEndTime(survey), survey.getEndTime());
-//            }
+            }
             if (published.equals("true")) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
                 // write to db
