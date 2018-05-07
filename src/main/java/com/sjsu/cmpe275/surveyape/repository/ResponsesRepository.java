@@ -12,10 +12,12 @@ public interface ResponsesRepository extends JpaRepository<Responses, Integer> {
     @Query(value = "SELECT answers from responses where question_id=:qid", nativeQuery = true)
     List<String> getAnswersByQuestionId(@Param("qid") int questionId);
 
-    @Query(value = "SELECT answers from responses where question_id=:uid and user_id=:qid", nativeQuery = true)
+    @Query(value = "SELECT answers from responses where question_id=:qid and user_id=:uid", nativeQuery = true)
     List<String> getAnswersByUserIdAndQuestion(@Param("uid") int userId, @Param("qid") int questionId);
 
-    @Query(value = "SELECT answers from responses where user_id=:uid")
+    @Query(value = "SELECT answers from responses where user_id=:uid",nativeQuery = true)
     List<String> getAnswersByUser(@Param("uid") int userId);
+
+    List<String> findAllBySurveyId(int surveyId);
 
 }

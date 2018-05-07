@@ -25,6 +25,12 @@ public class Responses {
     @Column
     private String email;
 
+    @Column
+    private String  surveyId;
+
+
+
+
     public Responses() {
 
     }
@@ -50,7 +56,7 @@ public class Responses {
     }
 
     public void setAnswers(String responses) {
-        this.answers = answers;
+        this.answers = responses;
     }
 
     public User getUserId() {
@@ -61,6 +67,29 @@ public class Responses {
         this.userId = userId;
     }
 
+    public int getResId() {
+        return resId;
+    }
+
+    public void setResId(int resId) {
+        this.resId = resId;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSurveyId() {
+        return surveyId;
+    }
+
+    public void setSurveyId(String surveyId) {
+        this.surveyId = surveyId;
+    }
 
     public Question getQuestion() {
         return question;
