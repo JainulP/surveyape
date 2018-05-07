@@ -32,10 +32,15 @@ class HomePage extends Component {
     loginUser = (data) => {
         API.login(data)
             .then((res) => {
+            if(res.userId){
                 localStorage.setItem("username", res.username);
                 localStorage.setItem("email", res.email);
                 localStorage.setItem("userId", res.userId);
                 this.props.history.push("/");
+            }
+              else{
+                alert("Login failed. Try again")
+            }
             });
     }
     signupUser = (data) => {
