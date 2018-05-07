@@ -1,6 +1,8 @@
 package com.sjsu.cmpe275.surveyape.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 
 @Entity
@@ -14,6 +16,7 @@ public class Responses {
     private String answers;
 
 
+    @JsonBackReference
     @ManyToOne(targetEntity = Question.class, fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name="question_id")
     private Question question;

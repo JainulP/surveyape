@@ -35,6 +35,8 @@ public class Survey {
 
     private int surveyType;//0 for open survey, 1 for closed survey, 2 for open unique survey
 
+    private boolean completed;
+
     @JsonBackReference
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SurveyLinks> links;
@@ -85,7 +87,7 @@ public class Survey {
         this.questions = questions;
     }
 
-    public boolean isPublished() {
+    public boolean getPublished() {
         return published;
     }
 
@@ -123,5 +125,17 @@ public class Survey {
 
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
+    }
+
+    public boolean isPublished() {
+        return published;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 }
