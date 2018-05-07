@@ -5,16 +5,21 @@ import com.sjsu.cmpe275.surveyape.repository.SurveyLinksRepository;
 import com.sjsu.cmpe275.surveyape.repository.SurveyRepository;
 import com.sjsu.cmpe275.surveyape.repository.UserRepository;
 import com.sjsu.cmpe275.surveyape.service.EmailService;
+import com.sjsu.cmpe275.surveyape.utils.CloseSurveyAtEndTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.text.html.Option;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.Timer;
 
 @RestController
 @RequestMapping(value = "/survey")
@@ -45,10 +50,13 @@ public class SurveyController {
         SimpleDateFormat sdf = new SimpleDateFormat(format);
 
         Survey survey = null;
+        Date date = null;
         try {
+            date = sdf.parse(endTime);
             survey = surveyRepository.save(new Survey(surveyName, sdf.parse(endTime),Integer.parseInt(surveyType), user));
         } catch (ParseException e) {
-            e.printStackTrace();
+            return new ResponseEntity<>(new BadRequest(400, "Invalid Date"), HttpStatus.BAD_REQUEST);
+//            e.printStackTrace();
         }
 
         return new ResponseEntity<>(survey, HttpStatus.OK);
@@ -171,6 +179,13 @@ public class SurveyController {
             if (survey == null) {
                 return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
             }
+//            if(survey.getEndTime()!= null) {
+//                //Now create the time and schedule it
+//                Timer timer = new Timer();
+//
+//                //Use this if you want to execute it once
+//                timer.schedule(new CloseSurveyAtEndTime(survey), survey.getEndTime());
+//            }
             if (published.equals("true")) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
                 // write to db
@@ -194,18 +209,31 @@ public class SurveyController {
                 //}
                 surveyRepository.save(survey);
 
-                //send the activation links to participants added
+                //activate links for participants added
                 activateSurveyLink(survey);
 
                 return new ResponseEntity<>(new BadRequest(200, "Survey with id " + surveyId + " is published successfully"), HttpStatus.OK);
 
-            } else {
-                //send the activation links to participants added
-                
-                invalidateSurveyLinks(survey);
-
-                return new ResponseEntity<>(new BadRequest(200, "Survey with id " + surveyId + " is unpublished successfully"), HttpStatus.OK);
             }
+            else {
+
+                   List<Question> questions = survey.getQuestions();
+                   for(Question question: questions){
+                       if(question.getResponses().size() >0){
+                           return new ResponseEntity<>(new BadRequest(400, "Survey with id " + surveyId + " can not be unpublished as it has been already responded by some participants"), HttpStatus.BAD_REQUEST);
+
+                       }
+                   }
+                    //de-activate links for participants added
+                    invalidateSurveyLinks(survey);
+
+                    survey.setPublished(false);
+                    surveyRepository.save(survey);
+
+                    return new ResponseEntity<>(new BadRequest(200, "Survey with id " + surveyId + " is unpublished successfully"), HttpStatus.OK);
+                 }
+
+
     }
 
 
@@ -218,7 +246,6 @@ public class SurveyController {
             surveyLinksRepository.save(link);
         }
     }
-
 
 
 
