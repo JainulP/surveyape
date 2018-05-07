@@ -1,6 +1,7 @@
 package com.sjsu.cmpe275.surveyape.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -16,11 +17,13 @@ public class Question {
 
     private String questionStr;
 
-    private String choiceType;//text or image
+    private String choiceType;//0 for text or 1 for image
 
-    private String answerType;//single or multiple
+    private String answerType;//0 for single or 1 for multiple
 
-    private int questionType;//0 for multiple choice, 1 for yes/no question, 2 for short answer question, 3 for datetime question, 4 for star rating question
+    private int questionType;//0 for multiple choice, 1 for yes/no question, 2 for    short answer question, 3 for datetime question, 4 for star rating question
+
+    private String visualStyle;// 0 for dropdown , 1 for radio button, 2 for checkbox
 
 //    @JsonIgnore
     @JsonBackReference
@@ -33,7 +36,7 @@ public class Question {
     private List<String> options;
 
 
-
+    @JsonManagedReference
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Responses> responses;
 
@@ -42,13 +45,20 @@ public class Question {
 
     }
 
-    public Question( String questionStr, String answerType, String choiceType, int questionType, List<String> options, Survey survey) {
+    public Question( String questionStr, String answerType, String choiceType, int questionType, List<String> options,String visualStyle, Survey survey) {
         this.questionStr = questionStr;
         this.choiceType = choiceType;
         this.answerType = answerType;
         this.questionType = questionType;
         this.survey = survey;
         this.options = options;
+        this.visualStyle = visualStyle;
+    }
+
+    public Question( String questionStr, int questionType, Survey survey) {
+        this.questionStr = questionStr;
+        this.questionType = questionType;
+        this.survey = survey;
     }
 
     public int getQuestionId() {
@@ -113,5 +123,13 @@ public class Question {
 
     public void setResponses(List<Responses> responses) {
         this.responses = responses;
+    }
+
+    public String getVisualStyle() {
+        return visualStyle;
+    }
+
+    public void setVisualStyle(String visualStyle) {
+        this.visualStyle = visualStyle;
     }
 }
