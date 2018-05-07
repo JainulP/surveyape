@@ -63,3 +63,17 @@
 .margin-70{
     margin: 50px;
 }
+
+.text-align-left{
+    text-align: left;
+}
+.text-align-right{
+    text-align: right;
+}
+.padding-left-25{
+    margin: 10px;
+}
+
+.heighht-survey-logo{
+    height: 31px;
+}

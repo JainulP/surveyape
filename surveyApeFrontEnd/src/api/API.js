@@ -189,7 +189,7 @@ export const createQuestion = (payload) =>
         });
 
 export const updateQuestion = (payload) =>
-    fetch(`${api}/question?questionId=`+payload.questionId+`questionStr=`+payload.questionStr+`&answerType=`+payload.answerType+`&choiceType=`+payload.choiceType+`&questionType=`+payload.questionType+
+    fetch(`${api}/question?questionId=`+payload.questionId+`&questionStr=`+payload.questionStr+`&answerType=`+payload.answerType+`&choiceType=`+payload.choiceType+`&questionType=`+payload.questionType+
         `&options=`+payload.options+`&surveyId=`+payload.surveyId+`&visualStyle=` +payload.visualStyle, {
         method: 'PUT',
         headers: {

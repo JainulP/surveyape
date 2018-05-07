@@ -47,7 +47,6 @@ saveQuestion = () =>{
                         self.choiceType=res.choiceType;
                         self.questionType=res.questionType;
                         self.options=res.options;
-                        self.surveyId=res.surveyId;
                         self.visualStyle=res.visualStyle;
                         self.questionId=res.questionId;
                     this.setState(self);
@@ -62,9 +61,9 @@ saveQuestion = () =>{
                         self.choiceType=res.choiceType;
                         self.questionType=res.questionType;
                         self.options=res.options;
-                        self.surveyId=res.surveyId;
                         self.visualStyle=res.visualStyle;
                         self.questionId=res.questionId;
+                        self.editMode = false;
                         this.setState(self);
                 });
         }
@@ -139,7 +138,8 @@ saveQuestion = () =>{
                     </span>
                     </div>
                     <input type="text" className="form-control surveyape-input" id="questionStr" aria-describedby="questionStr" placeholder="Question"
-                    onChange={(event) => {
+                           value={this.state.questionStr}
+                           onChange={(event) => {
                     this.setState({
                         questionStr: event.target.value
                     });
@@ -154,7 +154,8 @@ saveQuestion = () =>{
                     </span>
                     </div>
                     <select className="form-control surveyape-input" name="cards"  id="questionType" aria-describedby="Question Type" placeholder="Question Type"
-                    onChange={(event) => {
+                            value={this.state.questionType}
+                            onChange={(event) => {
                     this.setState({
                         questionType: event.target.value
                     });
@@ -179,6 +180,7 @@ saveQuestion = () =>{
                                     </div>
                                     <select className="form-control surveyape-input" name="cards" id="choiceType"
                                             aria-describedby="Choice Type" placeholder="Choice Type"
+                                            value={this.state.choiceType}
                                             onChange={(event) => {
                                                 this.setState({
                                                     choiceType: event.target.value
@@ -199,6 +201,7 @@ saveQuestion = () =>{
                                     </div>
                                     <select className="form-control surveyape-input" name="cards" id="answerType"
                                             aria-describedby="Answer Type" placeholder="Answer Type"
+                                            value={this.state.answerType}
                                             onChange={(event) => {
                                                 this.setState({
                                                     answerType: event.target.value
@@ -220,6 +223,7 @@ saveQuestion = () =>{
                                     </div>
                                     <select className="form-control surveyape-input" name="cards" id="visualStyle"
                                             aria-describedby="Visual style" placeholder="Visual style"
+                                            value={this.state.visualStyle}
                                             onChange={(event) => {
                                                 this.setState({
                                                     visualStyle: event.target.value

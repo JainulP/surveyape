@@ -37,30 +37,65 @@ class TopMenu extends Component {
     GoTosignup = () =>{
         this.props.history.push("/signup");
     }
+    GoToLogout = () =>{
+        
+    }
     render() {
         return (
             <div className="topmenu-conatiner-menu">
                 <div className="top-menu-head row">
                     <div className="col-md-6">
+                        <div className="text-align-left">
+                            {
+                                (localStorage.getItem("userId"))?
+                                    <span>
+                                        <span>
+                                 <img className="heighht-survey-logo" src="http://localhost:3000/surveyicon.png"></img>
+                        </span>
+                        <span>
+                            <a className="s padding-left-25 cursor-pointer" onClick={ () =>{this.GoToCreateSurvey()}}>CREATE</a>
+                        </span>
+                        <span>
+                            <a className="s padding-left-25 cursor-pointer" onClick={ () =>{this.GoToViewSurvey()}}>VIEW</a>
+                        </span>
+                        <span>
+                            <a className="s padding-left-25 cursor-pointer" onClick={ () =>{this.GoToTakeSurvey()}}>TAKE</a>
+                        </span>
+                                    </span>
+                                    :null
+                            }
+                        </div>
                     </div>
-                    <div className="col-md-1">
-                        <a className="s padding-left-25 cursor-pointer" onClick={ () =>{this.GoToCreateSurvey()}}>CREATE</a>
-                    </div>
-                    <div className="col-md-1">
-                        <a className="s padding-left-25 cursor-pointer" onClick={ () =>{this.GoToViewSurvey()}}>VIEW</a>
-                    </div>
-                    <div className="col-md-1">
-                        <a className="s padding-left-25 cursor-pointer" onClick={ () =>{this.GoToTakeSurvey()}}>TAKE</a>
-                    </div>
-                    <div className="col-md-1">
-                        <a className="s padding-left-25 cursor-pointer" onClick={ () =>{this.GoToDashboard()}}>DASHBOARD</a>
-                    </div>
-                    <div className="col-md-1">
-                        <a className="s padding-left-25 cursor-pointer" onClick={ () =>{this.GoTosignin()}}>SIGN IN</a>
-                    </div>
-                    <div className="col-md-1">
-                        <a className="s padding-left-25 cursor-pointer" onClick={ () =>{this.GoTosignup()}}>SIGN UP</a>
-                    </div>
+                    <div  className="col-md-6 text-align-right">
+                        {
+                            (localStorage.getItem("userId")) ?
+                                <span>
+                                <span>
+                        <a className="s padding-left-25 cursor-pointer" onClick={() => {
+                            this.GoToDashboard()
+                        }}>DASHBOARD</a>
+                    </span>
+                                     <span>
+                        <a className="s padding-left-25 cursor-pointer" onClick={() => {
+                            this.GoToLogout()
+                        }}>LOGOUT</a>
+                    </span>
+                                </span>:
+
+                                <span>
+                    <span>
+                        <a className="s padding-left-25 cursor-pointer" onClick={() => {
+                            this.GoTosignin()
+                        }}>SIGN IN</a>
+                    </span>
+                    <span>
+                        <a className="s padding-left-25 cursor-pointer" onClick={() => {
+                            this.GoTosignup()
+                        }}>SIGN UP</a>
+                    </span>
+                                </span>
+                        }
+                </div>
                 </div>
             </div>
         );
