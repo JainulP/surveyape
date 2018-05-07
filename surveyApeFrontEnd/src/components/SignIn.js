@@ -91,7 +91,7 @@ class Login extends Component {
                         <form>
                             <div className="form-group resizedTextbox">
 
-                                <input type="email" className="form-control" id="emailId" aria-describedby="emailHelp" placeholder="Enter Email"
+                                <input type="email" className="form-control surveyape-input" id="emailId" aria-describedby="emailHelp" placeholder="Enter Email"
                                        onChange={(event) => {
                                            this.setState({
                                                email: event.target.value
@@ -103,7 +103,7 @@ class Login extends Component {
                             </div>
                             <div className="form-group resizedTextbox">
 
-                                <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Password"
+                                <input type="password" className="form-control surveyape-input" id="exampleInputPassword1" placeholder="Password"
                                        onChange={(event) => {
                                            this.setState({
                                                password: event.target.value

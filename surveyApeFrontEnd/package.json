@@ -1,0 +1,30 @@
+{
+  "name": "SurveyApe",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "chart.js": "^2.7.2",
+    "eslint": "^4.19.1",
+    "google-places": "0.0.2",
+    "node-datetime": "^2.0.6",
+    "prop-types": "^15.6.1",
+    "react": "^15.6.2",
+    "react-bootstrap": "^0.31.5",
+    "react-chartjs-2": "^2.7.2",
+    "react-dom": "^15.6.2",
+    "react-dual-rangeslider": "^1.2.16",
+    "react-ionicons": "^2.1.6",
+    "react-redux": "^5.0.7",
+    "react-router-dom": "^4.2.2",
+    "react-scripts": "^1.1.4",
+    "reactjs-localstorage": "0.0.5",
+    "redux": "^3.7.2",
+    "webpack": "^3.11.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

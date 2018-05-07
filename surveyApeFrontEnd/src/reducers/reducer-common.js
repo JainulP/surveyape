@@ -1,20 +1,18 @@
-import {SET_COMPONENT} from '../actions/actionsAll';
-import {GET_COMPONENT} from '../actions/actionsAll';
+import {SAVE_BASIC_SUREVY} from '../actions/actionsAll';
 
 const initialState = {
 
-};
-
+}
 
 const all = (state = initialState, action) => {
     switch (action.type) {
-       /* case SET_COMPONENT :
+       case SAVE_BASIC_SUREVY :
             state = {
-                componentActive: action.obj
+                surveyData: action.obj
             };
-            console.log(state);
             return state;
-*/
+       default: // need this for default case
+            return state
     }
 };
 

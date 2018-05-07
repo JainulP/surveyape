@@ -1,9 +1,9 @@
-export const GET_HOTELS = 'GET_HOTELS';
+export const SAVE_BASIC_SUREVY = 'SAVE_BASIC_SUREVY';
 
-export function GetHotels(obj) {
-    console.log("Get Hotels Loaded");
+export function SaveBasicSurvey(obj) {
+    console.log("Save Basic Survey");
     return {
-        type : "GET_HOTELS",
+        type : "SAVE_BASIC_SUREVY",
         obj                                // this is same as newItem : newItem in ES6
     }
 }

@@ -102,7 +102,7 @@ class SignIn extends Component {
                             <span className="sign-up-head">NEW USER?</span>
                             <form>
                                 <div className="form-group resizedTextbox">
-                                    <input type="text" className="form-control" id="username" aria-describedby="emailHelp" placeholder="Username"
+                                    <input type="text" className="form-control surveyape-input" id="username" aria-describedby="emailHelp" placeholder="Username"
                                            onChange={(event) => {
                                                this.setState({
                                                    username: event.target.value
@@ -111,7 +111,7 @@ class SignIn extends Component {
                                     />
                                 </div>
                                 <div className="form-group resizedTextbox">
-                                    <input type="password" className="form-control" id="password" placeholder="Password"
+                                    <input type="password" className="form-control surveyape-input" id="password" placeholder="Password"
                                            onChange={(event) => {
                                                this.setState({
                                                    password: event.target.value
@@ -121,7 +121,7 @@ class SignIn extends Component {
                                     <span id="addValiadationPassword"></span>
                                 </div>
                                 <div className="form-group resizedTextbox">
-                                    <input type="email" className="form-control" id="email" placeholder="Email"
+                                    <input type="email" className="form-control surveyape-input" id="email" placeholder="Email"
                                            onChange={(event) => {
                                                this.setState({
                                                    email: event.target.value
@@ -132,7 +132,7 @@ class SignIn extends Component {
                                     <span id="addValiadationEmail"></span>
                                 </div>
                                 <div className="form-group resizedTextbox">
-                                    <input type="integer" className="form-control" id="age" placeholder="Age"
+                                    <input type="integer" className="form-control surveyape-input" id="age" placeholder="Age"
                                            onChange={(event) => {
                                                this.setState({
                                                    age: event.target.value
@@ -143,7 +143,7 @@ class SignIn extends Component {
                                 <div className="form-group resizedTextbox">
                                 </div>
                             </form>
-                        <button className="surveyape-button" id = "saveUsrInfo" onClick={()=>this.props.signupUser(this.state)}>SIGN UP</button>
+                        <button type="button" className="surveyape-button" id = "saveUsrInfo" onClick={()=>this.props.signupUser(this.state)}>SIGN UP</button>
                     </div>
                      </div>
                      <div className="col-md-5 margin-20">
@@ -151,7 +151,7 @@ class SignIn extends Component {
                              <span className="sign-up-head">ACTIVATE YOUR ACCOUNT?</span>
                              <form>
                                  <div className="form-group resizedTextbox">
-                                     <input type="email" className="form-control" id="emailV" aria-describedby="emailHelp" placeholder="Email"
+                                     <input type="email" className="form-control surveyape-input" id="emailV" aria-describedby="emailHelp" placeholder="Email"
                                             onChange={(event) => {
                                                 this.setState({
                                                     email: event.target.value
@@ -161,7 +161,7 @@ class SignIn extends Component {
                                  </div>
 
                                  <div className="form-group resizedTextbox">
-                                     <input type="text" className="form-control" id="verificationCode" aria-describedby="emailHelp" placeholder="verification Code"
+                                     <input type="text" className="form-control surveyape-input" id="verificationCode" aria-describedby="emailHelp" placeholder="verification Code"
                                             onChange={(event) => {
                                                 this.setState({
                                                     verificationCode: event.target.value
@@ -169,7 +169,7 @@ class SignIn extends Component {
                                             }}
                                      />
                                  </div>
-                                 <button className="surveyape-button" id = "saveUsrInfo" onClick={()=>this.props.activateCode(this.state.verificationCode, this.state.email)}>ACTIVATE</button>
+                                 <button type="button" className="surveyape-button" id = "saveUsrInfo" onClick={()=>this.props.activateCode(this.state.verificationCode, this.state.email)}>ACTIVATE</button>
                              </form>
                          </div>
                      </div>

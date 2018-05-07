@@ -37,3 +37,29 @@
     font-size: 20px;
     font-weight: 700;
 }
+
+.surveyape-input{
+    background: none;
+    height: 40px !important;
+    background-color: #fbfbfb !important;
+    border: 2px solid #d5d5d5 !important;
+    border-radius: 0 !important;
+    -webkit-appearance: none !important;
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    -webkit-transition: none;
+    color: #999;
+    height: 44px;
+    font-size: 16px;
+    font-weight: 400;
+    margin-bottom: 25px;
+    font-family: 'Open Sans', Arial, sans-serif !important;
+    line-height: 1.428571429;
+    padding: 6px 12px;
+}
+
+.margin-70{
+    margin: 50px;
+}

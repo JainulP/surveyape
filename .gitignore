@@ -9,7 +9,7 @@
 .settings
 .springBeans
 .sts4-cache
-
+surveyApeFrontEnd/node_modules
 
 ### IntelliJ IDEA ###
 .idea
@@ -29,3 +29,5 @@ src/main/resources/application.properties
 /.nb-gradle/
 *.properties
 src/main/resources/application.properties
+*.gz
+*.cmd

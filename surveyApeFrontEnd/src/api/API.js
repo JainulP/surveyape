@@ -39,7 +39,7 @@ export const signout = (payload) =>
 
 export const login = (payload) =>
     fetch(`${api}/login?email=`+payload.email+`&password=`+payload.password, {
-        method: 'POST',
+        method: 'GET',
         headers: {
             ...headers,
             'Content-Type': 'application/json'
@@ -57,7 +57,7 @@ export const login = (payload) =>
         });
 
 export const verifyUser = (code, emailId) =>
-    fetch(`${api}/users/activate/`+emailId +`?vCode=`+code, {
+    fetch(`${api}/activate/`+emailId +`?vCode=`+code, {
         method: 'PUT',
         headers: {
             ...headers,
@@ -65,7 +65,7 @@ export const verifyUser = (code, emailId) =>
         },
         credentials:'include'})
         .then(res => {
-
+            return res.json();
         })
         .catch(error => {
             console.log("This is error");
@@ -74,8 +74,8 @@ export const verifyUser = (code, emailId) =>
 
 
 export const createSurvey = (payload) =>
-    fetch(`${api}/survey?surveyName=`+payload.surveyName+`&endTime=`+payload.endTime+`&published=`+payload.published+
-            `&userId=`+payload.userId+`&surveyTye=`+payload.surveyTye, {
+    fetch(`${api}/survey?surveyName=`+payload.surveyName+`&endTime=`+payload.endTime+
+            `&userId=`+1/*localStorage.getItem("userId")*/+`&surveyType=`+payload.surveyType, {
         method: 'POST',
         headers: {
             ...headers,
