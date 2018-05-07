@@ -13,6 +13,7 @@ import Dashboard from './Dashboard.js';
 import CreateSurvey from './CreateSurvey.js';
 import TakeSurvey from './TakeSurvey.js';
 import ViewSurvey from './ViewSurvey.js';
+import Response from './Response';
 
 class HomePage extends Component {
     state = {
@@ -24,10 +25,7 @@ class HomePage extends Component {
     loginUser = (data) => {
         API.login(data)
             .then((res) => {
-                localStorage.setItem("username", res.username);
-                localStorage.setItem("email", res.email);
-                localStorage.setItem("userId", res.userId);
-                this.props.history.push("/");
+                console.log(res)
             });
     }
     signupUser = (data) => {
@@ -37,25 +35,16 @@ class HomePage extends Component {
                     alert("Email already registered");
                 }
                 else {
+                    localStorage.setItem("username", res.username);
+                    localStorage.setItem("email", res.email);
                     alert("A verification code is sent to your mail to activate your account.");
                 }
             });
     }
     activateCode = (code, emailId) =>{
-        var encodedEmailId =  btoa(emailId);
-        API.verifyUser(code, encodedEmailId)
+        API.verifyUser(code, emailId)
             .then((res) => {
-                if (res && res.msg) {
-                    alert(res.msg);
-                }
-                else {
-                   alert("Account Activated");
-                    localStorage.setItem("username", res.username);
-                    localStorage.setItem("email", res.email);
-                    localStorage.setItem("userId", res.userId);
-                    this.props.history.push("/");
-                }
-
+                console.log(res)
             });
     }
 
@@ -76,7 +65,7 @@ class HomePage extends Component {
                     (
                         <div>
                             <TopMenu/>
-                            <SignIn loginUser={this.loginUser}/>
+                            <SignIn loginUser={this.loginUser} activateCode = {this.activateCode}/>
                             <Footer/>
                         </div>
                     )}/>
@@ -85,7 +74,7 @@ class HomePage extends Component {
                     (
                         <div>
                             <TopMenu/>
-                            <SignUp signupUser={this.signupUser}  activateCode={this.activateCode}/>
+                            <SignUp signupUser={this.signupUser}/>
                             <Footer/>
                         </div>
                     )}/>
@@ -95,6 +84,15 @@ class HomePage extends Component {
                         <div>
                             <TopMenu/>
                             <TakeSurvey/>
+                            <Footer/>
+                        </div>
+                    )}/>
+
+                <Route exact path="/response" render={() =>
+                    (
+                        <div>
+                            <TopMenu/>
+                            <Response/>
                             <Footer/>
                         </div>
                     )}/>
@@ -112,7 +110,7 @@ class HomePage extends Component {
                     (
                         <div>
                             <TopMenu/>
-                            <CreateSurvey createBasicSurvey={this.createBasicSurvey}/>
+                            <CreateSurvey/>
                             <Footer/>
                         </div>
                     )}/>
@@ -131,14 +129,14 @@ class HomePage extends Component {
 }
 
 function mapStateToProps(state){
-   // console.log(state + " in homepage")
-  //  return {
-  //      hotelsList: state.hotels.hotelsList
-  //  }
+    //  console.log(state.hotels.hotelsList)
+    //  return {
+    //      hotelsList: state.hotels.hotelsList
+    //  }
 }
 
 function mapDispatchToProps(dispatch){
-  // return bindActionCreators({SaveBasicSurvey : SaveBasicSurvey}, dispatch);
+    // return bindActionCreators({GetHotels : GetHotels, GetCars: GetCars, GetFlight: GetFlight}, dispatch);
 }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(HomePage));
