@@ -26,17 +26,25 @@ public class QuestionController {
 
     @RequestMapping(method= RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createQuestion(@RequestParam(value="questionStr") String questionStr,
-                                             @RequestParam(value="answerType") String answerType,
-                                             @RequestParam(value="choiceType") String choiceType,
+                                             @RequestParam(value="answerType",required = false) String answerType,
+                                             @RequestParam(value="choiceType",required = false) String choiceType,
                                              @RequestParam(value="questionType") String questionType,
-                                             @RequestParam(value = "options") List<String> options,
+                                             @RequestParam(value = "options",required = false) List<String> options,
+                                             @RequestParam(value = "visual", required = false) String visual,
                                              @RequestParam(value = "surveyId") String surveyId){
 
             Survey survey = surveyRepository.findById(Integer.parseInt(surveyId)).get();
 
-            Question question = questionRepository.save(new Question(questionStr, answerType, choiceType, Integer.parseInt(questionType), options, survey));
+            if(questionType.equals("0") || Integer.parseInt(questionType) == 0) {
+                Question question = questionRepository.save(new Question(questionStr, answerType, choiceType, Integer.parseInt(questionType), options, visual, survey));
+                return new ResponseEntity<>(question, HttpStatus.OK);
+            }
+            else{
+                Question question = questionRepository.save(new Question(questionStr, Integer.parseInt(questionType),survey));
+                return new ResponseEntity<>(question, HttpStatus.OK);
+            }
 
-            return new ResponseEntity<>(question, HttpStatus.OK);
+
 
     }
 
@@ -45,32 +53,48 @@ public class QuestionController {
                                             @RequestParam(value="questionStr", required = false) String questionStr,
                                             @RequestParam(value="answerType",required = false) String answerType,
                                             @RequestParam(value="choiceType",required = false) String choiceType,
-                                            @RequestParam(value="questionType",required = false) String questionType,
+                                            @RequestParam(value="questionType") String questionType,
                                             @RequestParam(value = "options",required = false) List<String> options,
+                                            @RequestParam(value = "visual", required = false) String visual,
                                             @RequestParam(value = "surveyId") String surveyId) {
 
 
         Question question = questionRepository.findById(Integer.parseInt(questionId)).get();
         if (question != null) {
             Survey survey = surveyRepository.findById(Integer.parseInt(surveyId)).get();
-            if(questionStr != null){
-                question.setQuestionStr(questionStr);
+            if(question.getQuestionType() ==0) {
+                if (questionStr != null) {
+                    question.setQuestionStr(questionStr);
+                }
+                if (answerType != null) {
+                    question.setAnswerType(answerType);
+                }
+                if (choiceType != null) {
+                    question.setChoiceType(choiceType);
+                }
+                if (questionType != null) {
+                    question.setQuestionType(Integer.parseInt(questionType));
+                }
+                if (options != null) {
+                    question.setOptions(options);
+                }
+                if (visual != null) {
+                    question.setVisualStyle(visual);
+                }
+                Question updatedQuestion = questionRepository.save(question);
+                return new ResponseEntity<>(updatedQuestion, HttpStatus.OK);
             }
-            if(answerType != null){
-                question.setAnswerType(answerType);
+            else
+            {
+                if (questionStr != null) {
+                    question.setQuestionStr(questionStr);
+                }
+                if (questionType != null) {
+                    question.setQuestionType(Integer.parseInt(questionType));
+                }
+                Question updatedQuestion = questionRepository.save(question);
+                return new ResponseEntity<>(updatedQuestion, HttpStatus.OK);
             }
-            if(choiceType != null){
-                question.setChoiceType(choiceType);
-            }
-            if(questionType != null){
-                question.setQuestionType(Integer.parseInt(questionType));
-            }
-            if(options != null){
-                question.setOptions(options);
-            }
-            Question updatedQuestion = questionRepository.save(question);
-
-            return new ResponseEntity<>(updatedQuestion, HttpStatus.OK);
         }
         else
         {
