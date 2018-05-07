@@ -21,8 +21,8 @@ class MainComponent extends Component {
 
     render() {
         return (
-            <div>
-                MAIN MENU
+            <div >
+                <img className="back-img" src="http://localhost:3000/wc.png" ></img>
             </div>
         );
     }

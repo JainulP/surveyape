@@ -11,7 +11,8 @@ class TopMenu extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            pageActive: " home"
+            pageActive: " home",
+            loggedout:true
         }
     }
 
@@ -38,7 +39,11 @@ class TopMenu extends Component {
         this.props.history.push("/signup");
     }
     GoToLogout = () =>{
-        
+        var self = this.state;
+        self.loggedout = false;
+        this.setState(self);
+localStorage.clear();
+
     }
     render() {
         return (
@@ -47,7 +52,7 @@ class TopMenu extends Component {
                     <div className="col-md-6">
                         <div className="text-align-left">
                             {
-                                (localStorage.getItem("userId"))?
+                                (this.state.loggedout == true && localStorage.getItem("userId"))?
                                     <span>
                                         <span>
                                  <img className="heighht-survey-logo" src="http://localhost:3000/surveyicon.png"></img>
@@ -68,7 +73,7 @@ class TopMenu extends Component {
                     </div>
                     <div  className="col-md-6 text-align-right">
                         {
-                            (localStorage.getItem("userId")) ?
+                            (this.state.loggedout == true && localStorage.getItem("userId")) ?
                                 <span>
                                 <span>
                         <a className="s padding-left-25 cursor-pointer" onClick={() => {
