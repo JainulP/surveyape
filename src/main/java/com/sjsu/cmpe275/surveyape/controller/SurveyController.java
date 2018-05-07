@@ -200,12 +200,12 @@ public class SurveyController {
                     survey.setPublished(true);
                     if (survey.getSurveyType() == 0) {//general open survey
                         List<String> emails = surveyLinksRepository.getEmailsBySurvey(Integer.toString(survey.getSurveyId()));
-                        String url = emailService.sendUniqueInvitationForGeneralSurveyUsers(emails, null, surveyId);
+                        String url = emailService.sendUniqueInvitationForGeneralSurveyUsers(emails, null, "survey/" + surveyId);
 
                     }
                     else if(survey.getSurveyType() == 1){//closed surveey
                         List<String> emails = surveyLinksRepository.getEmailsBySurvey(Integer.toString(survey.getSurveyId()));
-                        List<String> urls = emailService.sendUniqueInvitationForClosedSurveyUsers(emails, null, surveyId);
+                        List<String> urls = emailService.sendUniqueInvitationForClosedSurveyUsers(emails, null, "survey/"+surveyId);
                     }
                 } catch (ParseException e) {
                     e.printStackTrace();

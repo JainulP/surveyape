@@ -20,7 +20,7 @@ class HomePage extends Component {
         var surveyIdTemp = null;
         if(props.location.pathname.indexOf("survey") > 0){
             var loc = props.location.pathname;
-            surveyIdTemp = loc.substr(loc.lastIndexOf('/') + 1);
+            surveyIdTemp = loc.substr(loc.indexOf("y")+2);
            // this.props.history.push("/survey");
         }
         this.state = {

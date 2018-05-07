@@ -36,7 +36,7 @@ public class EmailService {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setSubject("Invitation to the survey");
-            String url = "127.0.0.1:8080/"+surveyId;
+            String url = "127.0.0.1:3000/"+surveyId;
             for (String email : emails) {
                 message.setText(url);
                 message.setTo(email);
