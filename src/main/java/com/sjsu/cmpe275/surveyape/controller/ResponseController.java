@@ -101,8 +101,10 @@ public class ResponseController {
                 if (email == null) {
                     responsesRepository.save(new Responses(question, answers, null, "Anonymous"));
                 }
-                responsesRepository.save(new Responses(question, answers, null, email));
-                return new ResponseEntity<>("Response saved", HttpStatus.OK);
+                else {
+                    responsesRepository.save(new Responses(question, answers, null, email));
+                }
+                return new ResponseEntity<>(new BadRequest(200,"Response saved"), HttpStatus.OK);
             }
         } else {
             return new ResponseEntity<>(new BadRequest(400, "Invalid question"), HttpStatus.BAD_REQUEST);

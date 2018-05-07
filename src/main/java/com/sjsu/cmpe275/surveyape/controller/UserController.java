@@ -80,7 +80,7 @@ public class UserController {
             logger.info("String password {} ----- {}", new String(Base64.getDecoder().decode(user.getPassword().getBytes())), password);
             if (password.equalsIgnoreCase(new String(Base64.getDecoder().decode(user.getPassword().getBytes())))) {
                 if (user.isActivated()) {
-                    return new ResponseEntity<>(new BadRequest(200, "True"), HttpStatus.OK);
+                    return new ResponseEntity<>(user, HttpStatus.OK);
                 } else {
                     return new ResponseEntity<>(new BadRequest(404, "Please activate your account"), HttpStatus.BAD_REQUEST);
                 }
