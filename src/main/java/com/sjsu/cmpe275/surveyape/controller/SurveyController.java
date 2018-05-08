@@ -2,6 +2,7 @@ package com.sjsu.cmpe275.surveyape.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.sjsu.cmpe275.surveyape.model.*;
+import com.sjsu.cmpe275.surveyape.repository.QuestionRepository;
 import com.sjsu.cmpe275.surveyape.repository.SurveyLinksRepository;
 import com.sjsu.cmpe275.surveyape.repository.SurveyRepository;
 import com.sjsu.cmpe275.surveyape.repository.UserRepository;
@@ -25,6 +26,9 @@ public class SurveyController {
 
     @Autowired
     private SurveyRepository surveyRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -196,6 +200,13 @@ public class SurveyController {
 //                timer.schedule(new CloseSurveyAtEndTime(survey), survey.getEndTime());
             }
             if (published.equals("true")) {
+
+                List<Question> questions = survey.getQuestions();
+
+                if(questions.size()==0){
+                    return new ResponseEntity<>(new BadRequest(400, "Please add questions to this survey before publishing! "), HttpStatus.BAD_REQUEST);
+
+                }
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
                 // write to db
                 Date date1 = null;
@@ -227,6 +238,8 @@ public class SurveyController {
             else {
 
                    List<Question> questions = survey.getQuestions();
+
+
                    for(Question question: questions){
                        if(question.getResponses().size() >0){
                            return new ResponseEntity<>(new BadRequest(400, "Survey with id " + surveyId + " can not be unpublished as it has been already responded by some participants"), HttpStatus.BAD_REQUEST);
