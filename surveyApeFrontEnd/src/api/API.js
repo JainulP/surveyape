@@ -302,3 +302,36 @@ export const surveysGiven = (payload) =>
             console.log("This is error");
             return error;
         });
+
+
+export const saveResponse = (payload) =>
+    fetch(`${api}/response?qid=`+payload.questionId+`&email=`+payload.email+`&userid=`+payload.userid+`&surveyid=`+payload.surveyid+`&answers=`+payload.answer, {
+        method: 'POST',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        credentials:'include'})
+        .then(res => {
+            return res.json();
+        })
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
+
+export const updateResponse = (payload) =>
+    fetch(`${api}/response/`+payload.responseId+`?qid=`+payload.questionId+`&email=`+payload.email+`&userid=`+payload.userid+`&surveyid=`+payload.surveyid+`&answers=`+payload.answer, {
+        method: 'PUT',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        credentials:'include'})
+        .then(res => {
+            return res.json();
+        })
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });

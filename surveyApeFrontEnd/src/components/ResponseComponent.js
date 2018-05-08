@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import logo from '../logo.svg';
 import '../App.css';
-import Ionicon from 'react-ionicons';
+import * as  API from '../api/API';
 import StarRatingComponent from 'react-star-rating-component';
 import Calendar from 'react-calendar';
 
@@ -10,13 +9,19 @@ class ResponseComponent extends Component {
         super(props);
         this.state = {
             answer:null,
-            checked : null
+            checked : null,
+            questionId : this.props.data.questionId,
+            email : localStorage.getItem("email"),
+            userid : localStorage.getItem("userId"),
+            surveyid:this.props.surveyId,
+            responseId:null,
         }
     }
 
     onStarClick(nextValue, prevValue, name) {
-       // this.setState({answer: nextValue});
+        this.setState({answer: nextValue});
     }
+
     onChange = date => {
         this.setState({
             answer : date
@@ -51,6 +56,29 @@ class ResponseComponent extends Component {
             )
             }, this);
             return optionsList;
+        }
+    }
+    saveResponse = () =>{
+
+        if(this.state.responseId === null) {
+            var self = this.state;
+            self.questionId = this.props.data.questionId;
+            API.saveResponse(self)
+                .then((res) => {
+                    console.log(res)
+                    self.responseId = res.resId;
+                    this.setState(self);
+
+                });
+        }
+        else{
+            var self = this.state;
+            self.questionId = this.props.data.questionId;
+            API.updateResponse(self)
+                .then((res) => {
+                    console.log(res)
+
+                });
         }
     }
     renderCheckboxSingle = (data) =>{
@@ -131,13 +159,11 @@ class ResponseComponent extends Component {
       <div className="row margin-70 margin-none">
           <div className="form-group resizedTextbox">
                     <span>
-                        question
                         <div>
                             {this.state.answer}
                         </div>
                         {this.props.data.questionStr}
                     </span>
-
         <div>
               {(this.props.data.questionType === 0)?
                         <div>
@@ -262,10 +288,13 @@ class ResponseComponent extends Component {
                       </div>
               }
 
-</div>
+                </div>
               }
         </div>
-      </div>
+
+              <button type="button" className="surveyape-button" id = "saveResponse" onClick={()=>this.saveResponse()}>SAVE</button>
+
+          </div>
       </div>
     );
   }

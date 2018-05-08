@@ -24,7 +24,17 @@ class TakeSurvey extends Component {
         this.state = {
             surveyDetails:null,
             surveyId:surveyIdTemp,
-            accessCode:accessCodeTemp
+            accessCode:accessCodeTemp,
+            currentQuestion : {
+                questionId: null,
+                questionStr: null,
+                choiceType: null,
+                answerType: null,
+                questionType: null,
+                visualStyle: null,
+                options: null
+            },
+            currentIndex : 0
         }
     }
     componentWillMount(){
@@ -32,6 +42,7 @@ class TakeSurvey extends Component {
         API.getSurvey(this.state.surveyId)
             .then((res) => {
                 self.surveyDetails=res;
+                self.currentQuestion = res.questions[0];
                 this.setState(self);
                 if(res.surveyType === 1 && !this.state.accessCode){
                     alert("NO ACCESS RIGHTS")
@@ -39,7 +50,18 @@ class TakeSurvey extends Component {
                     }
             });
     }
-
+        nextClicked = () =>{
+            var self = this.state;
+            self.currentIndex = self.currentIndex + 1;
+            self.currentQuestion = self.surveyDetails.questions[self.currentIndex];
+            this.setState(self);
+        }
+        prevClicked = () =>{
+            var self = this.state;
+            self.currentIndex = self.currentIndex - 1;
+            self.currentQuestion = self.surveyDetails.questions[self.currentIndex];
+            this.setState(self);
+        }
     render() {
         var questionList = [];
         if(this.state.surveyDetails){
@@ -48,7 +70,7 @@ class TakeSurvey extends Component {
             data.map(function (temp, index) {
                 temp.surveyId = this.state.surveyId;
                 questionList.push(
-                    <ResponseComponent data={temp} number={index}/>
+                    <ResponseComponent data={temp} number={index} surveyId={this.state.surveyId}/>
                 );
             }, this);
         }
@@ -62,7 +84,10 @@ class TakeSurvey extends Component {
                         this.state.surveyDetails.surveyName:null
                 }
                 <div>
-                    {questionList}
+                    <button type="button" className="surveyape-button" id = "saveResponse" onClick={()=>this.prevClicked()}>PREVIOUS</button>
+                    <button type="button" className="surveyape-button" id = "saveResponse" onClick={()=>this.nextClicked()}>NEXT</button>
+                    <ResponseComponent data={this.state.currentQuestion} number={this.state.currentIndex} surveyId={this.state.surveyId}/>
+
                 </div>
             </div>
         );
