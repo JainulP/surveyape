@@ -138,6 +138,7 @@ public class ResponseController {
 
                     //mark all the links invalid
                     surveyLinks.setActivated(false);
+                    surveyLinks.setCompleted(true);
                     surveyLinksRepository.save(surveyLinks);
                     return new ResponseEntity<>(new BadRequest(200, "Survey is completed successfully"), HttpStatus.OK);
                 }
@@ -149,6 +150,9 @@ public class ResponseController {
 
 
     }
+
+
+
 
 
 

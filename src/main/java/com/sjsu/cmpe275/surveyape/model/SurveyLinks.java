@@ -26,6 +26,8 @@ public class SurveyLinks {
 
     private boolean activated;
 
+    private boolean isCompleted;
+
     public SurveyLinks() {
 
     }
@@ -34,13 +36,15 @@ public class SurveyLinks {
         this.survey = survey;
         this.link = link;
         this.activated = false;
+        this.isCompleted = false;
     }
 
     public SurveyLinks(Survey survey, String userEmail,String link) {
         this.survey = survey;
         this.userEmail = userEmail;
         this.link = link;
-        this.activated = true;
+        this.activated = false;
+        this.isCompleted = true;
     }
 
     public int getLinkId() {
@@ -81,5 +85,13 @@ public class SurveyLinks {
 
     public void setActivated(boolean activated) {
         this.activated = activated;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
     }
 }
