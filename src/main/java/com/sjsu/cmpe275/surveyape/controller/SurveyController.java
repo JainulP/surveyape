@@ -293,4 +293,14 @@ public class SurveyController {
         }
     }
 
+
+    @GetMapping(value = "/created/{userId}",produces="application/json")
+    public ResponseEntity<?> getCreatedAndPublishedSurveyByOwner(@PathVariable("userId")String userId){
+        List<Survey> surveys = surveyRepository.getCreatedAndPublishedSurveyByOwner(Integer.parseInt(userId));
+        if(surveys.size()>0){
+            return new ResponseEntity<>(surveys,HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(new BadRequest(400,"No surveys found Created and Published by you"),HttpStatus.NOT_FOUND);
+        }
+    }
 }

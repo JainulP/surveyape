@@ -72,10 +72,12 @@ class Dashboard extends Component {
     }
 
     componentWillMount(){
+        var self = this.state;
         API.getListOfSurveyscreated(localStorage.getItem("userId"))
             .then((res) => {
                 if(res && res.length > 0){
-
+                    self.listOfSurveys = res;
+                    this.setState(self);
                 }
             });
     }
@@ -122,7 +124,7 @@ class Dashboard extends Component {
                     </select>
                 </div>
                         <div>
-                            <button type="button" className="surveyape-button" id = "generateStats" onClick={() => this.generateStats()}>GENERATE STATS</button>
+                            <button type="button" className="surveyape-button" id = "generateStats" onClick={() => this.generateStats(this.state.surveyId)}>GENERATE STATS</button>
                         </div>
             </div>
                 </div>

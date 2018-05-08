@@ -10,6 +10,10 @@ public class StatsDto implements Serializable {
     private int participants;
     private int partipationrate;
 
+    public StatsDto() {
+
+    }
+
     public StatsDto(Date startDate, Date endDate, int participants, int partipationrate) {
         this.startDate = startDate;
         this.endDate = endDate;
