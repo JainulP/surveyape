@@ -2,6 +2,8 @@ package com.sjsu.cmpe275.surveyape.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.sjsu.cmpe275.surveyape.utils.View;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -13,8 +15,10 @@ import java.util.List;
 public class Survey {
     @Id
     @GeneratedValue
+    @JsonView(View.SurveyView.class)
     private int surveyId;
 
+    @JsonView(View.SurveyView.class)
     private String surveyName;
 
     @JsonManagedReference
@@ -27,12 +31,16 @@ public class Survey {
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Question> questions;
 
+
     private boolean published;
 
+    @JsonView(View.SurveyView.class)
     private Date endTime;
 
+    @JsonView(View.SurveyView.class)
     private Date startTime;
 
+    @JsonView(View.SurveyView.class)
     private int surveyType;//0 for open survey, 1 for closed survey, 2 for open unique survey
 
 //    private boolean completed;

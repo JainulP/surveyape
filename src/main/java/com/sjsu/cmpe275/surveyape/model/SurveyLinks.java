@@ -1,6 +1,8 @@
 package com.sjsu.cmpe275.surveyape.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.sjsu.cmpe275.surveyape.utils.View;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -13,6 +15,7 @@ public class SurveyLinks {
     @GeneratedValue
     private int linkId;
 
+    @JsonView(View.SurveyView.class)
     private String link;
 
     @JsonManagedReference
@@ -25,6 +28,12 @@ public class SurveyLinks {
 
     public SurveyLinks() {
 
+    }
+
+    public  SurveyLinks(Survey survey,String link){
+        this.survey = survey;
+        this.link = link;
+        this.activated = false;
     }
 
     public SurveyLinks(Survey survey, String userEmail,String link) {

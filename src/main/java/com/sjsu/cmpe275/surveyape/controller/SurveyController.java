@@ -1,24 +1,22 @@
 package com.sjsu.cmpe275.surveyape.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.sjsu.cmpe275.surveyape.model.*;
 import com.sjsu.cmpe275.surveyape.repository.SurveyLinksRepository;
 import com.sjsu.cmpe275.surveyape.repository.SurveyRepository;
 import com.sjsu.cmpe275.surveyape.repository.UserRepository;
 import com.sjsu.cmpe275.surveyape.service.EmailService;
+import com.sjsu.cmpe275.surveyape.utils.View;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.swing.text.html.Option;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
-import java.util.Timer;
 
 @RestController
 @RequestMapping(value = "/survey")
@@ -32,6 +30,7 @@ public class SurveyController {
 
     @Autowired
     private SurveyLinksRepository surveyLinksRepository;
+
 
     @Autowired
     private EmailService emailService;
@@ -53,6 +52,11 @@ public class SurveyController {
         try {
             date = sdf.parse(endTime);
             survey = surveyRepository.save(new Survey(surveyName, sdf.parse(endTime),Integer.parseInt(surveyType), user));
+            if(Integer.parseInt(surveyType) == 0 || Integer.parseInt(surveyType) == 0){//generate predefined url for general and open unique surveys
+                int surveyId = survey.getSurveyId();
+                String url = "127.0.0.1:8080/" + surveyId;
+                surveyLinksRepository.save(new SurveyLinks(survey,url));
+            }
         } catch (ParseException e) {
             return new ResponseEntity<>(new BadRequest(400, "Invalid Date"), HttpStatus.BAD_REQUEST);
 //            e.printStackTrace();
@@ -250,6 +254,17 @@ public class SurveyController {
             surveyLinksRepository.save(link);
         }
     }
+
+
+    @JsonView(View.SurveyView.class)
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getGeneralAndOpenSurvey() {
+        
+        List<Survey> surveys = surveyRepository.getGeneralAndOpenSurvey();
+        return new ResponseEntity<>(surveys, HttpStatus.OK);
+
+    }
+
 
 
 
