@@ -190,7 +190,7 @@ export const addParticipants = (payload) =>
 
 export const createQuestion = (payload) =>
     fetch(`${api}/question?questionStr=`+payload.questionStr+`&answerType=`+payload.answerType+`&choiceType=`+payload.choiceType+`&questionType=`+payload.questionType+
-        `&options=`+payload.options+`&surveyId=`+payload.surveyId +`&visualStyle=` +payload.visualStyle, {
+        `&options=`+payload.options+`&surveyId=`+payload.surveyId +`&visual=` +payload.visualStyle, {
         method: 'POST',
         headers: {
             ...headers,
@@ -207,7 +207,7 @@ export const createQuestion = (payload) =>
 
 export const updateQuestion = (payload) =>
     fetch(`${api}/question?questionId=`+payload.questionId+`&questionStr=`+payload.questionStr+`&answerType=`+payload.answerType+`&choiceType=`+payload.choiceType+`&questionType=`+payload.questionType+
-        `&options=`+payload.options+`&surveyId=`+payload.surveyId+`&visualStyle=` +payload.visualStyle, {
+        `&options=`+payload.options+`&surveyId=`+payload.surveyId+`&visual=` +payload.visualStyle, {
         method: 'PUT',
         headers: {
             ...headers,
