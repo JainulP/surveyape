@@ -197,6 +197,8 @@ class CreateSurvey extends Component {
                             </div>
                         </div>
                     </div>
+                    {
+                        (this.state.createSurveyResponse.surveyType === 1 || this.state.createSurveyResponse.surveyType === 0)?
                     <div className="row">
                         <div className="col-md-10 margin-70">
                             <span>
@@ -225,6 +227,8 @@ class CreateSurvey extends Component {
                             </div>
                         </div>
                     </div>
+                        :null
+                    }
 <div className="row margin-70">
     <button type="button" className="surveyape-button" id = "publishSurvey" onClick={()=>this.publishSurvey()}>PUBLISH</button>
 </div>

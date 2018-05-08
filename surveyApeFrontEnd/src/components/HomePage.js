@@ -17,13 +17,10 @@ import ViewSurvey from './ViewSurvey.js';
 class HomePage extends Component {
     constructor(props) {
         super(props);
-        var surveyIdTemp = null;
-
         this.state = {
             surveyId: null
         }
     }
-
     loginUser = (data) => {
         API.login(data)
             .then((res) => {
@@ -136,7 +133,15 @@ class HomePage extends Component {
                 <Route exact path="/survey/*" render={() =>
                     (
                         <div>
+                            {
+                                (localStorage.getItem("userId"))?
+                                    <TopMenu/>:null
+                            }
                             <TakeSurvey surveyId={this.state.surveyId} />
+                            {
+                                (localStorage.getItem("userId"))?
+                                    <Footer/>:null
+                            }
                         </div>
                     )}/>
             </div>
