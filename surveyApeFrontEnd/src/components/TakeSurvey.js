@@ -11,15 +11,19 @@ import {GetComponent} from '../actions/actionsAll';
 class TakeSurvey extends Component {
     constructor(props){
         var surveyIdTemp = null;
+        var accessCodeTemp = null;
         if(props.location.pathname.indexOf("survey") > 0){
             var loc = props.location.pathname;
-            surveyIdTemp = loc.substr(loc.indexOf("y")+2);
-            // this.props.history.push("/survey");
+            var temp = loc.substr(loc.indexOf("y")+2);
+            var a = temp.split("/");
+            surveyIdTemp = a[0];
+            accessCodeTemp = a[1];
         }
         super(props);
         this.state = {
             surveyDetails:null,
-            surveyId:surveyIdTemp
+            surveyId:surveyIdTemp,
+            accessCode:accessCodeTemp
         }
     }
     componentWillMount(){
@@ -28,13 +32,18 @@ class TakeSurvey extends Component {
             .then((res) => {
                 self.surveyDetails=res;
                 this.setState(self);
+                if(res.surveyType === 1 && !this.state.accessCode){
+                        alert("NO ACCESS RIGHTS")
+                    this.props.history.push("/");
+                    }
             });
+
     }
 
     render() {
         return (
             <div>
-                Take Survey {this.props.surveyId}
+                Take Survey {this.state.surveyId} | {this.state.accessCode}
                |  Survey Name:
                 {
                     (this.state.surveyDetails)?
