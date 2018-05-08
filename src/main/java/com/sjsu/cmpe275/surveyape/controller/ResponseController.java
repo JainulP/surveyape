@@ -93,18 +93,19 @@ public class ResponseController {
                 if (userOptional.isPresent()) {
                     User user = userOptional.get();
                     Responses responses = new Responses(question, answers, user, user.getEmail(), surveyid);
-                    responsesRepository.save(responses);
-                    return new ResponseEntity<>("Response saved", HttpStatus.OK);
+                    Responses responsestmp = responsesRepository.save(responses);
+                    return new ResponseEntity<>(responsestmp, HttpStatus.OK);
                 } else {
                     return new ResponseEntity<>(new BadRequest(404, "Invalid user"), HttpStatus.BAD_REQUEST);
                 }
             } else {
+                Responses responses = new Responses();
                 if (email == null) {
-                    responsesRepository.save(new Responses(question, answers, null, "Anonymous", surveyid));
+                    responses=responsesRepository.save(new Responses(question, answers, null, "Anonymous", surveyid));
                 } else {
-                    responsesRepository.save(new Responses(question, answers, null, email, surveyid));
+                    responses= responsesRepository.save(new Responses(question, answers, null, email, surveyid));
                 }
-                return new ResponseEntity<>(new BadRequest(200, "Response saved"), HttpStatus.OK);
+                return new ResponseEntity<>(responses, HttpStatus.OK);
             }
         } else {
             return new ResponseEntity<>(new BadRequest(400, "Invalid question"), HttpStatus.BAD_REQUEST);
@@ -127,7 +128,7 @@ public class ResponseController {
                         Responses response = responsesOptional.get();
                         response.setAnswers(answers);
                         responsesRepository.save(response);
-                        return new ResponseEntity<>(new BadRequest(200, "Response saved"), HttpStatus.OK);
+                        return new ResponseEntity<>(response, HttpStatus.OK);
                     }
                     else{
                         return new ResponseEntity<>(new BadRequest(200, "Error in updating your response. Please try again later"), HttpStatus.OK);
