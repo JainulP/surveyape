@@ -1,17 +1,13 @@
 package com.sjsu.cmpe275.surveyape.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sjsu.cmpe275.surveyape.model.*;
 import com.sjsu.cmpe275.surveyape.repository.SurveyLinksRepository;
 import com.sjsu.cmpe275.surveyape.repository.SurveyRepository;
 import com.sjsu.cmpe275.surveyape.repository.UserRepository;
 import com.sjsu.cmpe275.surveyape.service.EmailService;
 import com.sjsu.cmpe275.surveyape.utils.View;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jackson.JsonObjectSerializer;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -276,7 +272,6 @@ public class SurveyController {
         List<Survey> completedSurveysForUser = surveyRepository.getCompletedSurveysForUser(Integer.parseInt(userId));
         List<Survey> incompletedSurveysForUser = surveyRepository.getinCompletedSurveysForUser(Integer.parseInt(userId));
 
-
         HashMap<String,List<Survey>> map = new HashMap<>();
         map.put("completed", completedSurveysForUser);
         map.put("incompleted",incompletedSurveysForUser);
@@ -284,6 +279,18 @@ public class SurveyController {
 //        json.put("incompleted",incompletedSurveysForUser);
         return new ResponseEntity<>(map, HttpStatus.OK);
 
+    }
+
+    /* For stats */
+
+    @GetMapping(value = "/surveystats/{surveyid}",produces="application/json")
+    public ResponseEntity<?> getStatsForSurvey(@PathVariable("surveyid")String surveyId){
+        StatsDto dto = surveyRepository.getSurveyStatsByTimeAndParticipants(surveyId);
+        if(dto!=null){
+            return new ResponseEntity<>(dto,HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(new BadRequest(400,"No stats found for this survey"),HttpStatus.NOT_FOUND);
+        }
     }
 
 }
