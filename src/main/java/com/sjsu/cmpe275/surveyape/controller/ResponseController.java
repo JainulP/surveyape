@@ -88,7 +88,7 @@ public class ResponseController {
         Optional<Question> questionOptional = questionRepository.findById(questionId);
         if (questionOptional.isPresent()) {
             Question question = questionOptional.get();
-            if (userId != "" && !userId.isEmpty() && !userId.equals("null")) {
+            if (userId != "" && !userId.isEmpty() && !userId.equals("null") ) {
                 Optional<User> userOptional = userRepository.findById(Integer.parseInt(userId));
                 if (userOptional.isPresent()) {
                     User user = userOptional.get();
@@ -115,12 +115,12 @@ public class ResponseController {
     }
 
     @PutMapping(value = "/response/{resId}", produces = "application/json")
-    public ResponseEntity<?> updateResponses(@PathVariable int resId,@RequestParam String answers, @RequestParam(name = "qid") int questionId, @RequestParam(name = "email", required = false) String email, @RequestParam(name = "userid", required = false) Integer userId, @RequestParam(name = "surveyid") String surveyid) {
+    public ResponseEntity<?> updateResponses(@PathVariable int resId,@RequestParam String answers, @RequestParam(name = "qid") int questionId, @RequestParam(name = "email", required = false) String email, @RequestParam(name = "userid", required = false) String userId, @RequestParam(name = "surveyid") String surveyid) {
         Optional<Question> questionOptional = questionRepository.findById(questionId);
         if (questionOptional.isPresent()) {
             Question question = questionOptional.get();
-            if (userId != null) {
-                Optional<User> userOptional = userRepository.findById(userId);
+            if (userId != "" && !userId.isEmpty() && !userId.equals("null")) {
+                Optional<User> userOptional = userRepository.findById(Integer.parseInt(userId));
                 if (userOptional.isPresent()) {
                     User user = userOptional.get();
                     Optional<Responses> responsesOptional = responsesRepository.findById(resId);
@@ -139,7 +139,17 @@ public class ResponseController {
                     return new ResponseEntity<>(new BadRequest(404, "Invalid user"), HttpStatus.BAD_REQUEST);
                 }
             } else {
-                return new ResponseEntity<>(new BadRequest(200, "Response saved"), HttpStatus.OK);
+                Optional<Responses> responsesOptional = responsesRepository.findById(resId);
+                if(responsesOptional.isPresent()){
+                    Responses response = responsesOptional.get();
+                    response.setAnswers(answers);
+                    responsesRepository.save(response);
+                    return new ResponseEntity<>(response, HttpStatus.OK);
+                }
+                else{
+                    return new ResponseEntity<>(new BadRequest(200, "Error in updating your response. Please try again later"), HttpStatus.OK);
+
+                }
             }
         } else {
             return new ResponseEntity<>(new BadRequest(400, "Invalid question"), HttpStatus.BAD_REQUEST);
