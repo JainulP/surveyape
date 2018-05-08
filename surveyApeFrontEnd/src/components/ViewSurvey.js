@@ -12,17 +12,45 @@ class ViewSurvey extends Component {
     constructor(props){
         super(props);
         this.state = {
-
+            surveysCreated :[],
+            surveysGiven:[]
         }
     }
-    componentDidMount(){
-
+    componentWillMount(){
+        var self = this.state;
+        API.surveyscreated(localStorage.getItem("userId"))
+            .then((res) => {
+                if(res){
+                    self.surveysCreated = res;
+                    API.surveyscreated(localStorage.getItem("userId"))
+                        .then((res) => {
+                            if(res) {
+                                self.surveysGiven = res;
+                                this.setState(self);
+                            }
+                            else{
+                                alert("Try again later");
+                            }
+                        });
+                }
+                else{
+                    alert("Try again later");
+                }
+            });
     }
-
     render() {
         return (
-            <div>
-                View Survey
+            <div className="row margin-none">
+               <div className="row margin-70 margin-none">
+                   <div className="surveyname-head">
+                       SURVEYS CREATED
+                   </div>
+               </div>
+                <div className="row margin-70 margin-none">
+                    <div className="surveyname-head">
+                        SURVEYS GIVEN
+                    </div>
+                </div>
             </div>
         );
     }

@@ -42,9 +42,15 @@ class TopMenu extends Component {
         var self = this.state;
         self.loggedout = false;
         this.setState(self);
-localStorage.clear();
+        localStorage.clear();
         this.props.history.push("/");
 
+    }
+    goToHome = () =>{
+        this.props.history.push("/");
+    }
+    GoToEditSurvey = () =>{
+        this.props.history.push("/editSurvey");
     }
     render() {
         return (
@@ -65,7 +71,7 @@ localStorage.clear();
                             <a className="s padding-left-25 cursor-pointer" onClick={ () =>{this.GoToViewSurvey()}}>VIEW</a>
                         </span>
                         <span>
-                            <a className="s padding-left-25 cursor-pointer" onClick={ () =>{this.GoToTakeSurvey()}}>TAKE</a>
+                            <a className="s padding-left-25 cursor-pointer" onClick={ () =>{this.GoToEditSurvey()}}>EDIT</a>
                         </span>
                                     </span>
                                     :null
@@ -76,6 +82,11 @@ localStorage.clear();
                         {
                             (this.state.loggedout == true && localStorage.getItem("userId")) ?
                                 <span>
+                                    <span>
+                        <a className="s padding-left-25 cursor-pointer" onClick={() => {
+                            this.goToHome()
+                        }}>HOME</a>
+                    </span>
                                 <span>
                         <a className="s padding-left-25 cursor-pointer" onClick={() => {
                             this.GoToDashboard()
