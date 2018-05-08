@@ -272,7 +272,7 @@ export const getListOfSurveyscreated = (payload) =>
         });
 
 export const surveyStats = (payload) =>
-    fetch(`${api}/survey/`+payload, {
+    fetch(`${api}/survey/surveystats/`+payload, {
         method: 'GET',
         headers: {
             ...headers,
