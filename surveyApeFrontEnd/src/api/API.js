@@ -236,3 +236,36 @@ export const deleteQuestion = (payload) =>
             console.log("This is error");
             return error;
         });
+
+/* survey stats */
+export const getListOfSurveys = (payload) =>
+    fetch(`${api}/survey/`+payload, {
+        method: 'GET',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        credentials:'include'})
+        .then(res => {
+            return res.json();
+        })
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
+
+export const surveyStats = (payload) =>
+    fetch(`${api}/survey/`+payload, {
+        method: 'GET',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        credentials:'include'})
+        .then(res => {
+            return res.json();
+        })
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
