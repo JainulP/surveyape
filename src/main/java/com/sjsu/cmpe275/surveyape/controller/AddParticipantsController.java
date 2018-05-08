@@ -48,8 +48,8 @@ public class AddParticipantsController {
                     emailService.sendUniqueInvitationForGeneralSurveyUsers(emails, null, surveyId);
 
                 }
-//                   for(String email : emails) {
-//                         SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey,email,url));
+                   for(String email : emails) {
+                         SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey,email,url));
 //                       try {
 //                           String QR_CODE_IMAGE_PATH = "/Users/jainulpatel/Documents/GitHub/surveyape/src/main/java/com/sjsu/cmpe275/surveyape/QRCodes/"+ email + surveyId+"MyQRCode.png" ;
 //                           qrCodeService.generateQRCodeImage(url,350,350,QR_CODE_IMAGE_PATH);
@@ -58,9 +58,9 @@ public class AddParticipantsController {
 //                       } catch (IOException e) {
 //                           e.printStackTrace();
 //                       }
-//                         surveyLinks.add(links);
-//
-//                    }
+                         surveyLinks.add(links);
+
+                    }
                 return new ResponseEntity<>(new BadRequest(200, "Participants have been successfully added"), HttpStatus.OK);
             }else if(survey.getSurveyType() == 1){//closed survey
                 if(survey.getPublished() == true){
