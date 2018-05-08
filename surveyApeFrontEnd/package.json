@@ -10,6 +10,7 @@
     "prop-types": "^15.6.1",
     "react": "^15.6.2",
     "react-bootstrap": "^0.31.5",
+    "react-calendar": "^2.14.0",
     "react-chartjs-2": "^2.7.2",
     "react-dom": "^15.6.2",
     "react-dual-rangeslider": "^1.2.16",

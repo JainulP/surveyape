@@ -256,7 +256,7 @@ export const deleteQuestion = (payload) =>
 
 /* survey stats */
 export const getListOfSurveyscreated = (payload) =>
-    fetch(`${api}/survey/`+payload, {
+    fetch(`${api}/survey/created/`+payload, {
         method: 'GET',
         headers: {
             ...headers,
