@@ -84,12 +84,12 @@ public class ResponseController {
      * @return
      */
     @PostMapping(value = "/response", produces = "application/json")
-    public ResponseEntity<?> addResponses(@RequestParam String answers, @RequestParam(name = "qid") int questionId, @RequestParam(name = "email", required = false) String email, @RequestParam(name = "userid", required = false) Integer userId, @RequestParam(name = "surveyid") String surveyid) {
+    public ResponseEntity<?> addResponses(@RequestParam String answers, @RequestParam(name = "qid") int questionId, @RequestParam(name = "email", required = false) String email, @RequestParam(name = "userid", required = false) String userId, @RequestParam(name = "surveyid") String surveyid) {
         Optional<Question> questionOptional = questionRepository.findById(questionId);
         if (questionOptional.isPresent()) {
             Question question = questionOptional.get();
-            if (userId != null) {
-                Optional<User> userOptional = userRepository.findById(userId);
+            if (userId != "" && !userId.isEmpty() && !userId.equals("null")) {
+                Optional<User> userOptional = userRepository.findById(Integer.parseInt(userId));
                 if (userOptional.isPresent()) {
                     User user = userOptional.get();
                     Responses responses = new Responses(question, answers, user, user.getEmail(), surveyid);
@@ -100,7 +100,7 @@ public class ResponseController {
                 }
             } else {
                 Responses responses = new Responses();
-                if (email == null) {
+                if (email == null || email.equals("null") || email.isEmpty()) {
                     responses=responsesRepository.save(new Responses(question, answers, null, "Anonymous", surveyid));
                 } else {
                     responses= responsesRepository.save(new Responses(question, answers, null, email, surveyid));
