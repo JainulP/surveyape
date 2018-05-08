@@ -38,11 +38,12 @@ public class Responses {
 
     }
 
-    public Responses(Question question, String answers,User userId, String email) {
+    public Responses(Question question, String answers,User userId, String email, String surveyId) {
         this.userId = userId;
         this.setQuestion(question);
         this.answers = answers;
         this.email = email;
+        this.surveyId = surveyId;
 
     }
 
