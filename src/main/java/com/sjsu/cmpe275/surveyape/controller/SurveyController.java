@@ -52,9 +52,9 @@ public class SurveyController {
         try {
             date = sdf.parse(endTime);
             survey = surveyRepository.save(new Survey(surveyName, sdf.parse(endTime),Integer.parseInt(surveyType), user));
-            if(Integer.parseInt(surveyType) == 0 || Integer.parseInt(surveyType) == 0){//generate predefined url for general and open unique surveys
+            if(Integer.parseInt(surveyType) == 0 || Integer.parseInt(surveyType) == 2){//generate predefined url for general and open unique surveys
                 int surveyId = survey.getSurveyId();
-                String url = "127.0.0.1:8080/" + surveyId;
+                String url = "127.0.0.1:3000/" + surveyId;
                 surveyLinksRepository.save(new SurveyLinks(survey,url));
             }
         } catch (ParseException e) {

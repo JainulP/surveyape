@@ -18,16 +18,11 @@ class HomePage extends Component {
     constructor(props) {
         super(props);
         var surveyIdTemp = null;
-        if(props.location.pathname.indexOf("survey") > 0){
-            var loc = props.location.pathname;
-            surveyIdTemp = loc.substr(loc.indexOf("y")+2);
-           // this.props.history.push("/survey");
-        }
+
         this.state = {
-            surveyId: surveyIdTemp
+            surveyId: null
         }
     }
-
 
     loginUser = (data) => {
         API.login(data)

@@ -12,6 +12,6 @@ import java.util.List;
 public interface SurveyRepository extends CrudRepository<Survey, Integer> {
 
 
-    @Query(value = "SELECT DISTINCT * from survey s, survey_links sl where s.survey_id = sl.survey_survey_id AND (s.survey_type=0 OR s.survey_type=2 ) AND  s.published = true AND sl.user_email = '' ", nativeQuery = true)
+    @Query(value = "SELECT DISTINCT * from survey s where  (s.survey_type=0 OR s.survey_type=2 ) AND  s.published = true ", nativeQuery = true)
     List<Survey> getGeneralAndOpenSurvey();
 }

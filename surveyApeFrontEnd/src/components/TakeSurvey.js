@@ -10,14 +10,21 @@ import {GetComponent} from '../actions/actionsAll';
 
 class TakeSurvey extends Component {
     constructor(props){
+        var surveyIdTemp = null;
+        if(props.location.pathname.indexOf("survey") > 0){
+            var loc = props.location.pathname;
+            surveyIdTemp = loc.substr(loc.indexOf("y")+2);
+            // this.props.history.push("/survey");
+        }
         super(props);
         this.state = {
-            surveyDetails:null
+            surveyDetails:null,
+            surveyId:surveyIdTemp
         }
     }
     componentWillMount(){
         var self = this.state;
-        API.getSurvey(this.props.surveyId)
+        API.getSurvey(this.state.surveyId)
             .then((res) => {
                 self.surveyDetails=res;
                 this.setState(self);

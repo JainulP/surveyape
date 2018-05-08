@@ -123,6 +123,15 @@ saveQuestion = () =>{
                 return '';
         }
     }
+    renderOptions(param){
+        var optionsList = [];
+        param.map(function (temp, index) {
+            optionsList.push(
+                <div>{temp}</div>
+            );
+        },this);
+        return optionsList;
+    }
     render() {
         return (
             <div id="mainDiv" name="mainDiv">
@@ -230,6 +239,7 @@ saveQuestion = () =>{
                                                 });
                                             }}
                                     >
+                                        <option value=""> </option>
                                         <option value="2">Checkbox</option>
                                         {
                                             (this.state.answerType === "0") ?
@@ -333,6 +343,18 @@ saveQuestion = () =>{
                                     </div>
                                     :null
                             }
+                                {
+                                    (this.state.options !== null)?
+                                        <div>
+                                    <span>
+                                    Options :
+                                    </span>
+                                            <span>
+                                        {this.renderOptions(this.state.options)}
+                                    </span>
+                                        </div>
+                                        :null
+                                }
                         </div>
                             <div className="col-md-8">
                                 <button type="button" className="surveyape-button" id = "editQuestion" onClick={() => this.editQuestion()}>EDIT</button>
