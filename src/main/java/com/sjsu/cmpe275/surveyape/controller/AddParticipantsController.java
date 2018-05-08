@@ -9,6 +9,7 @@ import com.sjsu.cmpe275.surveyape.repository.SurveyLinksRepository;
 import com.sjsu.cmpe275.surveyape.repository.SurveyRepository;
 import com.sjsu.cmpe275.surveyape.service.EmailService;
 //import com.sjsu.cmpe275.surveyape.service.QRCodeService;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,6 +32,9 @@ public class AddParticipantsController {
 //    private QRCodeService qrCodeService;
 
     @Autowired
+    private SurveyController surveyController;
+
+    @Autowired
     private SurveyRepository surveyRepository;
 
     @Autowired
@@ -44,12 +48,9 @@ public class AddParticipantsController {
         if(survey != null) {
             if(survey.getSurveyType() == 0){//general open survey
                  String url = "127.0.0.1:8080/"+surveyId;
-                if(survey.getPublished() == true){
-                    emailService.sendUniqueInvitationForGeneralSurveyUsers(emails, null, surveyId);
 
-                }
-                   for(String email : emails) {
-                         SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey,email,url));
+                for(String email : emails) {
+                    SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey,email,url));
 //                       try {
 //                           String QR_CODE_IMAGE_PATH = "/Users/jainulpatel/Documents/GitHub/surveyape/src/main/java/com/sjsu/cmpe275/surveyape/QRCodes/"+ email + surveyId+"MyQRCode.png" ;
 //                           qrCodeService.generateQRCodeImage(url,350,350,QR_CODE_IMAGE_PATH);
@@ -58,19 +59,28 @@ public class AddParticipantsController {
 //                       } catch (IOException e) {
 //                           e.printStackTrace();
 //                       }
-                         surveyLinks.add(links);
+                    surveyLinks.add(links);
 
-                    }
+                }
+                if(survey.getPublished() == true){
+                    emailService.sendUniqueInvitationForGeneralSurveyUsers(emails, null, surveyId);
+                    surveyController.activateSurveyLink(survey);
+
+                }
+
+
                 return new ResponseEntity<>(new BadRequest(200, "Participants have been successfully added"), HttpStatus.OK);
             }else if(survey.getSurveyType() == 1){//closed survey
-                if(survey.getPublished() == true){
-                    emailService.sendUniqueInvitationForClosedSurveyUsers(emails, null, surveyId);
-                }
                 for(String email : emails) {
                     String url = "127.0.0.1:8080/"+surveyId+"/"+ Base64.getEncoder().encodeToString(email.getBytes());
                     SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey,email,url));
                     surveyLinks.add(links);
                 }
+                if(survey.getPublished() == true){
+                    emailService.sendUniqueInvitationForClosedSurveyUsers(emails, null, surveyId);
+                    surveyController.activateSurveyLink(survey);
+                }
+
                 return new ResponseEntity<>(new BadRequest(200, "Participants have been successfully added"), HttpStatus.OK);
             }
             return  null;

@@ -5,6 +5,7 @@ import com.sjsu.cmpe275.surveyape.model.Survey;
 import com.sjsu.cmpe275.surveyape.utils.View;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -14,4 +15,10 @@ public interface SurveyRepository extends CrudRepository<Survey, Integer> {
 
     @Query(value = "SELECT DISTINCT * from survey s where  (s.survey_type=0 OR s.survey_type=2 ) AND  s.published = true ", nativeQuery = true)
     List<Survey> getGeneralAndOpenSurvey();
+
+    @Query(value = "SELECT DISTINCT * from survey s, survey_links sl where  s.survey_id = sl.survey_survey_id  AND sl.user_id = :userId  AND sl.is_completed=1", nativeQuery = true)
+    List<Survey> getCompletedSurveysForUser(@Param("userId") int userId);
+
+    @Query(value = "SELECT DISTINCT * from survey s, survey_links sl where  s.survey_id = sl.survey_survey_id  AND sl.user_id = :userId  AND sl.is_completed=0", nativeQuery = true)
+    List<Survey> getinCompletedSurveysForUser(@Param("userId") int userId);
 }

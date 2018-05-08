@@ -12,7 +12,7 @@ public interface SurveyLinksRepository extends CrudRepository<SurveyLinks, Integ
 
     List<SurveyLinks> getSurveyLinksBySurvey(Survey survey);
 
-    @Query(value = "SELECT DISTINCT user_email FROM SurveyApe.survey_links sl WHERE sl.survey_survey_id = :surveyId",
+    @Query(value = "SELECT DISTINCT user_email FROM SurveyApe.survey_links sl WHERE sl.survey_survey_id = :surveyId AND user_email IS NOT NULL",
             nativeQuery = true)
     List<String> getEmailsBySurvey(@Param("surveyId") String surveyId);
 

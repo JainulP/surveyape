@@ -1,17 +1,22 @@
 package com.sjsu.cmpe275.surveyape.controller;
 
 import com.sjsu.cmpe275.surveyape.model.BadRequest;
+import com.sjsu.cmpe275.surveyape.model.Survey;
 import com.sjsu.cmpe275.surveyape.model.User;
+import com.sjsu.cmpe275.surveyape.repository.SurveyRepository;
 import com.sjsu.cmpe275.surveyape.repository.UserRepository;
 import com.sjsu.cmpe275.surveyape.service.EmailService;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -22,6 +27,8 @@ public class UserController {
     private UserRepository userRepository;
     private EmailService emailService;
 
+    @Autowired
+    private SurveyRepository surveyRepository;
 
     @Autowired
     private UserController(UserRepository uRepo, EmailService eService) {
@@ -92,6 +99,9 @@ public class UserController {
         }
 
     }
+
+
+
 
 
 }
