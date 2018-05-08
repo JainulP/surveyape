@@ -12,17 +12,27 @@ class TakeSurvey extends Component {
     constructor(props){
         super(props);
         this.state = {
-
+            surveyDetails:null
         }
     }
-    componentDidMount(){
-
+    componentWillMount(){
+        var self = this.state;
+        API.getSurvey(this.props.surveyId)
+            .then((res) => {
+                self.surveyDetails=res;
+                this.setState(self);
+            });
     }
 
     render() {
         return (
             <div>
-                Take Survey
+                Take Survey {this.props.surveyId}
+               |  Survey Name:
+                {
+                    (this.state.surveyDetails)?
+                        this.state.surveyDetails.surveyName:null
+                }
             </div>
         );
     }

@@ -43,6 +43,7 @@ class TopMenu extends Component {
         self.loggedout = false;
         this.setState(self);
 localStorage.clear();
+        this.props.history.push("/");
 
     }
     render() {
