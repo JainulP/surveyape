@@ -57,7 +57,7 @@ public class EmailService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setSubject("Invitation to the closed survey");
             for (String email : emails) {
-                String url = "127.0.0.1:8080/"+surveyId+"/"+ Base64.getEncoder().encodeToString(email.getBytes());
+                String url = "127.0.0.1:3000/"+surveyId+"/"+ Base64.getEncoder().encodeToString(email.getBytes());
                 message.setText(url);
                 message.setTo(email);
                 emailSender.send(message);
