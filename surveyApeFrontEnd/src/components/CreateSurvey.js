@@ -85,11 +85,16 @@ class CreateSurvey extends Component {
             });
     }
     publishSurvey = () =>{
-        API.publishSurvey(this.state.createSurveyResponse.surveyId)
-            .then((res) => {
-            console.log(res)
-                window.location = "http://localhost:3000/"
-            });
+        if(this.state.questions.length > 0){
+            API.publishSurvey(this.state.createSurveyResponse.surveyId)
+                .then((res) => {
+                    console.log(res)
+                    window.location = "http://localhost:3000/"
+                });
+        }
+        else{
+            alert("No questions added")
+        }
     }
     renderSurveyTypeSwitch(param) {
         switch(param) {

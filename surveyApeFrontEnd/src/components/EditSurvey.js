@@ -93,16 +93,21 @@ class EditSurvey extends Component {
             });
     }
     publishSurvey = () =>{
-        API.publishSurvey(this.state.surveyId)
-            .then((res) => {
-                if(res){
-                    alert("published")
-                    window.location = "http://localhost:3000/";
-                }
-                else{
-                    alert("Please try again")
-                }
-            });
+        if(this.state.questions.length > 0){
+            API.publishSurvey(this.state.surveyId)
+                .then((res) => {
+                    if(res){
+                        alert("published")
+                        window.location = "http://localhost:3000/";
+                    }
+                    else{
+                        alert("Please try again")
+                    }
+                });
+        }
+        else{
+            alert("No questions added")
+        }
     }
     addParticipants = () =>{
         var data = {

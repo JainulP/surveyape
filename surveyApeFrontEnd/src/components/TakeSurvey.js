@@ -76,14 +76,14 @@ class TakeSurvey extends Component {
         }
         }
         return (
-            <div>
-                Take Survey {this.state.surveyId} | {this.state.accessCode}
-               |  Survey Name:
+            <div> Survey Name:
                 {
                     (this.state.surveyDetails)?
                         this.state.surveyDetails.surveyName:null
                 }
                 <div>
+                    <div className="pad-top-20">
+                    </div>
                     <button type="button" className="surveyape-button" id = "saveResponse" onClick={()=>this.prevClicked()}>PREVIOUS</button>
                     <button type="button" className="surveyape-button" id = "saveResponse" onClick={()=>this.nextClicked()}>NEXT</button>
                     <ResponseComponent data={this.state.currentQuestion} number={this.state.currentIndex} surveyId={this.state.surveyId}/>
