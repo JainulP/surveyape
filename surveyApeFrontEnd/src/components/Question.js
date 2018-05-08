@@ -125,11 +125,13 @@ saveQuestion = () =>{
     }
     renderOptions(param){
         var optionsList = [];
-        param.map(function (temp, index) {
-            optionsList.push(
-                <div>{temp}</div>
-            );
-        },this);
+        if(param && param.length>0) {
+            param.map(function (temp, index) {
+                optionsList.push(
+                    <div>{temp}</div>
+                );
+            }, this);
+        }
         return optionsList;
     }
     render() {
@@ -301,17 +303,17 @@ saveQuestion = () =>{
                             </div>
                             <div>
                                 <span>
-                                    Question Type :
+                                    Question Type
                                 </span>
                                 <span>
                                     {this.renderQuestionTypeSwitch(this.state.questionType)}
                                    </span>
                             </div>
                             {
-                                (this.state.choiceType !== null) ?
+                                (this.state.choiceType !== null || this.state.choiceType !== "null") ?
                                     <div>
                                 <span>
-                                   Choice type :
+                                   Choice type
                                 </span>
                                         <span>
                                             {this.renderChoiceSwitch(this.state.choiceType)}
@@ -323,7 +325,7 @@ saveQuestion = () =>{
                                 (this.state.answerType !== null)?
                                     <div>
                                 <span>
-                                    Answer type :
+                                    Answer type
                                 </span>
                                 <span>
                                     {this.renderAnswerTypeSwitch(this.state.answerType)}
@@ -335,7 +337,7 @@ saveQuestion = () =>{
                                 (this.state.visualStyle !== null)?
                                     <div>
                                     <span>
-                                    Visual style :
+                                    Visual style
                                     </span>
                                     <span>
                                         {this.renderVisualTypeSwitch(this.state.visualStyle)}
@@ -347,7 +349,7 @@ saveQuestion = () =>{
                                     (this.state.options !== null)?
                                         <div>
                                     <span>
-                                    Options :
+                                    Options
                                     </span>
                                             <span>
                                         {this.renderOptions(this.state.options)}

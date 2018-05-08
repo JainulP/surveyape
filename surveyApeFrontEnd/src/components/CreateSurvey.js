@@ -88,6 +88,7 @@ class CreateSurvey extends Component {
         API.publishSurvey(this.state.createSurveyResponse.surveyId)
             .then((res) => {
             console.log(res)
+                window.location = "http://localhost:3000/"
             });
     }
     renderSurveyTypeSwitch(param) {

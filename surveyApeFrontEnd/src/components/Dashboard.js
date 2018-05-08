@@ -72,7 +72,7 @@ class Dashboard extends Component {
     }
 
     componentWillMount(){
-        API.getListOfSurveys(localStorage.getItem("userId"))
+        API.getListOfSurveyscreated(localStorage.getItem("userId"))
             .then((res) => {
                 if(res && res.length > 0){
 

@@ -18,11 +18,11 @@ class ViewSurvey extends Component {
     }
     componentWillMount(){
         var self = this.state;
-        API.surveyscreated(localStorage.getItem("userId"))
+        API.getListOfSurveyscreated(localStorage.getItem("userId"))
             .then((res) => {
                 if(res){
                     self.surveysCreated = res;
-                    API.surveyscreated(localStorage.getItem("userId"))
+                    API.surveysGiven(localStorage.getItem("userId"))
                         .then((res) => {
                             if(res) {
                                 self.surveysGiven = res;

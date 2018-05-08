@@ -13,6 +13,7 @@ import Dashboard from './Dashboard.js';
 import CreateSurvey from './CreateSurvey.js';
 import TakeSurvey from './TakeSurvey.js';
 import ViewSurvey from './ViewSurvey.js';
+import EditSurvey from './EditSurvey.js';
 
 class HomePage extends Component {
     constructor(props) {
@@ -95,11 +96,11 @@ class HomePage extends Component {
                         </div>
                     )}/>
 
-                <Route exact path="/takeSurvey" render={() =>
+                <Route exact path="/editSurvey" render={() =>
                     (
                         <div>
                             <TopMenu/>
-                            <TakeSurvey/>
+                            <EditSurvey/>
                             <Footer/>
                         </div>
                     )}/>
