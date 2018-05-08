@@ -10,7 +10,7 @@ class EditSurvey extends Component {
         this.state = {
             listOfSurveys:[
                 {
-                    surveyId: 31,
+                    surveyId: 108,
                     surveyName: "survey_manasa"
                 },
                 {

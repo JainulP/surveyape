@@ -7,6 +7,7 @@ import * as  API from '../api/API';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {GetComponent} from '../actions/actionsAll';
+import ResponseComponent from "./ResponseComponent";
 
 class TakeSurvey extends Component {
     constructor(props){
@@ -33,14 +34,25 @@ class TakeSurvey extends Component {
                 self.surveyDetails=res;
                 this.setState(self);
                 if(res.surveyType === 1 && !this.state.accessCode){
-                        alert("NO ACCESS RIGHTS")
+                    alert("NO ACCESS RIGHTS")
                     this.props.history.push("/");
                     }
             });
-
     }
 
     render() {
+        var questionList = [];
+        if(this.state.surveyDetails){
+        var data = this.state.surveyDetails.questions;
+        if(data && data.length > 0) {
+            data.map(function (temp, index) {
+                temp.surveyId = this.state.surveyId;
+                questionList.push(
+                    <ResponseComponent data={temp} number={index}/>
+                );
+            }, this);
+        }
+        }
         return (
             <div>
                 Take Survey {this.state.surveyId} | {this.state.accessCode}
@@ -49,6 +61,9 @@ class TakeSurvey extends Component {
                     (this.state.surveyDetails)?
                         this.state.surveyDetails.surveyName:null
                 }
+                <div>
+                    {questionList}
+                </div>
             </div>
         );
     }
