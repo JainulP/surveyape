@@ -37,9 +37,17 @@ class Question extends Component {
     componentDidMount(){
 
         this.setState({
+
             options: this.state.myArray
+
         });
 
+    }
+
+    componentWillMount() {
+        this.setState({
+
+        })
     }
 
 
@@ -47,6 +55,7 @@ class Question extends Component {
         this.setState({
             uploadedFile: files[0]
         });
+
         this.handleImageUpload(files[0]);
     }
 
@@ -64,11 +73,10 @@ class Question extends Component {
 
                 this.setState({
                     uploadedFileCloudinaryUrl: response.body.secure_url,
-                    myArray: this.state.myArray.push(this.state.uploadedFileCloudinaryUrl)
-
+                    myArray: this.state.myArray + "," + this.state.uploadedFileCloudinaryUrl
                 });
 
-                console.log(this.props.uploadedFileCloudinaryUrl);
+
             }
         });
     }
@@ -321,7 +329,10 @@ saveQuestion = () =>{
                                                         <Dropzone
                                                             multiple={false}
                                                             accept="image/*"
-                                                            onDrop={this.onImageDrop.bind(this)}>
+                                                            onDrop={this.onImageDrop.bind(this)}
+                                                            onChange={(event) => {
+                                                            options: event.target.value
+                                                            }} >
                                                             <p>Drop an image or click to select a file to upload.</p>
                                                         </Dropzone>
 
@@ -330,7 +341,9 @@ saveQuestion = () =>{
                                                             {this.state.uploadedFileCloudinaryUrl === '' ? null :
                                                                 <div>
                                                                     <p>{this.state.uploadedFile.name}</p>
-                                                                    <img src={this.state.uploadedFileCloudinaryUrl} />
+
+                                                                    {this.state.myArray[1]}
+                                                                    <img src={this.state.options} />
                                                                 </div>}
                                                         </div>
 
