@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import React, {Component} from 'react';
+import {withRouter} from 'react-router-dom';
 import '../App.css';
 import * as  API from '../api/API';
 import {Doughnut} from 'react-chartjs-2';
@@ -44,10 +44,10 @@ const data2 = {
 };
 
 class Dashboard extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
-            listOfSurveys:[
+            listOfSurveys: [
                 {
                     surveyId: 31,
                     surveyName: "survey_manasa"
@@ -57,76 +57,99 @@ class Dashboard extends Component {
                     surveyName: "survey_manasa1"
                 }
             ],
-            surveyId:null,
-            surveyStats:{
-                    surveyName : "survey1",
-                    startTime:"12/34/5",
-                    endTime:"12/34/5",
-                    noParticipants:30,
-                    participationRate : 20,
-                    questions:[
-
-                    ]
+            surveyId: null,
+            surveyStats: {
+                surveyName: "survey1",
+                startTime: "12/34/5",
+                endTime: "12/34/5",
+                noParticipants: 30,
+                participationRate: 20,
+                questions: []
             }
         }
     }
 
-    componentWillMount(){
+    componentWillMount() {
         var self = this.state;
         API.getListOfSurveyscreated(localStorage.getItem("userId"))
             .then((res) => {
-                if(res && res.length > 0){
+                if (res && res.length > 0) {
                     self.listOfSurveys = res;
                     this.setState(self);
                 }
             });
     }
-    generateStats = () =>{
+
+    generateStats = () => {
         var self = this.state;
         API.surveyStats(this.state.surveyId)
             .then((res) => {
-                if(res && res.surveyId){
-                    self.surveyStats = res;
-                    this.setState(self);
+                if (res && res.surveyId) {
+                    console.log(res);
+                    const data = {};
+                    let questionStr = res.find(i => i['question']);
+                    let labels = [];
+                    let values = [];
+                    for (let i in res) {
+                        if (i !== 'question') {
+                            labels.append(i);
+                            values.append(res[i]);
+                        }
+                    }
+                    data['labels'] = labels;
+                    data['datasets'][0]['data'] = values;
+                    data['datasets'][0]['backgroundColor'] = [
+                        '#FF6384',
+                        '#36A2EB',
+                        '#FFCE56',
+                        '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
+                        '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
+                    ];
+
+                    return data;
                 }
             });
     }
+
     render() {
         var surveyList = [];
         var data = this.state.listOfSurveys;
-        if(data && data.length > 0){
+        if (data && data.length > 0) {
             data.map(function (temp, index) {
                 surveyList.push(
                     <option value={temp.surveyId}>{temp.surveyName}</option>
                 );
-            },this);
+            }, this);
         }
         return (
             <div>
                 <div className="row">
                     <div className="col-md-6 margin-70">
-                <div className="form-group resizedTextbox">
-                    <div>
+                        <div className="form-group resizedTextbox">
+                            <div>
                     <span>
                     Surveys
                     </span>
-                    </div>
-                    <select className="form-control surveyape-input" name="cards"  id="questionType" aria-describedby="Question Type" placeholder="Question Type"
-                            value={this.state.surveyId}
-                            onChange={(event) => {
-                                this.setState({
-                                    surveyId: event.target.value
-                                });
-                            }}
-                    >
-                        <option value=" "></option>
-                        {surveyList}
-                    </select>
-                </div>
-                        <div>
-                            <button type="button" className="surveyape-button" id = "generateStats" onClick={() => this.generateStats(this.state.surveyId)}>GENERATE STATS</button>
+                            </div>
+                            <select className="form-control surveyape-input" name="cards" id="questionType"
+                                    aria-describedby="Question Type" placeholder="Question Type"
+                                    value={this.state.surveyId}
+                                    onChange={(event) => {
+                                        this.setState({
+                                            surveyId: event.target.value
+                                        });
+                                    }}
+                            >
+                                <option value=" "></option>
+                                {surveyList}
+                            </select>
                         </div>
-            </div>
+                        <div>
+                            <button type="button" className="surveyape-button" id="generateStats"
+                                    onClick={() => this.generateStats(this.state.surveyId)}>GENERATE STATS
+                            </button>
+                        </div>
+                    </div>
                 </div>
                 <div className="row margin-70 stat-heading">
                     {this.state.surveyStats.surveyName}
@@ -171,15 +194,15 @@ class Dashboard extends Component {
                             ANSWERS CHOSEN
                         </div>
                         <div>
-                        <Doughnut data={data1}/>
+                            <Doughnut data={data1}/>
                         </div>
                     </div>
                     <div className="col-md-6">
                         <div className="stat-heading">
-                           ANSWERS GIVEN
+                            ANSWERS GIVEN
                         </div>
                         <div>
-                        <HorizontalBar data={data2}/>
+                            <HorizontalBar data={data2}/>
                         </div>
                     </div>
                 </div>
@@ -191,7 +214,7 @@ class Dashboard extends Component {
 function mapStateToProps(state) {
     //.log(state)
     //return {
-       // componentActive: state.all.componentActive
+    // componentActive: state.all.componentActive
     //}
 }
 
