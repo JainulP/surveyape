@@ -11,9 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 public class ResponseController {
@@ -23,6 +21,7 @@ public class ResponseController {
     private ResponsesRepository responsesRepository;
     private QuestionRepository questionRepository;
     private UserRepository userRepository;
+
 
     @Autowired
     private SurveyRepository surveyRepository;
@@ -92,7 +91,7 @@ public class ResponseController {
         Optional<Question> questionOptional = questionRepository.findById(questionId);
         if (questionOptional.isPresent()) {
             Question question = questionOptional.get();
-            if (userId != "" && !userId.isEmpty() && !userId.equals("null") ) {
+            if (userId != "" && !userId.isEmpty() && !userId.equals("null")) {
                 Optional<User> userOptional = userRepository.findById(Integer.parseInt(userId));
                 if (userOptional.isPresent()) {
                     User user = userOptional.get();
@@ -105,9 +104,9 @@ public class ResponseController {
             } else {
                 Responses responses = new Responses();
                 if (email == null || email.equals("null") || email.isEmpty()) {
-                    responses=responsesRepository.save(new Responses(question, answers, null, "Anonymous", surveyid));
+                    responses = responsesRepository.save(new Responses(question, answers, null, "Anonymous", surveyid));
                 } else {
-                    responses= responsesRepository.save(new Responses(question, answers, null, email, surveyid));
+                    responses = responsesRepository.save(new Responses(question, answers, null, email, surveyid));
                 }
                 return new ResponseEntity<>(responses, HttpStatus.OK);
             }
@@ -119,7 +118,7 @@ public class ResponseController {
     }
 
     @PutMapping(value = "/response/{resId}", produces = "application/json")
-    public ResponseEntity<?> updateResponses(@PathVariable int resId,@RequestParam String answers, @RequestParam(name = "qid") int questionId, @RequestParam(name = "email", required = false) String email, @RequestParam(name = "userid", required = false) String userId, @RequestParam(name = "surveyid") String surveyid) {
+    public ResponseEntity<?> updateResponses(@PathVariable int resId, @RequestParam String answers, @RequestParam(name = "qid") int questionId, @RequestParam(name = "email", required = false) String email, @RequestParam(name = "userid", required = false) String userId, @RequestParam(name = "surveyid") String surveyid) {
         Optional<Question> questionOptional = questionRepository.findById(questionId);
         if (questionOptional.isPresent()) {
             Question question = questionOptional.get();
@@ -128,13 +127,12 @@ public class ResponseController {
                 if (userOptional.isPresent()) {
                     User user = userOptional.get();
                     Optional<Responses> responsesOptional = responsesRepository.findById(resId);
-                    if(responsesOptional.isPresent()){
+                    if (responsesOptional.isPresent()) {
                         Responses response = responsesOptional.get();
                         response.setAnswers(answers);
                         responsesRepository.save(response);
                         return new ResponseEntity<>(response, HttpStatus.OK);
-                    }
-                    else{
+                    } else {
                         return new ResponseEntity<>(new BadRequest(200, "Error in updating your response. Please try again later"), HttpStatus.OK);
 
                     }
@@ -142,24 +140,25 @@ public class ResponseController {
                 } else {
                     return new ResponseEntity<>(new BadRequest(404, "Invalid user"), HttpStatus.BAD_REQUEST);
                 }
-            } else {
-                Optional<Responses> responsesOptional = responsesRepository.findById(resId);
-                if(responsesOptional.isPresent()){
-                    Responses response = responsesOptional.get();
-                    response.setAnswers(answers);
-                    responsesRepository.save(response);
-                    return new ResponseEntity<>(response, HttpStatus.OK);
-                }
-                else{
-                    return new ResponseEntity<>(new BadRequest(200, "Error in updating your response. Please try again later"), HttpStatus.OK);
-
-                }
+//            } else {
+//                Optional<Responses> responsesOptional = responsesRepository.findById(resId);
+//                if(responsesOptional.isPresent()){
+//                    Responses response = responsesOptional.get();
+//                    response.setAnswers(answers);
+//                    responsesRepository.save(response);
+//                    return new ResponseEntity<>(response, HttpStatus.OK);
+//                }
+//                else{
+//                    return new ResponseEntity<>(new BadRequest(200, "Error in updating your response. Please try again later"), HttpStatus.OK);
+//
+//                }
             }
         } else {
             return new ResponseEntity<>(new BadRequest(400, "Invalid question"), HttpStatus.BAD_REQUEST);
         }
 
 
+        return null;
     }
 
     /* For stats */
@@ -171,14 +170,71 @@ public class ResponseController {
      * @return
      */
 
-    @GetMapping(value = "/responses", produces = "application/json", params = "surveyId")
-    public ResponseEntity<?> getAnswersBySurveyAndQuestionId(@RequestParam(value = "surveyId") int surveyId) {
-        Map<String, Integer> answers = responsesRepository.getQuestionAndAnswersForSurvey(surveyId);
-        if (answers.size() > 0) {
-            return new ResponseEntity<>(answers, HttpStatus.OK);
+    @GetMapping(value = "/responses/questionstats", produces = "application/json", params = "surveyId")
+    public ResponseEntity<?> getAnswersBySurveyAndQuestionId(@RequestParam(value = "surveyId") String surveyId) {
+        List<Integer> questions = responsesRepository.getQuestionAndAnswersForSurvey(Integer.parseInt(surveyId));
+        List<Map<String, String>> masterList = new ArrayList<>();
+
+        List<String> optionsList = new ArrayList<>();
+        if (questions.size() > 0) {
+            for (Integer question : questions) {
+                Map<String, String> optionsCountMap = new HashMap<>();
+                String questionStr = questionRepository.getQuestionNameByQuestionId(question);
+                int questionType = responsesRepository.getQuestionTypeForQuestion(question);
+
+                optionsCountMap.put("Question", questionStr);
+
+                //QuestionStyle - 0 for multiple choice, 1 for yes/no question, 2 for    short answer question, 3 for datetime question, 4 for star rating question
+                // VisualStyle - // 0 for dropdown , 1 for radio button, 2 for checkbox
+
+                // only yes/no or multiple choice with radiobutton  or multiple choice with dropdown
+
+                if (questionType == 1 || questionType == 4) {
+                    List<String> options = responsesRepository.getOptionsForQuestion(question);
+                    for (String option : options) {
+                        int count = responsesRepository.getCountOfAnswerChoices(question, option);
+                        //create the map
+                        optionsCountMap.put(option, String.valueOf(count));
+                    }
+                } else if (questionType == 0) {  // for multiple choice
+                    int visualType = responsesRepository.getVisualTypeForQuestion(question);
+                    if (visualType == 1 || visualType == 0) {  // for radio button/dropdown
+                        List<String> options = responsesRepository.getOptionsForQuestion(question);
+                        for (String option : options) {
+                            int count = responsesRepository.getCountOfAnswerChoices(question, option);
+                            //create the map
+                            optionsCountMap.put(option, String.valueOf(count));
+                        }
+                    } else if (visualType == 2) {   // for checkbox
+
+                        // Multiple choice questions with checkboxes
+
+                        // get all the answers
+                        List<String> answers = responsesRepository.getAnswersByQuestionId(question);
+
+                        // separate the choices by comma and add it to master list
+                        for (String answer : answers) {
+                            String[] splitOptions = answer.split(",");
+                            optionsList.addAll(Arrays.asList(splitOptions));
+                        }
+
+                        // filter out duplicate elements
+                        Set<String> uniqueOptions = new HashSet<>(optionsList);
+
+                        // create the map
+                        for (String option : uniqueOptions) {
+                            int count = Collections.frequency(optionsList, option);
+                            optionsCountMap.put(option, String.valueOf(count));
+                        }
+                    }
+                }
+                masterList.add(optionsCountMap);
+            }
+            return new ResponseEntity<>(masterList, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(new BadRequest(400, "No answers/questions for this survey "), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new BadRequest(404, "No Stats available"), HttpStatus.NOT_FOUND);
         }
+
     }
 
 

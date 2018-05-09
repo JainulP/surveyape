@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Map;
 
 public interface ResponsesRepository extends JpaRepository<Responses, Integer> {
 
@@ -25,8 +24,24 @@ public interface ResponsesRepository extends JpaRepository<Responses, Integer> {
     @Query(value = "SELECT answers FROM responses WHERE survey_id=:sid  AND question_id=:qid", nativeQuery = true)
     List<String> findAllBySurveyId(int surveyId);
 
-    @Query(value="SELECT answers,question_id FROM responses WHERE survey_id=:sid",nativeQuery = true)
-    Map<String,Integer> getQuestionAndAnswersForSurvey(@Param("sid") int surveyId);
+    @Query(value="SELECT question_id FROM responses WHERE survey_id=:sid",nativeQuery = true)
+    List<Integer> getQuestionAndAnswersForSurvey(@Param("sid") int surveyId);
+
+    @Query(value = "SELECT options from question_options where question_question_id=:qid", nativeQuery = true)
+    List<String> getOptionsForQuestion(@Param("qid") int questionId);
+
+//    @Query(value = "SELECT answers,question_id FROM responses WHERE survey_id=:sid", nativeQuery = true)
+//    List<Integer> getQuestionAndAnswersForSurvey(@Param("sid") int surveyId);
+
+
+    @Query(value = "SELECT count(*) from Responses where question_id = :qid and answers=:option ",nativeQuery = true)
+    int getCountOfAnswerChoices(@Param("qid")int qid,@Param("option") String option);
+
+    @Query(value = "SELECT question_type from Question where question_id=:qid",nativeQuery = true)
+    int getQuestionTypeForQuestion(@Param("qid") int question_id);
+
+    @Query(value = "SELECT visual_style from Question where question_id=:qid",nativeQuery = true)
+    int getVisualTypeForQuestion(@Param("qid") int question_id);
 
 
 
