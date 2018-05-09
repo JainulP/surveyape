@@ -313,8 +313,8 @@ public class SurveyController {
     @GetMapping(value = "/user/{userId}", produces = "application/json")
     public ResponseEntity<?> getSurveysForUser(@PathVariable("userId") String userId) {
 
-        List<Survey> completedSurveysForUser = surveyRepository.getCompletedSurveysForUser(Integer.parseInt(userId));
-        List<Survey> incompletedSurveysForUser = surveyRepository.getinCompletedSurveysForUser(Integer.parseInt(userId));
+        List<Survey> completedSurveysForUser = surveyRepository.getCompletedSurveysForUser(userId);
+        List<Survey> incompletedSurveysForUser = surveyRepository.getinCompletedSurveysForUser(userId);
 
         HashMap<String,List<Survey>> map = new HashMap<>();
         map.put("completed", completedSurveysForUser);

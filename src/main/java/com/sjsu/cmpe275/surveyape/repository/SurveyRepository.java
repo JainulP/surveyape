@@ -36,11 +36,11 @@ public interface SurveyRepository extends CrudRepository<Survey, Integer> {
 
 
 
-    @Query(value = "SELECT DISTINCT * from survey s, survey_links sl where  s.survey_id = sl.survey_survey_id  AND sl.user_id = :userId  AND sl.is_completed=1", nativeQuery = true)
-    List<Survey> getCompletedSurveysForUser(@Param("userId") int userId);
+    @Query(value = "SELECT DISTINCT * from survey s, survey_links sl where  s.survey_id = sl.survey_survey_id  AND sl.user_email = :userId  AND sl.is_completed=1", nativeQuery = true)
+    List<Survey> getCompletedSurveysForUser(@Param("userId") String userId);
 
-    @Query(value = "SELECT DISTINCT * from survey s, survey_links sl where  s.survey_id = sl.survey_survey_id  AND sl.user_id = :userId  AND sl.is_completed=0", nativeQuery = true)
-    List<Survey> getinCompletedSurveysForUser(@Param("userId") int userId);
+    @Query(value = "SELECT DISTINCT * from survey s, survey_links sl where  s.survey_id = sl.survey_survey_id  AND sl.user_email = :userId  AND sl.is_completed=0", nativeQuery = true)
+    List<Survey> getinCompletedSurveysForUser(@Param("userId") String userId);
 
     @Query(value =
             "SELECT DISTINCT * from survey s where  s.user_id = :userId  AND s.published=1", nativeQuery = true)

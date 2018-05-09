@@ -204,6 +204,22 @@ export const getAll02Surveys = () =>
             return error;
         });
 
+export const getAllSurveysforviewtab = (payload) =>
+    fetch(`${api}/survey/user/`+payload, {
+        method: 'GET',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        credentials:'include'})
+        .then(res => {
+            return res.json();
+        })
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
+
 export const addParticipants = (payload) =>
     fetch(`${api}/participants/`+payload.surveyId+`?emails=`+payload.participants, {
         method: 'POST',
