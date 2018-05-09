@@ -100,6 +100,11 @@ class TopMenu extends Component {
                                 </span>:
 
                                 <span>
+                                     <span>
+                        <a className="s padding-left-25 cursor-pointer" onClick={() => {
+                            this.goToHome()
+                        }}>HOME</a>
+                    </span>
                     <span>
                         <a className="s padding-left-25 cursor-pointer" onClick={() => {
                             this.GoTosignin()

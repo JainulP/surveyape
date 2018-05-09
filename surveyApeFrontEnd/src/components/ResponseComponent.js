@@ -17,7 +17,13 @@ class ResponseComponent extends Component {
             }
         }
         else{
-            email = localStorage.getItem("email");
+            if(localStorage.getItem("email")){
+                email = localStorage.getItem("email");
+            }
+            if(localStorage.getItem("guestemail")){
+                email = localStorage.getItem("guestemail");
+                localStorage.removeItem("guestemail");
+            }
         }
         this.state = {
             answer:this.props.answerTemp,
@@ -47,7 +53,13 @@ componentWillMount(){
     }
     else{
         var self = this.state;
-        self.email = localStorage.getItem("email");
+        if(localStorage.getItem("email")){
+            self.email = localStorage.getItem("email");
+        }
+        if(localStorage.getItem("guestemail")){
+            self.email = localStorage.getItem("guestemail");
+            localStorage.removeItem("guestemail");
+        }
         this.setState(self);
     }
 }
@@ -92,7 +104,19 @@ componentWillMount(){
         }
     }
     saveResponse = () =>{
-        if(!this.props.responseId ||  !this.state.responseIds[this.props.number]) {
+        if(this.props.responseId ||  this.state.responseIds[this.props.number]) {
+
+            var self = this.state;
+            self.questionId = this.props.data.questionId;
+            self.responseId = this.props.responseId || this.state.responseIds[this.props.number]
+            API.updateResponse(self)
+                .then((res) => {
+                    console.log(res)
+                    self.answer = "";
+                    alert("Response Saved")
+                });
+        }
+        else{
             var self = this.state;
             self.questionId = this.props.data.questionId;
             API.saveResponse(self)
@@ -104,17 +128,6 @@ componentWillMount(){
                     this.setState(self);
                     alert("Response Saved")
 
-                });
-        }
-        else{
-            var self = this.state;
-            self.questionId = this.props.data.questionId;
-            self.responseId = this.state.responseIds[this.props.number]
-            API.updateResponse(self)
-                .then((res) => {
-                    console.log(res)
-                    self.answer = "";
-                    alert("Response Saved")
                 });
         }
     }
@@ -157,6 +170,8 @@ componentWillMount(){
         API.completeSurvey(data)
             .then((res) => {
                 console.log(res)
+                alert("Thank you for submitting your response!")
+                window.location = "http://localhost:3000/"
 
             });
     }
