@@ -30,7 +30,12 @@ class TakeSurvey extends Component {
             }
         }
         else{
-            email = localStorage.getItem("email");
+            if(localStorage.getItem("email")){
+                email = localStorage.getItem("email");
+            }
+            if(localStorage.getItem("guestemail")){
+                email = localStorage.getItem("guestemail");
+            }
         }
         super(props);
         this.state = {
@@ -52,6 +57,9 @@ class TakeSurvey extends Component {
             email:email,
             currentresponseId : null
         }
+    }
+    componentWillUnmount(){
+
     }
     componentWillMount() {
         var self = this.state;
@@ -93,37 +101,58 @@ class TakeSurvey extends Component {
                 surveyId : this.state.surveyId,
                 email: this.state.email
             }
-            API.getSurveybYemail(data)
-                .then((res) => {
-                    if (res.surveyType === 1 && !this.state.accessCode) {
-                        alert("NO ACCESS RIGHTS")
-                        this.props.history.push("/");
-                    }
-                    if (res.published === false) {
-                        alert("SURVEY NOT PUBLISHED YET")
-                        this.props.history.push("/");
-                    }
-                    var d1 = new Date();
-                    var d2 = new Date(res.endTime);
-                    console.log(d1.getTime() > d2.getTime());
-                    /*if(d1.getTime() > d2.getTime()){
-                        alert("SURVEY EXPIRED")
-                        this.props.history.push("/");
-                    }*/
-                    self.surveyDetails = res;
-                    self.currentQuestion = res.questions[0];
-
-                    self.size = res.questions.length;
-                    if(res.questions[0].responses.length>0){
-                        self.currentAnswer = res.questions[0].responses[0].answers;
-                        self.currentresponseId = res.questions[0].responses[0].resId;
-                    }
-                    if (this.state.surveyDetails.questions.length > 1) {
-                        document.getElementById("nextClicked").disabled = false;
-                    }
-                    this.setState(self);
-                });
+            if(this.state.accessCode === "open"){
+                if(this.state.email){
+                    this.openclosesurveydetails();
+                }
+                else{
+                    localStorage.setItem("openSurveyLink",this.props.location.pathname)
+                    this.props.history.push("/openSurveyLogin");
+                }
+            }
+            else{
+                this.openclosesurveydetails();
+            }
         }
+    }
+
+    openclosesurveydetails = () =>{
+        //open-unique and closed
+        var data={
+            surveyId : this.state.surveyId,
+            email: this.state.email
+        }
+        var self = this.state;
+        API.getSurveybYemail(data)
+            .then((res) => {
+                if (res.surveyType === 1 && !this.state.accessCode) {
+                    alert("NO ACCESS RIGHTS")
+                    this.props.history.push("/");
+                }
+                if (res.published === false) {
+                    alert("SURVEY NOT PUBLISHED YET")
+                    this.props.history.push("/");
+                }
+                var d1 = new Date();
+                var d2 = new Date(res.endTime);
+                console.log(d1.getTime() > d2.getTime());
+                /*if(d1.getTime() > d2.getTime()){
+                    alert("SURVEY EXPIRED")
+                    this.props.history.push("/");
+                }*/
+                self.surveyDetails = res;
+                self.currentQuestion = res.questions[0];
+
+                self.size = res.questions.length;
+                if(res.questions[0].responses.length>0){
+                    self.currentAnswer = res.questions[0].responses[0].answers;
+                    self.currentresponseId = res.questions[0].responses[0].resId;
+                }
+                if (this.state.surveyDetails.questions.length > 1) {
+                    document.getElementById("nextClicked").disabled = false;
+                }
+                this.setState(self);
+            });
     }
     componentDidMount(){
         document.getElementById("prevClicked").disabled = true;
