@@ -39,6 +39,7 @@ class TakeSurvey extends Component {
     }
     componentWillMount(){
         var self = this.state;
+
         API.getSurvey(this.state.surveyId)
             .then((res) => {
                 if(res.surveyType === 1 && !this.state.accessCode){
@@ -52,26 +53,61 @@ class TakeSurvey extends Component {
                 var d1 = new Date();
                 var d2 = new Date(res.endTime);
                 console.log(d1.getTime() > d2.getTime());
-                if(d1.getTime() > d2.getTime()){
+                /*if(d1.getTime() > d2.getTime()){
                     alert("SURVEY EXPIRED")
                     this.props.history.push("/");
-                }
+                }*/
                 self.surveyDetails=res;
                 self.currentQuestion = res.questions[0];
+                if(this.state.surveyDetails.questions.length > 1){
+                    document.getElementById("nextClicked").disabled = false;
+                }
                 this.setState(self);
             });
     }
+    componentDidMount(){
+        document.getElementById("prevClicked").disabled = true;
+        document.getElementById("nextClicked").disabled = true;
+    }
         nextClicked = () =>{
             var self = this.state;
-            self.currentIndex = self.currentIndex + 1;
-            self.currentQuestion = self.surveyDetails.questions[self.currentIndex];
-            this.setState(self);
+
+            if( self.currentIndex < self.surveyDetails.questions.length - 1){
+                document.getElementById("nextClicked").disabled = false;
+                self.currentIndex = self.currentIndex + 1;
+                self.currentQuestion = self.surveyDetails.questions[self.currentIndex];
+                this.setState(self);
+            }
+            else{
+                document.getElementById("nextClicked").disabled = true;
+            }
+
+            if( self.currentIndex > 0){
+                document.getElementById("prevClicked").disabled = false;
+            }
+            else{
+                document.getElementById("prevClicked").disabled = true;
+            }
         }
         prevClicked = () =>{
             var self = this.state;
-            self.currentIndex = self.currentIndex - 1;
-            self.currentQuestion = self.surveyDetails.questions[self.currentIndex];
-            this.setState(self);
+
+            if( self.currentIndex < self.surveyDetails.questions.length - 1){
+                document.getElementById("nextClicked").disabled = false;
+            }
+            else{
+                document.getElementById("nextClicked").disabled = true;
+            }
+
+            if( self.currentIndex > 0){
+                document.getElementById("prevClicked").disabled = false;
+                self.currentIndex = self.currentIndex - 1;
+                self.currentQuestion = self.surveyDetails.questions[self.currentIndex];
+                this.setState(self);
+            }
+            else{
+                document.getElementById("prevClicked").disabled = true;
+            }
         }
     render() {
         var questionList = [];
@@ -95,8 +131,8 @@ class TakeSurvey extends Component {
                 <div>
                     <div className="pad-top-20">
                     </div>
-                    <button type="button" className="surveyape-button" id = "saveResponse" onClick={()=>this.prevClicked()}>PREVIOUS</button>
-                    <button type="button" className="surveyape-button" id = "saveResponse" onClick={()=>this.nextClicked()}>NEXT</button>
+                    <button type="button" className="surveyape-button" name="prevClicked" id = "prevClicked" onClick={()=>this.prevClicked()}>PREVIOUS</button>
+                    <button type="button" className="surveyape-button" name="nextClicked" id = "nextClicked" onClick={()=>this.nextClicked()}>NEXT</button>
                     <ResponseComponent accessCode={this.state.accessCode} data={this.state.currentQuestion} number={this.state.currentIndex} surveyId={this.state.surveyId}/>
 
                 </div>
