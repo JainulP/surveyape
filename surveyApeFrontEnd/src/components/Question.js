@@ -257,7 +257,7 @@ saveQuestion = () =>{
                                 </div>
 
                                 {
-                                    (this.state.choiceType === 0) ?
+                                    (this.state.choiceType === "0") ?
                                         <div>
                                             <input type="text" className="form-control surveyape-input" id="options"
                                                    aria-describedby="Options" placeholder="Options"
@@ -270,15 +270,14 @@ saveQuestion = () =>{
                                         </div>
                                         :
                                         <div>
-                                            <input type="text" className="form-control surveyape-input" id="options"
-                                                   aria-describedby="Options" placeholder="Options"
-                                                   onChange={(event) => {
-                                                       this.setState({
-                                                           options: event.target.value
-                                                       });
-                                                   }}
-                                            />
-                                        </div>
+                                            {
+                                                (this.state.choiceType === "1") ?
+                                                    <div>
+                                                        upload image option
+                                                    </div>
+                                                    :null
+                                            }
+                                    </div>
                                 }
 
                             </div>
