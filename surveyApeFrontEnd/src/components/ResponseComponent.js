@@ -59,10 +59,19 @@ class ResponseComponent extends Component {
         }
     }
     saveResponse = () =>{
-
+        var email = null;
+        if(this.props.accessCode) {
+            try {
+                email = atob(this.props.accessCode);
+            }
+            catch (err) {
+                alert("invalid link")
+            }
+        }
         if(this.state.responseId === null) {
             var self = this.state;
             self.questionId = this.props.data.questionId;
+            self.email =email;
             API.saveResponse(self)
                 .then((res) => {
                     console.log(res)
@@ -74,6 +83,7 @@ class ResponseComponent extends Component {
         else{
             var self = this.state;
             self.questionId = this.props.data.questionId;
+            self.email =email;
             API.updateResponse(self)
                 .then((res) => {
                     console.log(res)

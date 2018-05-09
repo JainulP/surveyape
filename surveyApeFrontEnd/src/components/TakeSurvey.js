@@ -70,7 +70,7 @@ class TakeSurvey extends Component {
             data.map(function (temp, index) {
                 temp.surveyId = this.state.surveyId;
                 questionList.push(
-                    <ResponseComponent data={temp} number={index} surveyId={this.state.surveyId}/>
+                    <ResponseComponent accessCode={this.state.accessCode} data={temp} number={index} surveyId={this.state.surveyId}/>
                 );
             }, this);
         }
@@ -86,7 +86,7 @@ class TakeSurvey extends Component {
                     </div>
                     <button type="button" className="surveyape-button" id = "saveResponse" onClick={()=>this.prevClicked()}>PREVIOUS</button>
                     <button type="button" className="surveyape-button" id = "saveResponse" onClick={()=>this.nextClicked()}>NEXT</button>
-                    <ResponseComponent data={this.state.currentQuestion} number={this.state.currentIndex} surveyId={this.state.surveyId}/>
+                    <ResponseComponent accessCode={this.state.accessCode} data={this.state.currentQuestion} number={this.state.currentIndex} surveyId={this.state.surveyId}/>
 
                 </div>
             </div>
