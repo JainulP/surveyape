@@ -70,7 +70,17 @@ class Question extends Component {
             }
 
             if (response.body.secure_url !== '') {
-
+                var self = this.state;
+                var optionstemp = this.state.options;
+                if(optionstemp === null) {
+                    optionstemp = response.body.secure_url;
+                }
+                else{
+                    optionstemp = optionstemp + "," + response.body.secure_url;
+                }
+                this.setState({
+                    options: optionstemp
+                });
                 this.setState({
                     uploadedFileCloudinaryUrl: response.body.secure_url,
                     myArray: this.state.myArray + "," + this.state.uploadedFileCloudinaryUrl
@@ -297,7 +307,7 @@ saveQuestion = () =>{
                                         <option value=""> </option>
                                         <option value="2">Checkbox</option>
                                         {
-                                            (this.state.answerType === "0") ?
+                                            (this.state.answerType === "0" && this.state.choiceType === "0") ?
                                                 <option value="0">Dropdown</option>
                                                 : null
                                         }
