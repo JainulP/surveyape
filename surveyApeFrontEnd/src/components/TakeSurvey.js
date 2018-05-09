@@ -41,13 +41,24 @@ class TakeSurvey extends Component {
         var self = this.state;
         API.getSurvey(this.state.surveyId)
             .then((res) => {
-                self.surveyDetails=res;
-                self.currentQuestion = res.questions[0];
-                this.setState(self);
                 if(res.surveyType === 1 && !this.state.accessCode){
                     alert("NO ACCESS RIGHTS")
                     this.props.history.push("/");
                     }
+                if(res.published === false){
+                    alert("SURVEY NOT PUBLISHED YET")
+                    this.props.history.push("/");
+                }
+                var d1 = new Date();
+                var d2 = new Date(res.endTime);
+                console.log(d1.getTime() > d2.getTime());
+                if(d1.getTime() > d2.getTime()){
+                    alert("SURVEY EXPIRED")
+                    this.props.history.push("/");
+                }
+                self.surveyDetails=res;
+                self.currentQuestion = res.questions[0];
+                this.setState(self);
             });
     }
         nextClicked = () =>{
