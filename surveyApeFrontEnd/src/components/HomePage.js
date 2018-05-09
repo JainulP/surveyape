@@ -14,6 +14,7 @@ import CreateSurvey from './CreateSurvey.js';
 import TakeSurvey from './TakeSurvey.js';
 import ViewSurvey from './ViewSurvey.js';
 import EditSurvey from './EditSurvey.js';
+import OpenSurveyLogin from './OpenSurveyLogin.js';
 
 class HomePage extends Component {
     constructor(props) {
@@ -93,6 +94,13 @@ class HomePage extends Component {
                             <TopMenu/>
                             <SignUp signupUser={this.signupUser}  activateCode={this.activateCode}/>
                             <Footer/>
+                        </div>
+                    )}/>
+
+                <Route exact path="/openSurveyLogin" render={() =>
+                    (
+                        <div>
+                            <OpenSurveyLogin/>
                         </div>
                     )}/>
 

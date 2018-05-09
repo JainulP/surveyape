@@ -17,7 +17,13 @@ class ResponseComponent extends Component {
             }
         }
         else{
-            email = localStorage.getItem("email");
+            if(localStorage.getItem("email")){
+                email = localStorage.getItem("email");
+            }
+            if(localStorage.getItem("guestemail")){
+                email = localStorage.getItem("guestemail");
+                localStorage.removeItem("guestemail");
+            }
         }
         this.state = {
             answer:this.props.answerTemp,
@@ -47,7 +53,13 @@ componentWillMount(){
     }
     else{
         var self = this.state;
-        self.email = localStorage.getItem("email");
+        if(localStorage.getItem("email")){
+            self.email = localStorage.getItem("email");
+        }
+        if(localStorage.getItem("guestemail")){
+            self.email = localStorage.getItem("guestemail");
+            localStorage.removeItem("guestemail");
+        }
         this.setState(self);
     }
 }
