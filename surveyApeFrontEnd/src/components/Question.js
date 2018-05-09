@@ -30,10 +30,15 @@ class Question extends Component {
             visualStyle:this.props.data.visualStyle,
             questionId:this.props.data.questionId,
             editMode : false,
-            uploadedFileCloudinaryUrl: ''
+            uploadedFileCloudinaryUrl: '',
+            myArray: []
         }
     }
     componentDidMount(){
+
+        this.setState({
+            options: this.state.myArray
+        });
 
     }
 
@@ -56,9 +61,14 @@ class Question extends Component {
             }
 
             if (response.body.secure_url !== '') {
+
                 this.setState({
-                    uploadedFileCloudinaryUrl: response.body.secure_url
+                    uploadedFileCloudinaryUrl: response.body.secure_url,
+                    myArray: this.state.myArray.push(this.state.uploadedFileCloudinaryUrl)
+
                 });
+
+                console.log(this.props.uploadedFileCloudinaryUrl);
             }
         });
     }
@@ -323,6 +333,9 @@ saveQuestion = () =>{
                                                                     <img src={this.state.uploadedFileCloudinaryUrl} />
                                                                 </div>}
                                                         </div>
+
+
+
                                                     </div>
                                                     :null
                                             }
