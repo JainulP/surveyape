@@ -350,7 +350,7 @@ public class SurveyController {
                     }
                     return new ResponseEntity<>(map, HttpStatus.OK);
                 } else {
-                    return new ResponseEntity<>(new BadRequest(400, "Fewer than 1 participants available"), HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(new BadRequest(400, "Too few responses available"), HttpStatus.BAD_REQUEST);
                 }
             } else {
                 return new ResponseEntity<>(new BadRequest(400, "Fewer than 1 participants available"), HttpStatus.BAD_REQUEST);

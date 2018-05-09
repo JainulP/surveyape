@@ -85,7 +85,7 @@ class TakeSurvey extends Component {
                 }*/
                 self.surveyDetails = res;
                 self.currentQuestion = res.questions[0];
-                if(res.questions[0].responses.length>0){
+                if(res.questions[0].responses.length>0 && self.email != null ){
                     self.currentAnswer = res.questions[0].responses[0].answers;
                     self.currentresponseId = res.questions[0].responses[0].resId;
                 }
@@ -161,8 +161,10 @@ class TakeSurvey extends Component {
 
                     self.size = res.questions.length;
                     if (res.questions[0].responses.length > 0) {
-                        self.currentAnswer = res.questions[0].responses[0].answers;
-                        self.currentresponseId = res.questions[0].responses[0].resId;
+                        if(self.email != null) {
+                            self.currentAnswer = res.questions[0].responses[0].answers;
+                            self.currentresponseId = res.questions[0].responses[0].resId;
+                        }
                     }
                     this.setState(self);
                     if (self.surveyDetails.questions.length > 1) {
@@ -183,7 +185,7 @@ class TakeSurvey extends Component {
                 document.getElementById("nextClicked").disabled = false;
                 self.currentIndex = self.currentIndex + 1;
                 self.currentQuestion = self.surveyDetails.questions[self.currentIndex];
-                if(self.surveyDetails.questions[self.currentIndex].responses && self.surveyDetails.questions[self.currentIndex].responses.length>0) {
+                if(self.surveyDetails.questions[self.currentIndex].responses && self.surveyDetails.questions[self.currentIndex].responses.length>0 && self.email != null) {
                     self.currentAnswer = self.surveyDetails.questions[self.currentIndex].responses[0].answers;
                     self.currentresponseId = self.surveyDetails.questions[self.currentIndex].responses[0].resId;
                 }
@@ -218,7 +220,7 @@ class TakeSurvey extends Component {
                 document.getElementById("prevClicked").disabled = false;
                 self.currentIndex = self.currentIndex - 1;
                 self.currentQuestion = self.surveyDetails.questions[self.currentIndex];
-                if(self.surveyDetails.questions[self.currentIndex].responses && self.surveyDetails.questions[self.currentIndex].responses.length>0) {
+                if(self.surveyDetails.questions[self.currentIndex].responses && self.surveyDetails.questions[self.currentIndex].responses.length>0 && self.email != null) {
                     self.currentAnswer = self.surveyDetails.questions[self.currentIndex].responses[0].answers;
                     self.currentresponseId = self.surveyDetails.questions[self.currentIndex].responses[0].resId;
                 }
