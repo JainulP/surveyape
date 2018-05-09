@@ -101,19 +101,13 @@ public class EmailService {
 
             //helper.addInline("Image",new File("QRCodes/image.png"));
            // helper.setText(inlineImage, true);
-            helper.setSubject("Invitation to participate int the survey");
-            helper.setTo("aravindhan.elayakumar@sjsu.edu");
-            helper.setFrom("surveyape135@gmail.com");
-
+            helper.setSubject(subject);
+            helper.setTo(to);
+            helper.setFrom(from);
             helper.setText("<html>"
                     + "<img src='cid:image' style='float:left;width:200px;height:200px;'/>"
                     + "</html>", true);
-
             helper.addInline("image",new File("image.png"));
-
-
-
-
             emailSender.send(message);
         } catch (MessagingException e) {
             e.printStackTrace();
