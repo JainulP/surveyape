@@ -70,4 +70,16 @@ public class EmailService {
         return urls;
     }
 
+    public void sendConfirmationForCompletion(String to, String subject, String text) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(to);
+            message.setSubject(subject);
+            message.setText(text);
+            emailSender.send(message);
+        } catch (MailException exception) {
+            exception.printStackTrace();
+        }
+    }
+
 }

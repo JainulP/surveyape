@@ -2,6 +2,7 @@ package com.sjsu.cmpe275.surveyape.controller;
 
 import com.sjsu.cmpe275.surveyape.model.*;
 import com.sjsu.cmpe275.surveyape.repository.*;
+import com.sjsu.cmpe275.surveyape.service.EmailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class ResponseController {
 
     @Autowired
     private SurveyController surveyController;
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     public ResponseController(ResponsesRepository responsesRepository, QuestionRepository questionRepository, UserRepository userRepository) {
@@ -202,27 +206,41 @@ public class ResponseController {
                                             @RequestParam(value = "email", required = false) String userEmail) {
 
         Survey survey = surveyRepository.findById(Integer.parseInt(surveyId)).get();
-
         if (survey == null) {
             return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
         } else {
-            SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
+            if(survey.getSurveyType() != 0) {
+                SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
 //                if(survey.getSurveyType() != 0 && surveyLinks != null) {
-            if (surveyLinks != null) {
+                if (surveyLinks != null) {
+                    //mark all the links invalid
+                    surveyLinks.setActivated(false);
+                    surveyLinks.setCompleted(true);
+                    surveyLinksRepository.save(surveyLinks);
+                    if(userEmail.isEmpty() || userEmail == null){
+                        return new ResponseEntity<>(new BadRequest(400, "Can not send confirmation as emil id is not found"), HttpStatus.NOT_FOUND);
+                    }
+                    else{
+                        emailService.sendConfirmationForCompletion(userEmail,"Survey Confirmation","Thank you for submitting this survey. Your response has been successfully recorded.");
+                    }
+                }
 
-                //mark all the links invalid
-                surveyLinks.setActivated(false);
-                surveyLinks.setCompleted(true);
-                surveyLinksRepository.save(surveyLinks);
-                return new ResponseEntity<>(new BadRequest(200, "Survey is completed successfully"), HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>(new BadRequest(200, "Survey is completed successfully"), HttpStatus.OK);
             }
-
+            else if(survey.getSurveyType() == 0){
+                if(!userEmail.isEmpty() &&  userEmail != null){
+                    emailService.sendConfirmationForCompletion(userEmail,"Survey Confirmation","Thank you for submitting this survey. Your response has been successfully recorded.");
+                }
+            }
+            return new ResponseEntity<>(new BadRequest(200, "Survey is completed successfully"), HttpStatus.OK);
         }
 
 
+
     }
+
+
+
+
 
 
 }
