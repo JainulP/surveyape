@@ -170,6 +170,8 @@ componentWillMount(){
         API.completeSurvey(data)
             .then((res) => {
                 console.log(res)
+                alert("Thank you for submitting your response!")
+                window.location = "http://localhost:3000/"
 
             });
     }

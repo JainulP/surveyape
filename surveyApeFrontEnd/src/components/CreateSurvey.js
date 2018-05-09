@@ -78,11 +78,16 @@ class CreateSurvey extends Component {
         var self = this.state;
         API.createSurvey(this.state.surveyData)
             .then((res) => {
+            if(res.code == 400){
+                alert(res.msg)
+                window.location = "http://localhost:3000/"
+            }
+            else {
             self.questionData.surveyId = res.surveyId;
                self.createSurveyResponse = res;
                this.setState(self);
                 alert("Survey successfully created! Pleas add questions to the survey!")
-            });
+            }});
     }
     publishSurvey = () =>{
         if(this.state.questions.length > 0){
