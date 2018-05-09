@@ -63,7 +63,7 @@ public class UserController {
         }
     }
 
-    @PutMapping(value = "/activate/{email}", produces = "application/json")
+    @GetMapping(value = "/activate/{email}", produces = "application/json")
     private ResponseEntity<?> activateUser(@PathVariable("email") String email, @RequestParam(value = "vCode", required = false) String activationCode) {
         String decodedEmail = new String(Base64.getDecoder().decode(email.getBytes()));
         Optional<User> userOptional = userRepository.findByEmail(decodedEmail);

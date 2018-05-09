@@ -55,7 +55,7 @@ export const login = (payload) =>
 
 export const verifyUser = (code, emailId) =>
     fetch(`${api}/activate/`+emailId +`?vCode=`+code, {
-        method: 'PUT',
+        method: 'GET',
         headers: {
             ...headers,
             'Content-Type': 'application/json'
