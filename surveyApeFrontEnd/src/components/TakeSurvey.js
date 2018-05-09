@@ -34,9 +34,10 @@ class TakeSurvey extends Component {
             if(localStorage.getItem("email")){
                 email = localStorage.getItem("email");
             }
-            /*if(localStorage.getItem("guestemail")){
-                email = localStorage.getItem("guestemail");
-            }*/
+            if(localStorage.getItem("email") && accessCodeTemp == "open") {
+                email = localStorage.getItem("email");
+            }
+
         }
         super(props);
         this.state = {
@@ -102,14 +103,19 @@ class TakeSurvey extends Component {
                 surveyId : this.state.surveyId,
                 email: this.state.email
             }
-            if(this.state.accessCode === "open"){
+            if(this.state.accessCode === "open" ){
                 var surveyIdTemp = null;
                 var accessCodeTemp = null;
                 var loc = this.props.location.pathname;
                 var temp = loc.substr(loc.indexOf("y")+2);
                 var a = temp.split("/");
                 surveyIdTemp = a[0];
-                accessCodeTemp = a[2];
+                if(this.state.email == null){
+                    accessCodeTemp = a[2];
+                }
+               else{
+                    accessCodeTemp = this.state.email;
+                }
                 self.email = accessCodeTemp;
                 this.setState(self);
                 if(accessCodeTemp){

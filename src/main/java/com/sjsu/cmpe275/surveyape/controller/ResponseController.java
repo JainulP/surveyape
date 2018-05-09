@@ -268,11 +268,14 @@ public class ResponseController {
         if (survey == null) {
             return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
         } else {
-//            if(survey.getSurveyType() == 2 && !userEmail.isEmpty() && userEmail != null && !userEmail.equals("")){
-//                String url = "127.0.0.1:3000/"+surveyId+"/"+ Base64.getEncoder().encodeToString(userEmail.getBytes());
-//                SurveyLinks surveyLinks = surveyLinksRepository.save(new SurveyLinks(survey,userEmail,url));
-//                //SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
-//            }
+            if(survey.getSurveyType() == 2 && !userEmail.isEmpty() && userEmail != null && !userEmail.equals("")){
+                String url = "127.0.0.1:3000/survey/"+surveyId+"/open/"+ Base64.getEncoder().encodeToString(userEmail.getBytes());
+                SurveyLinks surveyLinks = surveyLinksRepository.save(new SurveyLinks(survey,userEmail,url));
+                surveyLinks.setActivated(false);
+                surveyLinks.setCompleted(true);
+                surveyLinksRepository.save(surveyLinks);
+                //SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
+            }
 
             if (survey.getSurveyType() != 0) {
                 SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
