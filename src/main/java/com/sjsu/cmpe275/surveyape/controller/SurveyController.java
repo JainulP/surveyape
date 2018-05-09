@@ -14,8 +14,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.ws.Response;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -73,20 +75,25 @@ public class SurveyController {
 
     @RequestMapping(value = "/{surveyId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getSurveyJson(@PathVariable("surveyId") String surveyId) {
-
-        return getSurvey(surveyId);
+        Survey survey = getSurvey(surveyId);
+        if (survey == null) {
+            return new ResponseEntity<>(new BadRequest(404, "Sorry, the requested survey with id " +surveyId + " does not exist"), HttpStatus.NOT_FOUND);
+        }
+        else {
+            return new ResponseEntity<>(survey, HttpStatus.OK);
+        }
 
     }
 
 
-    private ResponseEntity<?> getSurvey(String id) {
+    private Survey getSurvey(String id) {
 
         Survey survey = surveyRepository.findById(Integer.parseInt(id)).get();
 
         if (survey == null) {
-            return new ResponseEntity<>(new BadRequest(404, "Sorry, the requested survey with id " +id + " does not exist"), HttpStatus.NOT_FOUND);
+            return null;
         } else {
-            return new ResponseEntity<>(survey, HttpStatus.OK);
+            return survey;
 
         }
     }
@@ -315,5 +322,40 @@ public class SurveyController {
         }else{
             return new ResponseEntity<>(new BadRequest(400,"No surveys found Created and Published by you"),HttpStatus.NOT_FOUND);
         }
+    }
+
+
+    @RequestMapping(value = "/saved/{surveyId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getSavedSurvey(@PathVariable("surveyId") String surveyId,
+                                            @RequestParam(value = "email") String userEmail) {
+
+        Survey survey =  getSurvey(surveyId);
+
+        if(survey != null) {
+            List<Question> questions = survey.getQuestions();
+            for (Question question : questions) {
+                List<Responses> responses = question.getResponses();
+                List<Responses> temp = new ArrayList<>();
+                for (Responses response : responses) {
+                    if (response.getEmail().equals(userEmail)) {
+                        temp.add(response);
+
+                    }
+                }
+                if (temp.size() > 0) {
+                    question.setResponses(temp);
+                }
+
+
+            }
+            if (questions.size() > 0) {
+                survey.setQuestions(questions);
+            }
+            return  new ResponseEntity<>(survey,HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(new BadRequest(404, "Sorry, the requested survey with id " +surveyId + " does not exist"), HttpStatus.NOT_FOUND);
+        }
+
     }
 }
