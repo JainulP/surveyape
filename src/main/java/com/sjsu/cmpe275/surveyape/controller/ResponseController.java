@@ -174,7 +174,6 @@ public class ResponseController {
     public ResponseEntity<?> getAnswersBySurveyAndQuestionId(@RequestParam(value = "surveyId") String surveyId) {
         List<Integer> questions = responsesRepository.getQuestionAndAnswersForSurvey(Integer.parseInt(surveyId));
         List<Map<String, String>> masterList = new ArrayList<>();
-
         List<String> optionsList = new ArrayList<>();
         if (questions.size() > 0) {
             for (Integer question : questions) {
@@ -229,6 +228,7 @@ public class ResponseController {
                     }
                 }
                 masterList.add(optionsCountMap);
+                //res.put("question",masterList);
             }
             return new ResponseEntity<>(masterList, HttpStatus.OK);
         } else {
@@ -265,6 +265,11 @@ public class ResponseController {
         if (survey == null) {
             return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
         } else {
+//            if(survey.getSurveyType() == 2 && !userEmail.isEmpty() && userEmail != null && !userEmail.equals("")){
+//                String url = "127.0.0.1:3000/"+surveyId+"/"+ Base64.getEncoder().encodeToString(userEmail.getBytes());
+//                SurveyLinks surveyLinks = surveyLinksRepository.save(new SurveyLinks(survey,userEmail,url));
+//                //SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
+//            }
             if(survey.getSurveyType() != 0) {
                 SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
 //                if(survey.getSurveyType() != 0 && surveyLinks != null) {
@@ -289,9 +294,6 @@ public class ResponseController {
             }
             return new ResponseEntity<>(new BadRequest(200, "Survey is completed successfully"), HttpStatus.OK);
         }
-
-
-
     }
 
 
