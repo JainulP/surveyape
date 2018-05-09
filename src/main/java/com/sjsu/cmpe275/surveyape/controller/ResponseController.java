@@ -22,6 +22,9 @@ public class ResponseController {
     private QuestionRepository questionRepository;
     private UserRepository userRepository;
 
+    @Autowired
+    private SurveyCountRepository surveyCountRepository;
+
 
     @Autowired
     private SurveyRepository surveyRepository;
@@ -270,7 +273,8 @@ public class ResponseController {
 //                SurveyLinks surveyLinks = surveyLinksRepository.save(new SurveyLinks(survey,userEmail,url));
 //                //SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
 //            }
-            if(survey.getSurveyType() != 0) {
+
+            if (survey.getSurveyType() != 0) {
                 SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
 //                if(survey.getSurveyType() != 0 && surveyLinks != null) {
                 if (surveyLinks != null) {
@@ -278,27 +282,54 @@ public class ResponseController {
                     surveyLinks.setActivated(false);
                     surveyLinks.setCompleted(true);
                     surveyLinksRepository.save(surveyLinks);
-                    if(userEmail.isEmpty() || userEmail == null){
+                    if (userEmail.isEmpty() || userEmail == null) {
                         return new ResponseEntity<>(new BadRequest(400, "Can not send confirmation as emil id is not found"), HttpStatus.NOT_FOUND);
-                    }
-                    else{
-                        emailService.sendConfirmationForCompletion(userEmail,"Survey Confirmation","Thank you for submitting this survey. Your response has been successfully recorded.");
+                    } else {
+
+                        // For calculating the count of successfully completed surveys
+                        Optional<SurveyCount> surveyCountOptional = surveyCountRepository.findById(Integer.parseInt(surveyId));
+                        if (surveyCountOptional.isPresent()) {
+                            SurveyCount surveyCount = surveyCountOptional.get();
+                            surveyCount.setCount(surveyCount.getCount() + 1);
+                            surveyCountRepository.save(surveyCount);
+                        } else {
+                            surveyCountRepository.save(new SurveyCount(Integer.parseInt(surveyId), 1));
+                        }
+
+                        emailService.sendConfirmationForCompletion(userEmail, "Survey Confirmation", "Thank you for submitting this survey. Your response has been successfully recorded.");
                     }
                 }
 
-            }
-            else if(survey.getSurveyType() == 0){
-                if(!userEmail.isEmpty() &&  userEmail != null){
-                    emailService.sendConfirmationForCompletion(userEmail,"Survey Confirmation","Thank you for submitting this survey. Your response has been successfully recorded.");
+                // For counting survey completion
+            } else if (survey.getSurveyType() == 0) {
+                if (!userEmail.isEmpty() && userEmail != null) {
+                    // For calculating the count of successfully completed surveys
+                    Optional<SurveyCount> surveyCountOptional = surveyCountRepository.findById(Integer.parseInt(surveyId));
+                    if (surveyCountOptional.isPresent()) {
+                        SurveyCount surveyCount = surveyCountOptional.get();
+                        surveyCount.setCount(surveyCount.getCount() + 1);
+                        surveyCountRepository.save(surveyCount);
+                    } else {
+                        surveyCountRepository.save(new SurveyCount(Integer.parseInt(surveyId), 1));
+                    }
+                    emailService.sendConfirmationForCompletion(userEmail, "Survey Confirmation", "Thank you for submitting this survey. Your response has been successfully recorded.");
                 }
             }
+            // for counting
+            Optional<SurveyCount> surveyCountOptional = surveyCountRepository.findById(Integer.parseInt(surveyId));
+            if (surveyCountOptional.isPresent()) {
+                SurveyCount surveyCount = surveyCountOptional.get();
+                surveyCount.setCount(surveyCount.getCount() + 1);
+                surveyCountRepository.save(surveyCount);
+            } else {
+                surveyCountRepository.save(new SurveyCount(Integer.parseInt(surveyId), 1));
+            }
+            emailService.sendConfirmationForCompletion(userEmail, "Survey Confirmation", "Thank you for submitting this survey. Your response has been successfully recorded.");
             return new ResponseEntity<>(new BadRequest(200, "Survey is completed successfully"), HttpStatus.OK);
         }
+
+
     }
-
-
-
-
 
 
 }
