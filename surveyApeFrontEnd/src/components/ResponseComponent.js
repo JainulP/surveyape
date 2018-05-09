@@ -233,58 +233,116 @@ componentWillMount(){
         <div>
               {(this.props.data.questionType === 0)?
                         <div>
-                            {(this.props.data.answerType === "0") ?
-                              /*  Single*/
+                            {
+                                (this.props.data.choiceType === 0)?
+
                                 <div>
-                                    {(this.props.data.visualStyle === "0") ?
+
+                                    {(this.props.data.answerType === "0") ?
+                                        /*  Single*/
                                         <div>
-                                            <select className="form-control surveyape-input" name="cards" id="visualStyle"
-                                                    aria-describedby="Visual style" placeholder="Visual style"
-                                                    value={this.state.visualStyle}
-                                                    onChange={(event) => {
-                                                        this.setState({
-                                                            visualStyle: event.target.value
-                                                        });
-                                                    }}
-                                            >
-                                                <option value=""> </option>
-                                                {this.renderOptions(this.props.data.options)}
-                                            </select>
+                                            {(this.props.data.visualStyle === "0") ?
+                                                <div>
+                                                    <select className="form-control surveyape-input" name="cards" id="visualStyle"
+                                                            aria-describedby="Visual style" placeholder="Visual style"
+                                                            value={this.state.visualStyle}
+                                                            onChange={(event) => {
+                                                                this.setState({
+                                                                    visualStyle: event.target.value
+                                                                });
+                                                            }}
+                                                    >
+                                                        <option value=""> </option>
+                                                        {this.renderOptions(this.props.data.options)}
+                                                    </select>
+                                                </div>
+                                                :
+                                                <div>
+                                                    {(this.props.data.visualStyle === "1") ?
+                                                        <div>
+                                                            {this.renderRadio(this.props.data.options)}
+                                                        </div>
+                                                        :
+                                                        <div>
+                                                            {(this.props.data.visualStyle === "2") ?
+                                                                <div>
+                                                                    {this.renderCheckboxSingle(this.props.data.options)}
+                                                                </div>
+                                                                :
+                                                                null
+                                                            }
+                                                        </div>
+                                                    }
+                                                </div>
+                                            }
                                         </div>
                                         :
+                                        /* Multiple*/
                                         <div>
-                                        {(this.props.data.visualStyle === "1") ?
-                                            <div>
-                                                {this.renderRadio(this.props.data.options)}
-                                            </div>
-                                            :
                                             <div>
                                                 {(this.props.data.visualStyle === "2") ?
                                                     <div>
-                                                        {this.renderCheckboxSingle(this.props.data.options)}
+                                                        {this.renderCheckboxMultiple(this.props.data.options)}
                                                     </div>
                                                     :
                                                     null
                                                 }
                                             </div>
+                                        </div>
                                     }
+
                                     </div>
-                                    }
-                                </div>
-                                :
-                                /* Multiple*/
-                                <div>
+
+                                    :
+                                    /*For Images*/
+
                                     <div>
-                                        {(this.props.data.visualStyle === "2") ?
+
+
+
+
+                                        {(this.props.data.answerType === "0") ?
+                                            /*  Single*/
                                             <div>
-                                                {this.renderCheckboxMultiple(this.props.data.options)}
+
+                                                    <div>
+                                                        {(this.props.data.visualStyle === "1") ?
+                                                            <div>
+                                                                {this.renderRadio(this.props.data.options)}
+                                                            </div>
+                                                            :
+                                                            <div>
+                                                                {(this.props.data.visualStyle === "2") ?
+                                                                    <div>
+                                                                        {this.renderCheckboxSingle(this.props.data.options)}
+                                                                    </div>
+                                                                    :
+                                                                    null
+                                                                }
+                                                            </div>
+                                                        }
+                                                    </div>
+
                                             </div>
                                             :
-                                            null
+                                            /* Multiple*/
+                                            <div>
+                                                <div>
+                                                    {(this.props.data.visualStyle === "2") ?
+                                                        <div>
+                                                            {this.renderCheckboxMultiple(this.props.data.options)}
+                                                        </div>
+                                                        :
+                                                        null
+                                                    }
+                                                </div>
+                                            </div>
                                         }
+
+
                                     </div>
-                                </div>
                             }
+
 
 
                         </div>
