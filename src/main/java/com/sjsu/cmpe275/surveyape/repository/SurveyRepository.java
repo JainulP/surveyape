@@ -46,5 +46,9 @@ public interface SurveyRepository extends CrudRepository<Survey, Integer> {
             "SELECT DISTINCT * from survey s where  s.user_id = :userId  AND s.published=1", nativeQuery = true)
     List<Survey> getCreatedAndPublishedSurveyByOwner(@Param("userId") int userId);
 
+    @Query(value =
+            "SELECT DISTINCT * from survey s where  s.user_id = :userId", nativeQuery = true)
+    List<Survey> getCreatedSurveyByOwner(@Param("userId") int userId);
+
 
 }
