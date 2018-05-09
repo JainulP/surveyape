@@ -17,10 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.xml.ws.Response;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/survey")
@@ -59,9 +56,14 @@ public class SurveyController {
         try {
             date = sdf.parse(endTime);
             survey = surveyRepository.save(new Survey(surveyName, sdf.parse(endTime),Integer.parseInt(surveyType), user));
-            if(Integer.parseInt(surveyType) == 0 || Integer.parseInt(surveyType) == 2){//generate predefined url for general and open unique surveys
+            if(Integer.parseInt(surveyType) == 0 ){//generate predefined url for general and open unique surveys
                 int surveyId = survey.getSurveyId();
                 String url = "127.0.0.1:3000/" + surveyId;
+                surveyLinksRepository.save(new SurveyLinks(survey,url));
+            }
+            if( Integer.parseInt(surveyType) == 2){//generate predefined url for general and open unique surveys
+                int surveyId = survey.getSurveyId();
+                String url = "127.0.0.1:3000/" + surveyId + "/open";
                 surveyLinksRepository.save(new SurveyLinks(survey,url));
             }
         } catch (ParseException e) {
@@ -74,12 +76,20 @@ public class SurveyController {
     }
 
     @RequestMapping(value = "/{surveyId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getSurveyJson(@PathVariable("surveyId") String surveyId) {
+    public ResponseEntity<?> getSurveyJson(@PathVariable("surveyId") String surveyId,
+                                           @RequestParam(value = "email",required = false) String userEmail) {
         Survey survey = getSurvey(surveyId);
+
         if (survey == null) {
             return new ResponseEntity<>(new BadRequest(404, "Sorry, the requested survey with id " +surveyId + " does not exist"), HttpStatus.NOT_FOUND);
         }
         else {
+            if(survey.getSurveyType() == 1 || survey.getSurveyType() == 2) {
+                SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
+                if (surveyLinks.isActivated() == false || surveyLinks.isCompleted() == true) {
+                    return new ResponseEntity<>(new BadRequest(404, "You can not take this survey as this survey has been already been taken"), HttpStatus.NOT_FOUND);
+                }
+            }
             return new ResponseEntity<>(survey, HttpStatus.OK);
         }
 
@@ -87,14 +97,19 @@ public class SurveyController {
 
 
     private Survey getSurvey(String id) {
+        Optional<Survey> surveyOptional = surveyRepository.findById(Integer.parseInt(id));
+        if(surveyOptional.isPresent()) {
+            Survey survey = surveyOptional.get();
 
-        Survey survey = surveyRepository.findById(Integer.parseInt(id)).get();
 
-        if (survey == null) {
-            return null;
-        } else {
-            return survey;
+            if (survey == null) {
+                return null;
+            } else {
+                return survey;
 
+            }
+        }else{
+            return  null;
         }
     }
 
@@ -330,7 +345,6 @@ public class SurveyController {
                                             @RequestParam(value = "email") String userEmail) {
 
         Survey survey =  getSurvey(surveyId);
-
         if(survey != null) {
             List<Question> questions = survey.getQuestions();
             for (Question question : questions) {
@@ -339,23 +353,46 @@ public class SurveyController {
                 for (Responses response : responses) {
                     if (response.getEmail().equals(userEmail)) {
                         temp.add(response);
-
                     }
                 }
-                if (temp.size() > 0) {
+//                if (temp.size() > 0) {
                     question.setResponses(temp);
-                }
-
-
+                //}
             }
-            if (questions.size() > 0) {
+            //if (questions.size() > 0) {
                 survey.setQuestions(questions);
-            }
+            //}
             return  new ResponseEntity<>(survey,HttpStatus.OK);
         }
         else{
             return new ResponseEntity<>(new BadRequest(404, "Sorry, the requested survey with id " +surveyId + " does not exist"), HttpStatus.NOT_FOUND);
         }
-
     }
+
+//    @RequestMapping(value = "/validate/{surveyId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<?> validateSurveyLink(@PathVariable("surveyId") String surveyId,
+//                                            @RequestParam(value = "email",required = false) String userEmail) {
+//
+//        Optional<Survey> surveyOptional = surveyRepository.findById(Integer.parseInt(surveyId));
+//        if(surveyOptional.isPresent()){
+//            Survey survey = surveyOptional.get();
+//            if(survey.getSurveyType() == 1 || survey.getSurveyType() == 2) {
+//                SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
+//                if (surveyLinks.isActivated() == false || surveyLinks.isCompleted() == true) {
+//                    return new ResponseEntity<>(new BadRequest(404, "You can not take this survey as this survey has been already been taken"), HttpStatus.NOT_FOUND);
+//                } else {
+//                    return new ResponseEntity<>(new BadRequest(200, "You can not take this survey as this survey has been already been taken"), HttpStatus.NOT_FOUND);
+//
+//                }
+//            }
+//
+//        }
+//        else
+//        {
+//            return new ResponseEntity<>(new BadRequest(404, "Invalid link"), HttpStatus.NOT_FOUND);
+//
+//        }
+//        return  null;
+//    }
+
 }
