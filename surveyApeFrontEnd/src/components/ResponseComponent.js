@@ -20,16 +20,16 @@ class ResponseComponent extends Component {
             if(localStorage.getItem("email")){
                 email = localStorage.getItem("email");
             }
-            if(localStorage.getItem("guestemail")){
+            /*if(localStorage.getItem("guestemail")){
                 email = localStorage.getItem("guestemail");
-                localStorage.removeItem("guestemail");
-            }
+                //localStorage.removeItem("guestemail");
+            }*/
         }
         this.state = {
             answer:this.props.answerTemp,
             checked : null,
             questionId : this.props.data.questionId,
-            email : null,
+            email : email,
             userid : localStorage.getItem("userId"),
             surveyid:this.props.surveyId,
             responseId:this.props.responseId,
@@ -56,10 +56,10 @@ componentWillMount(){
         if(localStorage.getItem("email")){
             self.email = localStorage.getItem("email");
         }
-        if(localStorage.getItem("guestemail")){
+        /*if(localStorage.getItem("guestemail")){
             self.email = localStorage.getItem("guestemail");
             localStorage.removeItem("guestemail");
-        }
+        }*/
         this.setState(self);
     }
 }
