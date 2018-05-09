@@ -9,6 +9,7 @@ import {connect} from 'react-redux';
 import {GetComponent} from '../actions/actionsAll';
 import Calendar from 'react-calendar';
 import Question from './Question';
+import  Moment from 'react-moment'
 
 class CreateSurvey extends Component {
     constructor(props){
@@ -71,6 +72,7 @@ class CreateSurvey extends Component {
     }
     createBasicSurvey = () =>{
         // date format required yyyy-MM-dd-HH
+
         var data = this.state;
         data.surveyData.endTime = data.date.getYear() + "-" + data.date.getMonth() + "-" +
                                      data.date.getDate() + "-" + data.date.getHours();
@@ -86,7 +88,7 @@ class CreateSurvey extends Component {
             self.questionData.surveyId = res.surveyId;
                self.createSurveyResponse = res;
                this.setState(self);
-                alert("Survey successfully created! Pleas add questions to the survey!")
+                alert("Survey successfully created! Please add questions to the survey!")
             }});
     }
     publishSurvey = () =>{

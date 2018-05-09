@@ -84,27 +84,61 @@ class Dashboard extends Component {
         var self = this.state;
         API.surveyStats(this.state.surveyId)
             .then((res) => {
-                if (res && res.surveyId) {
+                if (res && res.surveyName) {
+                    self.surveyStats = res;
+                    this.setState(self);
+                    console.log(res);
+                     const data = {};
+                    // let questionStr = res.find(i => i['question']);
+                    // let labels = [];
+                    // let values = [];
+                    // for (let i in res) {
+                    //     if (i !== 'question') {
+                    //         labels.append(i);
+                    //         values.append(res[i]);
+                    //     }
+                    // }
+                    // data['labels'] = labels;
+                    // data['datasets'][0]['data'] = values;
+                    // data['datasets'][0]['backgroundColor'] = [
+                    //     '#FF6384',
+                    //     '#36A2EB',
+                    //     '#FFCE56',
+                    //     '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
+                    //     '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
+                    // ];
+
+                    return data;
+                }
+            });
+
+        API.questionStats(this.state.surveyId)
+            .then((res) => {
+                if (res && res.question) {
+                    // self.surveyStats = res;
+                    // this.setState(self);
                     console.log(res);
                     const data = {};
+
+
                     let questionStr = res.find(i => i['question']);
                     let labels = [];
                     let values = [];
-                    for (let i in res) {
-                        if (i !== 'question') {
-                            labels.append(i);
-                            values.append(res[i]);
-                        }
-                    }
-                    data['labels'] = labels;
-                    data['datasets'][0]['data'] = values;
-                    data['datasets'][0]['backgroundColor'] = [
-                        '#FF6384',
-                        '#36A2EB',
-                        '#FFCE56',
-                        '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
-                        '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
-                    ];
+                    // for (let i in res) {
+                    //     if (i !== 'question') {
+                    //         labels.append(i);
+                    //         values.append(res[i]);
+                    //     }
+                    // }
+                    // data['labels'] = labels;
+                    // data['datasets'][0]['data'] = values;
+                    // data['datasets'][0]['backgroundColor'] = [
+                    //     '#FF6384',
+                    //     '#36A2EB',
+                    //     '#FFCE56',
+                    //     '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
+                    //     '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
+                    // ];
 
                     return data;
                 }
@@ -114,10 +148,13 @@ class Dashboard extends Component {
     render() {
         var surveyList = [];
         var data = this.state.listOfSurveys;
+        var temp = this.state.surveyStats;
+
         if (data && data.length > 0) {
             data.map(function (temp, index) {
+                let a = temp.surveyId;
                 surveyList.push(
-                    <option value={temp.surveyId}>{temp.surveyName}</option>
+                    <option value={a}>{temp.surveyName}</option>
                 );
             }, this);
         }
@@ -152,7 +189,7 @@ class Dashboard extends Component {
                     </div>
                 </div>
                 <div className="row margin-70 stat-heading">
-                    {this.state.surveyStats.surveyName}
+                    {temp.surveyName}
                 </div>
                 <div className="row margin-70">
                     <div className="col-md-3 box-shadow-surveyape">
@@ -160,7 +197,7 @@ class Dashboard extends Component {
                             START TIME
                         </div>
                         <div className="stat-data">
-                            {this.state.surveyStats.startTime}
+                            {temp.startDate}
                         </div>
                     </div>
                     <div className="col-md-3 box-shadow-surveyape">
@@ -168,7 +205,7 @@ class Dashboard extends Component {
                             END TIME
                         </div>
                         <div className="stat-data">
-                            {this.state.surveyStats.endTime}
+                            {temp.endDate}
                         </div>
                     </div>
                     <div className="col-md-3 box-shadow-surveyape">
@@ -176,7 +213,7 @@ class Dashboard extends Component {
                             # OF PARTICIPANTS
                         </div>
                         <div className="stat-data">
-                            {this.state.surveyStats.noParticipants}
+                            {temp.participants}
                         </div>
                     </div>
                     <div className="col-md-3 box-shadow-surveyape">
@@ -184,7 +221,7 @@ class Dashboard extends Component {
                             PARTICIPANTS RATE
                         </div>
                         <div className="stat-data">
-                            {this.state.surveyStats.participationRate}
+                            {temp.participationRate}
                         </div>
                     </div>
                 </div>

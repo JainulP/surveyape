@@ -1,6 +1,7 @@
 package com.sjsu.cmpe275.surveyape.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.sjsu.cmpe275.surveyape.utils.View;
@@ -34,9 +35,11 @@ public class Survey {
 
     private boolean published;
 
+    @JsonFormat(pattern="yyyy-MM-dd-hh")
     @JsonView(View.SurveyView.class)
     private Date endTime;
 
+    @JsonFormat(pattern="yyyy-MM-dd-hh")
     @JsonView(View.SurveyView.class)
     private Date startTime;
 

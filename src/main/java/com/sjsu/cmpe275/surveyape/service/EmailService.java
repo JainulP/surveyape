@@ -40,7 +40,7 @@ public class EmailService {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setSubject("Invitation to the survey");
-            String url = "127.0.0.1:3000/survey/"+surveyId;
+            String url = "127.0.0.1:3000/"+surveyId;
             for (String email : emails) {
                 message.setText(url);
                 message.setTo(email);
@@ -61,7 +61,7 @@ public class EmailService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setSubject("Invitation to the survey");
             for (String email : emails) {
-                String url = "127.0.0.1:3000/survey/"+surveyId+"/"+ Base64.getEncoder().encodeToString(email.getBytes());
+                String url = "127.0.0.1:3000/"+surveyId+"/"+ Base64.getEncoder().encodeToString(email.getBytes());
 
                 message.setText(url);
                 message.setTo(email);

@@ -19,6 +19,7 @@ class TakeSurvey extends Component {
             var a = temp.split("/");
             surveyIdTemp = a[0];
             accessCodeTemp = a[1];
+
         }
         var email = null
         if(accessCodeTemp && accessCodeTemp !== "open" ) {
@@ -33,9 +34,9 @@ class TakeSurvey extends Component {
             if(localStorage.getItem("email")){
                 email = localStorage.getItem("email");
             }
-            if(localStorage.getItem("guestemail")){
+            /*if(localStorage.getItem("guestemail")){
                 email = localStorage.getItem("guestemail");
-            }
+            }*/
         }
         super(props);
         this.state = {
@@ -102,11 +103,21 @@ class TakeSurvey extends Component {
                 email: this.state.email
             }
             if(this.state.accessCode === "open"){
-                if(this.state.email){
+                var surveyIdTemp = null;
+                var accessCodeTemp = null;
+                var loc = this.props.location.pathname;
+                var temp = loc.substr(loc.indexOf("y")+2);
+                var a = temp.split("/");
+                surveyIdTemp = a[0];
+                accessCodeTemp = a[2];
+                self.email = accessCodeTemp;
+                this.setState(self);
+                if(accessCodeTemp){
                     this.openclosesurveydetails();
                 }
                 else{
                     localStorage.setItem("openSurveyLink",this.props.location.pathname)
+                    localStorage.setItem("surveyId",this.state.surveyId)
                     this.props.history.push("/openSurveyLogin");
                 }
             }
@@ -153,10 +164,11 @@ class TakeSurvey extends Component {
                         self.currentAnswer = res.questions[0].responses[0].answers;
                         self.currentresponseId = res.questions[0].responses[0].resId;
                     }
-                    if (this.state.surveyDetails.questions.length > 1) {
+                    this.setState(self);
+                    if (self.surveyDetails.questions.length > 1) {
                         document.getElementById("nextClicked").disabled = false;
                     }
-                    this.setState(self);
+
                 }
             });
     }

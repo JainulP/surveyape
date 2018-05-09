@@ -77,6 +77,7 @@ public class SurveyController {
 
                 String url = "127.0.0.1:3000/survey/" + surveyId + "/open";
                 surveyLinksRepository.save(new SurveyLinks(survey,url));
+
             }
         } catch (ParseException e) {
             return new ResponseEntity<>(new BadRequest(400, "Invalid Date"), HttpStatus.BAD_REQUEST);
