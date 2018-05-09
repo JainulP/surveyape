@@ -35,7 +35,7 @@ class TakeSurvey extends Component {
                 email = localStorage.getItem("email");
             }
             if(localStorage.getItem("email") && accessCodeTemp == "open") {
-                email = localStorage.getItem("email");
+                email = atob(accessCodeTemp);
             }
 
         }
@@ -112,6 +112,9 @@ class TakeSurvey extends Component {
                 surveyIdTemp = a[0];
                 if(this.state.email == null){
                     accessCodeTemp = a[2];
+                    if(accessCodeTemp != null && accessCodeTemp != "" && accessCodeTemp != undefined) {
+                        accessCodeTemp = atob(accessCodeTemp);
+                    }
                 }
                else{
                     accessCodeTemp = this.state.email;
@@ -264,7 +267,7 @@ class TakeSurvey extends Component {
                     </div>
                     <button type="button" className="surveyape-button" name="prevClicked" id = "prevClicked" onClick={()=>this.prevClicked()}>PREVIOUS</button>
                     <button type="button" className="surveyape-button" name="nextClicked" id = "nextClicked" onClick={()=>this.nextClicked()}>NEXT</button>
-                    <ResponseComponent responseId={this.state.currentresponseId} answer={this.state.currentAnswer} surveyid={this.state.surveyId} size={this.state.size} accessCode={this.state.accessCode} data={this.state.currentQuestion} number={this.state.currentIndex} surveyId={this.state.surveyId}/>
+                    <ResponseComponent emailtmp = {this.state.email} responseId={this.state.currentresponseId} answer={this.state.currentAnswer} surveyid={this.state.surveyId} size={this.state.size} accessCode={this.state.accessCode} data={this.state.currentQuestion} number={this.state.currentIndex} surveyId={this.state.surveyId}/>
 
                 </div>
             </div>

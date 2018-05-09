@@ -126,6 +126,7 @@ public class AddParticipantsController {
             String url = "127.0.0.1:3000/survey/"+surveyId+"/open/"+ Base64.getEncoder().encodeToString(email.getBytes());
             SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey,email,url));
             links.setActivated(true);
+            links.setCompleted(false);
             surveyLinksRepository.save(links);
             emailService.sendUniqueInvitationForOpenUniqueSurveyUsers(email, null, surveyId);
             return new ResponseEntity<>(new BadRequest(200, "Unique invitation link has been sent to the email id provided by you."), HttpStatus.OK);
