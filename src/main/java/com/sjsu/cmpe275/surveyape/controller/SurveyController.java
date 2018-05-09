@@ -49,7 +49,13 @@ public class SurveyController {
                                           @RequestParam(value = "userId") String userId,
                                           @RequestParam(value = "surveyType") String surveyType) {
 
-        User user = userRepository.findById(Integer.parseInt(userId)).get();
+        Optional<User> optionalUser = userRepository.findById(Integer.parseInt(userId));
+        if (!optionalUser.isPresent()) {
+            return new ResponseEntity<>(new BadRequest(400, "Invalid User! You need to sign in to app to create a survey"), HttpStatus.NOT_FOUND);
+
+        }
+
+        User user = optionalUser.get();
         String format = "yyyy-MM-dd-HH";
 
         SimpleDateFormat sdf = new SimpleDateFormat(format);
@@ -361,6 +367,13 @@ public class SurveyController {
 
         Survey survey =  getSurvey(surveyId);
         if(survey != null) {
+
+            if(survey.getSurveyType() == 1 || survey.getSurveyType() == 2) {
+                SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
+                if (surveyLinks.isActivated() == false || surveyLinks.isCompleted() == true) {
+                    return new ResponseEntity<>(new BadRequest(404, "You can not take this survey as this survey has been already been taken"), HttpStatus.NOT_FOUND);
+                }
+            }
             List<Question> questions = survey.getQuestions();
             for (Question question : questions) {
                 List<Responses> responses = question.getResponses();

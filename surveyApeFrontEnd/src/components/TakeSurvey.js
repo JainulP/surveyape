@@ -95,33 +95,39 @@ class TakeSurvey extends Component {
             }
             API.getSurveybYemail(data)
                 .then((res) => {
-                    if (res.surveyType === 1 && !this.state.accessCode) {
-                        alert("NO ACCESS RIGHTS")
+                    if(res.code == 404){
+                        alert("You can not take this survey as this survey has been already been taken")
                         this.props.history.push("/");
-                    }
-                    if (res.published === false) {
-                        alert("SURVEY NOT PUBLISHED YET")
-                        this.props.history.push("/");
-                    }
-                    var d1 = new Date();
-                    var d2 = new Date(res.endTime);
-                    console.log(d1.getTime() > d2.getTime());
-                    /*if(d1.getTime() > d2.getTime()){
-                        alert("SURVEY EXPIRED")
-                        this.props.history.push("/");
-                    }*/
-                    self.surveyDetails = res;
-                    self.currentQuestion = res.questions[0];
+                    }else{
+                        if (res.surveyType === 1 && !this.state.accessCode) {
+                            alert("NO ACCESS RIGHTS")
+                            this.props.history.push("/");
+                        }
+                        if (res.published === false) {
+                            alert("SURVEY NOT PUBLISHED YET")
+                            this.props.history.push("/");
+                        }
+                        var d1 = new Date();
+                        var d2 = new Date(res.endTime);
+                        console.log(d1.getTime() > d2.getTime());
+                        /*if(d1.getTime() > d2.getTime()){
+                            alert("SURVEY EXPIRED")
+                            this.props.history.push("/");
+                        }*/
+                        self.surveyDetails = res;
+                        self.currentQuestion = res.questions[0];
 
-                    self.size = res.questions.length;
-                    if(res.questions[0].responses.length>0){
-                        self.currentAnswer = res.questions[0].responses[0].answers;
-                        self.currentresponseId = res.questions[0].responses[0].resId;
+                        self.size = res.questions.length;
+                        if(res.questions[0].responses.length>0){
+                            self.currentAnswer = res.questions[0].responses[0].answers;
+                            self.currentresponseId = res.questions[0].responses[0].resId;
+                        }
+                        if (this.state.surveyDetails.questions.length > 1) {
+                            document.getElementById("nextClicked").disabled = false;
+                        }
+                        this.setState(self);
                     }
-                    if (this.state.surveyDetails.questions.length > 1) {
-                        document.getElementById("nextClicked").disabled = false;
-                    }
-                    this.setState(self);
+
                 });
         }
     }
