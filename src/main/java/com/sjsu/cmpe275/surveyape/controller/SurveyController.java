@@ -8,13 +8,14 @@ import com.sjsu.cmpe275.surveyape.repository.SurveyRepository;
 import com.sjsu.cmpe275.surveyape.repository.UserRepository;
 import com.sjsu.cmpe275.surveyape.service.EmailService;
 import com.sjsu.cmpe275.surveyape.utils.View;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Response;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -22,6 +23,8 @@ import java.util.*;
 @RestController
 @RequestMapping(value = "/survey")
 public class SurveyController {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private SurveyRepository surveyRepository;
@@ -209,7 +212,7 @@ public class SurveyController {
 
     @RequestMapping(value = "/{surveyId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> publishSurvey(@PathVariable("surveyId") String surveyId,
-                                           @RequestParam(value= "published") String published) {
+                                           @RequestParam(value = "published") String published) {
         Survey survey = surveyRepository.findById(Integer.parseInt(surveyId)).get();
             if (survey == null) {
                 return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
@@ -318,13 +321,25 @@ public class SurveyController {
 
     /* For stats */
 
-    @GetMapping(value = "/surveystats/{surveyid}",produces="application/json")
-    public ResponseEntity<?> getStatsForSurvey(@PathVariable("surveyid")String surveyId){
-        StatsDto dto = surveyRepository.getSurveyStatsByTimeAndParticipants(surveyId);
-        if(dto!=null){
-            return new ResponseEntity<>(dto,HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>(new BadRequest(400,"No stats found for this survey"),HttpStatus.NOT_FOUND);
+    @GetMapping(value = "/surveystats/{surveyid}", produces = "application/json")
+    public ResponseEntity<?> getStatsForSurvey(@PathVariable("surveyid") int surveyId) {
+        Optional<Survey> surveyOpt = surveyRepository.findById(surveyId);
+        Map<String,String> map = new HashMap<>();
+        if (surveyOpt.isPresent()) {
+            Survey survey = surveyOpt.get();
+            int participants = surveyRepository.getParticipantsForSurvey(surveyId);
+            int invitedUsers = surveyRepository.getInvitedUsersForSurvey(surveyId);
+            int participationRate = 0;
+            if (invitedUsers != 0) {
+                participationRate = (participants / invitedUsers) * 100;
+                map.put("start_date", survey.getStartTime().toString());
+                map.put("end_date", survey.getStartTime().toString());
+                map.put("participants", String.valueOf(participants));
+                map.put("participationRate", String.valueOf(participationRate));
+            }
+            return new ResponseEntity<>(map, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new BadRequest(404, "Survey not found"), HttpStatus.OK);
         }
     }
 

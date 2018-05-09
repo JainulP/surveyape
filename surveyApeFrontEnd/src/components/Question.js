@@ -9,6 +9,12 @@ import {connect} from 'react-redux';
 import {GetComponent} from '../actions/actionsAll';
 import {updateQuestion} from "../api/API";
 import {createQuestion} from "../api/API";
+import Dropzone from 'react-dropzone';
+import request from 'superagent';
+
+
+const CLOUDINARY_UPLOAD_PRESET = 'cmpe275';
+const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/cmpe275/upload';
 
 class Question extends Component {
     constructor(props){
@@ -24,11 +30,40 @@ class Question extends Component {
             visualStyle:this.props.data.visualStyle,
             questionId:this.props.data.questionId,
             editMode : false,
+            uploadedFileCloudinaryUrl: ''
         }
     }
     componentDidMount(){
 
     }
+
+
+    onImageDrop(files) {
+        this.setState({
+            uploadedFile: files[0]
+        });
+        this.handleImageUpload(files[0]);
+    }
+
+    handleImageUpload(file) {
+        let upload = request.post(CLOUDINARY_UPLOAD_URL)
+            .field('upload_preset', CLOUDINARY_UPLOAD_PRESET)
+            .field('file', file);
+
+        upload.end((err, response) => {
+            if (err) {
+                console.error(err);
+            }
+
+            if (response.body.secure_url !== '') {
+                this.setState({
+                    uploadedFileCloudinaryUrl: response.body.secure_url
+                });
+            }
+        });
+    }
+
+
     deleteQuestion = () =>{
         API.deleteQuestion(this.state.questionId)
             .then((res) => {
@@ -257,7 +292,7 @@ saveQuestion = () =>{
                                 </div>
 
                                 {
-                                    (this.state.choiceType === 0) ?
+                                    (this.state.choiceType === "0") ?
                                         <div>
                                             <input type="text" className="form-control surveyape-input" id="options"
                                                    aria-describedby="Options" placeholder="Options"
@@ -270,15 +305,28 @@ saveQuestion = () =>{
                                         </div>
                                         :
                                         <div>
-                                            <input type="text" className="form-control surveyape-input" id="options"
-                                                   aria-describedby="Options" placeholder="Options"
-                                                   onChange={(event) => {
-                                                       this.setState({
-                                                           options: event.target.value
-                                                       });
-                                                   }}
-                                            />
-                                        </div>
+                                            {
+                                                (this.state.choiceType === "1") ?
+                                                    <div>
+                                                        <Dropzone
+                                                            multiple={false}
+                                                            accept="image/*"
+                                                            onDrop={this.onImageDrop.bind(this)}>
+                                                            <p>Drop an image or click to select a file to upload.</p>
+                                                        </Dropzone>
+
+
+                                                        <div>
+                                                            {this.state.uploadedFileCloudinaryUrl === '' ? null :
+                                                                <div>
+                                                                    <p>{this.state.uploadedFile.name}</p>
+                                                                    <img src={this.state.uploadedFileCloudinaryUrl} />
+                                                                </div>}
+                                                        </div>
+                                                    </div>
+                                                    :null
+                                            }
+                                    </div>
                                 }
 
                             </div>

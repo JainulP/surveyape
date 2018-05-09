@@ -7,14 +7,26 @@ import Calendar from 'react-calendar';
 class ResponseComponent extends Component {
     constructor(props){
         super(props);
+        var email = null
+        if(this.props.accessCodeTemp && this.props.accessCodeTemp !== "open" ) {
+            try {
+                email = atob(this.props.accessCodeTemp);
+            }
+            catch (err) {
+                alert("invalid link")
+            }
+        }
+        else{
+            email = localStorage.getItem("email");
+        }
         this.state = {
             answer:this.props.answerTemp,
             checked : null,
             questionId : this.props.data.questionId,
-            email : localStorage.getItem("email"),
+            email : null,
             userid : localStorage.getItem("userId"),
             surveyid:this.props.surveyId,
-            responseId:null,
+            responseId:this.props.responseId,
             emailtaken :null,
             responseIds:[]
         }
@@ -22,7 +34,7 @@ class ResponseComponent extends Component {
 componentWillMount(){
     var email = null;
 
-    if(this.props.accessCode) {
+    if(this.props.accessCode && this.props.accessCode !== "open" ) {
         try {
             var self = this.state;
             email = atob(this.props.accessCode);
@@ -32,6 +44,11 @@ componentWillMount(){
         catch (err) {
             alert("invalid link")
         }
+    }
+    else{
+        var self = this.state;
+        self.email = localStorage.getItem("email");
+        this.setState(self);
     }
 }
     onStarClick(nextValue, prevValue, name) {
@@ -75,7 +92,7 @@ componentWillMount(){
         }
     }
     saveResponse = () =>{
-        if(!this.state.responseIds[this.props.number]) {
+        if(!this.props.responseId ||  !this.state.responseIds[this.props.number]) {
             var self = this.state;
             self.questionId = this.props.data.questionId;
             API.saveResponse(self)
@@ -189,6 +206,12 @@ componentWillMount(){
     return (
       <div className="row margin-70 margin-none">
           <div className="form-group resizedTextbox col-md-6">
+              <div>
+                  {this.props.answer}
+              </div>
+              <div>
+                  {this.props.responseId}
+              </div>
                     <span>
                         {this.props.data.questionStr}
                     </span>
