@@ -1,6 +1,7 @@
 package com.sjsu.cmpe275.surveyape.controller;
 
 import com.sjsu.cmpe275.surveyape.model.BadRequest;
+import com.sjsu.cmpe275.surveyape.model.Survey;
 import com.sjsu.cmpe275.surveyape.model.User;
 import com.sjsu.cmpe275.surveyape.repository.SurveyRepository;
 import com.sjsu.cmpe275.surveyape.repository.UserRepository;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.support.SessionAttributeStore;
@@ -17,6 +19,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpSession;
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -106,6 +109,16 @@ public class UserController {
         store.cleanupAttribute(request,"username");
         return new ResponseEntity<>(new BadRequest(200,"You have have been logged out successfully"),HttpStatus.OK);
 
+    }
+
+    @RequestMapping(value = "/created/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getCreatedSurveyByOwner(@PathVariable("userId")String userId){
+        List<Survey> surveys = surveyRepository.getCreatedSurveyByOwner(Integer.parseInt(userId));
+        if(surveys.size()>0){
+            return new ResponseEntity<>(surveys,HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(new BadRequest(400,"No surveys found Created by you"),HttpStatus.NOT_FOUND);
+        }
     }
 
 }

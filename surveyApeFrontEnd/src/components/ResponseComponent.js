@@ -20,16 +20,16 @@ class ResponseComponent extends Component {
             if(localStorage.getItem("email")){
                 email = localStorage.getItem("email");
             }
-            if(localStorage.getItem("guestemail")){
+            /*if(localStorage.getItem("guestemail")){
                 email = localStorage.getItem("guestemail");
-                localStorage.removeItem("guestemail");
-            }
+                //localStorage.removeItem("guestemail");
+            }*/
         }
         this.state = {
             answer:this.props.answerTemp,
             checked : null,
             questionId : this.props.data.questionId,
-            email : null,
+            email : email,
             userid : localStorage.getItem("userId"),
             surveyid:this.props.surveyId,
             responseId:this.props.responseId,
@@ -56,10 +56,10 @@ componentWillMount(){
         if(localStorage.getItem("email")){
             self.email = localStorage.getItem("email");
         }
-        if(localStorage.getItem("guestemail")){
+        /*if(localStorage.getItem("guestemail")){
             self.email = localStorage.getItem("guestemail");
             localStorage.removeItem("guestemail");
-        }
+        }*/
         this.setState(self);
     }
 }
@@ -81,24 +81,6 @@ componentWillMount(){
                 optionsList.push(
                     <option value={temp}>{temp}</option>
                 );
-            }, this);
-            return optionsList;
-        }
-    }
-    renderRadio = (data) =>{
-        var optionsList = [];
-        if (data && data.length > 0) {
-            data.map(function (temp, index) {
-                optionsList.push(
-                    <span>
-                    <input type="radio" name={this.props.data.questionId} value={temp}
-                           onChange={(event) => {
-                               this.setState({
-                                   answer: event.target.value
-                               });
-                           }}/>{temp}
-                    </span>
-            )
             }, this);
             return optionsList;
         }
@@ -131,6 +113,44 @@ componentWillMount(){
                 });
         }
     }
+    renderRadio = (data) =>{
+        var optionsList = [];
+        if (data && data.length > 0) {
+            data.map(function (temp, index) {
+                optionsList.push(
+                    <span>
+                    <input type="radio" name={this.props.data.questionId} value={temp}
+                           onChange={(event) => {
+                               this.setState({
+                                   answer: event.target.value
+                               });
+                           }}/>{temp}
+                    </span>
+            )
+            }, this);
+            return optionsList;
+        }
+    }
+
+    renderRadioImages = (data) =>{
+        var optionsList = [];
+        if (data && data.length > 0) {
+            data.map(function (temp, index) {
+                optionsList.push(
+                    <span>
+                    <input type="radio" name={this.props.data.questionId} value={temp}
+                           onChange={(event) => {
+                               this.setState({
+                                   answer: event.target.value
+                               });
+                           }}/><img className="img-height" src={temp}></img>
+                    </span>
+                )
+            }, this);
+            return optionsList;
+        }
+    }
+
     renderCheckboxSingle = (data) =>{
         var optionsList = [];
         if (data && data.length > 0) {
@@ -162,19 +182,40 @@ componentWillMount(){
             return optionsList;
         }
     }
-    submitSurvey = () =>{
-        var data={
-            surveyId : this.props.surveyid,
-            email : this.state.email || this.state.emailtaken
-        }
-        API.completeSurvey(data)
-            .then((res) => {
-                console.log(res)
-                alert("Thank you for submitting your response!")
-                window.location = "http://localhost:3000/"
 
-            });
+
+    renderCheckboxSingleImages = (data) =>{
+        var optionsList = [];
+        if (data && data.length > 0) {
+            data.map(function (temp, index) {
+                optionsList.push(
+                    <span>
+                    <input
+                        name={temp}
+                        id={temp}
+                        type="checkbox"
+                        value={temp}
+                        onChange={(event) => {
+                            var temp = this.props.data.options;
+                            var val = event.target.value;
+                            for (let i = 0; i < temp.length; i++) {
+                                if (temp[i] !== val) {
+                                    document.getElementById(temp[i]).checked = false;
+                                }
+                            }
+                            this.setState({
+                                answer: event.target.value
+                            });
+                            //console.log(this.state.answer)
+                        }}
+                    /><img className="img-height" src={temp}></img>
+                    </span>
+                );
+            }, this);
+            return optionsList;
+        }
     }
+
     renderCheckboxMultiple = (data) =>{
         var optionsList = [];
         if (data && data.length > 0) {
@@ -216,6 +257,71 @@ componentWillMount(){
             }, this);
             return optionsList;
         }
+    }
+
+    renderCheckboxMultipleImages = (data) =>{
+        var optionsList = [];
+        if (data && data.length > 0) {
+            data.map(function (temp, index) {
+                optionsList.push(
+                    <span>
+                    <input
+                        name={index}
+                        type="checkbox"
+                        value={temp}
+                        onChange={(event) => {
+                            var temp = this.state.mcqarray;
+                            var val =  event.target.value;
+                            var changed = false;
+                            if(!temp || temp === null || temp.length === 0){
+                                temp=[];
+                                temp.push(val);
+                            }
+                            else {
+                                for (let i = 0; i < temp.length; i++) {
+                                    if (temp[i] === val) {
+                                        temp.splice(i, 1);
+                                        changed = true;
+                                    }
+
+                                }
+                                if(!changed){
+                                    temp.push(val);
+                                }
+                            }
+                            var imgtemp=null;
+                            if(temp.length>0){
+                                imgtemp = temp[0];
+                            }
+                            for(var i=1;i < temp.length;i++){
+                                imgtemp = imgtemp + "," + temp[i];
+                            }
+                            // console.log(temp)
+                            this.setState({
+                                answer:imgtemp,
+                                mcqarray:temp
+                            });
+                        }}
+                    /><img className="img-height" src={temp}></img>
+                    </span>
+                );
+            }, this);
+            return optionsList;
+        }
+    }
+
+    submitSurvey = () =>{
+        var data={
+            surveyId : this.props.surveyid,
+            email : this.state.email || this.state.emailtaken
+        }
+        API.completeSurvey(data)
+            .then((res) => {
+                console.log(res)
+                alert("Thank you for submitting your response!")
+                window.location = "http://localhost:3000/"
+
+            });
     }
   render() {
     return (
@@ -298,9 +404,6 @@ componentWillMount(){
 
                                     <div>
 
-
-
-
                                         {(this.props.data.answerType === "0") ?
                                             /*  Single*/
                                             <div>
@@ -308,13 +411,13 @@ componentWillMount(){
                                                     <div>
                                                         {(this.props.data.visualStyle === "1") ?
                                                             <div>
-                                                                {this.renderRadio(this.props.data.options)}
+                                                                {this.renderRadioImages(this.props.data.options)}
                                                             </div>
                                                             :
                                                             <div>
                                                                 {(this.props.data.visualStyle === "2") ?
                                                                     <div>
-                                                                        {this.renderCheckboxSingle(this.props.data.options)}
+                                                                        {this.renderCheckboxSingleImages(this.props.data.options)}
                                                                     </div>
                                                                     :
                                                                     null
@@ -330,7 +433,7 @@ componentWillMount(){
                                                 <div>
                                                     {(this.props.data.visualStyle === "2") ?
                                                         <div>
-                                                            {this.renderCheckboxMultiple(this.props.data.options)}
+                                                            {this.renderCheckboxMultipleImages(this.props.data.options)}
                                                         </div>
                                                         :
                                                         null

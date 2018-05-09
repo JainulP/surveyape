@@ -31,7 +31,8 @@ class Question extends Component {
             questionId:this.props.data.questionId,
             editMode : false,
             uploadedFileCloudinaryUrl: '',
-            myArray: []
+            myArray: [],
+            optionsListS : []
         }
     }
     componentDidMount(){
@@ -70,14 +71,19 @@ class Question extends Component {
             }
 
             if (response.body.secure_url !== '') {
-
+                var self = this.state;
+                var optionstemp = this.state.options;
+                this.state.optionsListS.push(<img className="img-height" src={response.body.secure_url}></img>);
+                if(optionstemp.length === 0) {
+                    optionstemp = response.body.secure_url;
+                }
+                else{
+                    optionstemp = optionstemp + "," + response.body.secure_url;
+                }
                 this.setState({
-                    uploadedFileCloudinaryUrl: response.body.secure_url,
-                    myArray: this.state.myArray + "," + this.state.uploadedFileCloudinaryUrl
+                    options: optionstemp
                 });
-
-
-            }
+                           }
         });
     }
 
@@ -210,7 +216,6 @@ saveQuestion = () =>{
                 }}
                     />
                     </div>
-
                     <div className="form-group resizedTextbox">
                     <div>
                     <span>
@@ -297,7 +302,7 @@ saveQuestion = () =>{
                                         <option value=""> </option>
                                         <option value="2">Checkbox</option>
                                         {
-                                            (this.state.answerType === "0") ?
+                                            (this.state.answerType === "0" && this.state.choiceType === "0") ?
                                                 <option value="0">Dropdown</option>
                                                 : null
                                         }
@@ -338,13 +343,7 @@ saveQuestion = () =>{
 
 
                                                         <div>
-                                                            {this.state.uploadedFileCloudinaryUrl === '' ? null :
-                                                                <div>
-                                                                    <p>{this.state.uploadedFile.name}</p>
-
-                                                                    {this.state.myArray[1]}
-                                                                    <img src={this.state.options} />
-                                                                </div>}
+                                                            {this.state.optionsListS}
                                                         </div>
 
 
