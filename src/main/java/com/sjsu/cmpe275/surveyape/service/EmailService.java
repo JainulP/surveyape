@@ -36,7 +36,7 @@ public class EmailService {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setSubject("Invitation to the survey");
-            String url = "127.0.0.1:3000/"+surveyId;
+            String url = "127.0.0.1:3000/survey/"+surveyId;
             for (String email : emails) {
                 message.setText(url);
                 message.setTo(email);
@@ -55,14 +55,33 @@ public class EmailService {
         List<String> urls = new ArrayList<>();
         try {
             SimpleMailMessage message = new SimpleMailMessage();
-            message.setSubject("Invitation to the closed survey");
+            message.setSubject("Invitation to the survey");
             for (String email : emails) {
-                String url = "127.0.0.1:3000/"+surveyId+"/"+ Base64.getEncoder().encodeToString(email.getBytes());
+                String url = "127.0.0.1:3000/survey/"+surveyId+"/"+ Base64.getEncoder().encodeToString(email.getBytes());
                 message.setText(url);
                 message.setTo(email);
                 emailSender.send(message);
                 urls.add(url);
             }
+        } catch (MailException exception) {
+            logger.debug("Unable to send uniqueMessage for users");
+            exception.printStackTrace();
+        }
+        return urls;
+    }
+
+    public List<String> sendUniqueInvitationForOpenUniqueSurveyUsers(String email, String text,String surveyId) {
+        List<String> urls = new ArrayList<>();
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setSubject("Invitation to the survey");
+
+                String url = "127.0.0.1:3000/survey/"+surveyId+"/open/"+ Base64.getEncoder().encodeToString(email.getBytes());
+                message.setText(url);
+                message.setTo(email);
+                emailSender.send(message);
+                urls.add(url);
+
         } catch (MailException exception) {
             logger.debug("Unable to send uniqueMessage for users");
             exception.printStackTrace();
