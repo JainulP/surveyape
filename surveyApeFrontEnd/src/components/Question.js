@@ -31,7 +31,8 @@ class Question extends Component {
             questionId:this.props.data.questionId,
             editMode : false,
             uploadedFileCloudinaryUrl: '',
-            myArray: []
+            myArray: [],
+            optionsListS : []
         }
     }
     componentDidMount(){
@@ -72,7 +73,8 @@ class Question extends Component {
             if (response.body.secure_url !== '') {
                 var self = this.state;
                 var optionstemp = this.state.options;
-                if(optionstemp === null) {
+                this.state.optionsListS.push(<img className="img-height" src={response.body.secure_url}></img>);
+                if(optionstemp.length === 0) {
                     optionstemp = response.body.secure_url;
                 }
                 else{
@@ -81,13 +83,7 @@ class Question extends Component {
                 this.setState({
                     options: optionstemp
                 });
-                this.setState({
-                    uploadedFileCloudinaryUrl: response.body.secure_url,
-                    myArray: this.state.myArray + "," + this.state.uploadedFileCloudinaryUrl
-                });
-
-
-            }
+                           }
         });
     }
 
@@ -220,7 +216,6 @@ saveQuestion = () =>{
                 }}
                     />
                     </div>
-
                     <div className="form-group resizedTextbox">
                     <div>
                     <span>
@@ -348,13 +343,7 @@ saveQuestion = () =>{
 
 
                                                         <div>
-                                                            {this.state.uploadedFileCloudinaryUrl === '' ? null :
-                                                                <div>
-                                                                    <p>{this.state.uploadedFile.name}</p>
-
-                                                                    {this.state.myArray[1]}
-                                                                    <img src={this.state.options} />
-                                                                </div>}
+                                                            {this.state.optionsListS}
                                                         </div>
 
 
