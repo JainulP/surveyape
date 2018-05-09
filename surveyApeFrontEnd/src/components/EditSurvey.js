@@ -45,10 +45,12 @@ class EditSurvey extends Component {
     }
 
     componentWillMount(){
+        var self = this.state;
         API.getListOfSurveyscreated(localStorage.getItem("userId"))
             .then((res) => {
-                if(res && res.length > 0){
-
+                if (res && res.length > 0) {
+                    self.listOfSurveys = res;
+                    this.setState(self);
                 }
             });
     }
