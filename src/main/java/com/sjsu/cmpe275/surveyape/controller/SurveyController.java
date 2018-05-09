@@ -352,6 +352,14 @@ public class SurveyController {
                         map.put("participants", String.valueOf(participants));
                         map.put("participationRate", String.valueOf(participationRate));
                     }
+                    else{
+                        participationRate = (participants / 1) * 100;
+                        map.put("surveyName",survey.getSurveyName());
+                        map.put("startDate", survey.getStartTime().toString());
+                        map.put("endDate", survey.getEndTime().toString());
+                        map.put("participants", String.valueOf(participants));
+                        map.put("participationRate", String.valueOf(participationRate));
+                    }
                     return new ResponseEntity<>(map, HttpStatus.OK);
                 } else {
                     return new ResponseEntity<>(new BadRequest(400, "Too few responses available"), HttpStatus.BAD_REQUEST);
