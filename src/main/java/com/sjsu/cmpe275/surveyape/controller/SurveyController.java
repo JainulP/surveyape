@@ -2,10 +2,7 @@ package com.sjsu.cmpe275.surveyape.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.sjsu.cmpe275.surveyape.model.*;
-import com.sjsu.cmpe275.surveyape.repository.QuestionRepository;
-import com.sjsu.cmpe275.surveyape.repository.SurveyLinksRepository;
-import com.sjsu.cmpe275.surveyape.repository.SurveyRepository;
-import com.sjsu.cmpe275.surveyape.repository.UserRepository;
+import com.sjsu.cmpe275.surveyape.repository.*;
 import com.sjsu.cmpe275.surveyape.service.EmailService;
 import com.sjsu.cmpe275.surveyape.utils.View;
 import org.slf4j.Logger;
@@ -38,6 +35,9 @@ public class SurveyController {
     @Autowired
     private SurveyLinksRepository surveyLinksRepository;
 
+    @Autowired
+    private SurveyCountRepository surveyCountRepository;
+
 
     @Autowired
     private EmailService emailService;
@@ -64,16 +64,16 @@ public class SurveyController {
         Date date = null;
         try {
             date = sdf.parse(endTime);
-            survey = surveyRepository.save(new Survey(surveyName, sdf.parse(endTime),Integer.parseInt(surveyType), user));
-            if(Integer.parseInt(surveyType) == 0 ){//generate predefined url for general and open unique surveys
+            survey = surveyRepository.save(new Survey(surveyName, sdf.parse(endTime), Integer.parseInt(surveyType), user));
+            if (Integer.parseInt(surveyType) == 0) {//generate predefined url for general and open unique surveys
                 int surveyId = survey.getSurveyId();
                 String url = "127.0.0.1:3000/" + surveyId;
-                surveyLinksRepository.save(new SurveyLinks(survey,url));
+                surveyLinksRepository.save(new SurveyLinks(survey, url));
             }
-            if( Integer.parseInt(surveyType) == 2){//generate predefined url for general and open unique surveys
+            if (Integer.parseInt(surveyType) == 2) {//generate predefined url for general and open unique surveys
                 int surveyId = survey.getSurveyId();
                 String url = "127.0.0.1:3000/" + surveyId + "/open";
-                surveyLinksRepository.save(new SurveyLinks(survey,url));
+                surveyLinksRepository.save(new SurveyLinks(survey, url));
             }
         } catch (ParseException e) {
             return new ResponseEntity<>(new BadRequest(400, "Invalid Date"), HttpStatus.BAD_REQUEST);
@@ -86,14 +86,13 @@ public class SurveyController {
 
     @RequestMapping(value = "/{surveyId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getSurveyJson(@PathVariable("surveyId") String surveyId,
-                                           @RequestParam(value = "email",required = false) String userEmail) {
+                                           @RequestParam(value = "email", required = false) String userEmail) {
         Survey survey = getSurvey(surveyId);
 
         if (survey == null) {
-            return new ResponseEntity<>(new BadRequest(404, "Sorry, the requested survey with id " +surveyId + " does not exist"), HttpStatus.NOT_FOUND);
-        }
-        else {
-            if(survey.getSurveyType() == 1 || survey.getSurveyType() == 2) {
+            return new ResponseEntity<>(new BadRequest(404, "Sorry, the requested survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
+        } else {
+            if (survey.getSurveyType() == 1 || survey.getSurveyType() == 2) {
                 SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
                 if (surveyLinks.isActivated() == false || surveyLinks.isCompleted() == true) {
                     return new ResponseEntity<>(new BadRequest(404, "You can not take this survey as this survey has been already been taken"), HttpStatus.NOT_FOUND);
@@ -107,7 +106,7 @@ public class SurveyController {
 
     private Survey getSurvey(String id) {
         Optional<Survey> surveyOptional = surveyRepository.findById(Integer.parseInt(id));
-        if(surveyOptional.isPresent()) {
+        if (surveyOptional.isPresent()) {
             Survey survey = surveyOptional.get();
 
 
@@ -117,8 +116,8 @@ public class SurveyController {
                 return survey;
 
             }
-        }else{
-            return  null;
+        } else {
+            return null;
         }
     }
 
@@ -132,7 +131,7 @@ public class SurveyController {
         } else {
             // write to db
             surveyRepository.delete(survey);
-            return new ResponseEntity<>(new BadRequest(200, "Survey with id " + surveyId +" is deleted successfully"), HttpStatus.OK);
+            return new ResponseEntity<>(new BadRequest(200, "Survey with id " + surveyId + " is deleted successfully"), HttpStatus.OK);
         }
     }
 
@@ -146,8 +145,8 @@ public class SurveyController {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
             try {
                 Date date1 = null;
-                if(survey.getEndTime() != null) {
-                     date1 =sdf.parse(sdf.format(survey.getEndTime()));
+                if (survey.getEndTime() != null) {
+                    date1 = sdf.parse(sdf.format(survey.getEndTime()));
                 }
 
                 Date date2 = sdf.parse(sdf.format(new Date()));
@@ -161,8 +160,7 @@ public class SurveyController {
 //                    timer.schedule(new CloseSurveyAtEndTime(survey), sdf.parse(endTime));
                     Survey updatedSurvey = surveyRepository.save(survey);
                     return new ResponseEntity<>(updatedSurvey, HttpStatus.OK);
-                }
-                else{
+                } else {
                     return new ResponseEntity<>(new BadRequest(400, "Sorry, the survey has already been expired"), HttpStatus.BAD_REQUEST);
 
                 }
@@ -190,26 +188,26 @@ public class SurveyController {
             // write to db
             Date date1 = null;
 
-                try {
-                    date1 = sdf.parse(sdf.format(new Date()));
-                    survey.setEndTime(date1);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+            try {
+                date1 = sdf.parse(sdf.format(new Date()));
+                survey.setEndTime(date1);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
             surveyRepository.save(survey);
 
             //mark all the links invalid
-           invalidateSurveyLinks(survey);
+            invalidateSurveyLinks(survey);
 
-            return new ResponseEntity<>(new BadRequest(200, "Survey with id " + surveyId +" is closed successfully"), HttpStatus.OK);
+            return new ResponseEntity<>(new BadRequest(200, "Survey with id " + surveyId + " is closed successfully"), HttpStatus.OK);
         }
     }
 
     //mark all the links invalid
-    public void invalidateSurveyLinks(Survey survey){
+    public void invalidateSurveyLinks(Survey survey) {
         List<SurveyLinks> surveyLinks = surveyLinksRepository.getSurveyLinksBySurvey(survey);
-        for(SurveyLinks link : surveyLinks){
+        for (SurveyLinks link : surveyLinks) {
             link.setActivated(false);
             surveyLinksRepository.save(link);
         }
@@ -220,81 +218,77 @@ public class SurveyController {
     public ResponseEntity<?> publishSurvey(@PathVariable("surveyId") String surveyId,
                                            @RequestParam(value = "published") String published) {
         Survey survey = surveyRepository.findById(Integer.parseInt(surveyId)).get();
-            if (survey == null) {
-                return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
-            }
-            if(survey.getEndTime()!= null) {
+        if (survey == null) {
+            return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
+        }
+        if (survey.getEndTime() != null) {
 //                //Now create the time and schedule it
 //                Timer timer = new Timer();
 //
 //                //Use this if you want to execute it once
 //                timer.schedule(new CloseSurveyAtEndTime(survey), survey.getEndTime());
-            }
-            if (published.equals("true")) {
+        }
+        if (published.equals("true")) {
 
-                List<Question> questions = survey.getQuestions();
+            List<Question> questions = survey.getQuestions();
 
-                if(questions.size()==0){
-                    return new ResponseEntity<>(new BadRequest(400, "Please add questions to this survey before publishing! "), HttpStatus.BAD_REQUEST);
-
-                }
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
-                // write to db
-                Date date1 = null;
-                try {
-                    date1 = sdf.parse(sdf.format(new Date()));
-                    survey.setStartTime(date1);
-                    survey.setPublished(true);
-                    if (survey.getSurveyType() == 0) {//general open survey
-                        List<String> emails = surveyLinksRepository.getEmailsBySurvey(Integer.toString(survey.getSurveyId()));
-                        String url = emailService.sendUniqueInvitationForGeneralSurveyUsers(emails, null, "survey/" + surveyId);
-
-                    }
-                    else if(survey.getSurveyType() == 1){//closed surveey
-                        List<String> emails = surveyLinksRepository.getEmailsBySurvey(Integer.toString(survey.getSurveyId()));
-                        List<String> urls = emailService.sendUniqueInvitationForClosedSurveyUsers(emails, null, "survey/"+surveyId);
-                    }
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                //}
-                surveyRepository.save(survey);
-
-                //activate links for participants added
-                activateSurveyLink(survey);
-
-                return new ResponseEntity<>(new BadRequest(200, "Survey with id " + surveyId + " is published successfully"), HttpStatus.OK);
+            if (questions.size() == 0) {
+                return new ResponseEntity<>(new BadRequest(400, "Please add questions to this survey before publishing! "), HttpStatus.BAD_REQUEST);
 
             }
-            else {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
+            // write to db
+            Date date1 = null;
+            try {
+                date1 = sdf.parse(sdf.format(new Date()));
+                survey.setStartTime(date1);
+                survey.setPublished(true);
+                if (survey.getSurveyType() == 0) {//general open survey
+                    List<String> emails = surveyLinksRepository.getEmailsBySurvey(Integer.toString(survey.getSurveyId()));
+                    String url = emailService.sendUniqueInvitationForGeneralSurveyUsers(emails, null, "survey/" + surveyId);
 
-                   List<Question> questions = survey.getQuestions();
+                } else if (survey.getSurveyType() == 1) {//closed surveey
+                    List<String> emails = surveyLinksRepository.getEmailsBySurvey(Integer.toString(survey.getSurveyId()));
+                    List<String> urls = emailService.sendUniqueInvitationForClosedSurveyUsers(emails, null, "survey/" + surveyId);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            //}
+            surveyRepository.save(survey);
+
+            //activate links for participants added
+            activateSurveyLink(survey);
+
+            return new ResponseEntity<>(new BadRequest(200, "Survey with id " + surveyId + " is published successfully"), HttpStatus.OK);
+
+        } else {
+
+            List<Question> questions = survey.getQuestions();
 
 
-                   for(Question question: questions){
-                       if(question.getResponses().size() >0){
-                           return new ResponseEntity<>(new BadRequest(400, "Survey with id " + surveyId + " can not be unpublished as it has been already responded by some participants"), HttpStatus.BAD_REQUEST);
+            for (Question question : questions) {
+                if (question.getResponses().size() > 0) {
+                    return new ResponseEntity<>(new BadRequest(400, "Survey with id " + surveyId + " can not be unpublished as it has been already responded by some participants"), HttpStatus.BAD_REQUEST);
 
-                       }
-                   }
-                    //de-activate links for participants added
-                    invalidateSurveyLinks(survey);
+                }
+            }
+            //de-activate links for participants added
+            invalidateSurveyLinks(survey);
 
-                    survey.setPublished(false);
-                    surveyRepository.save(survey);
+            survey.setPublished(false);
+            surveyRepository.save(survey);
 
-                    return new ResponseEntity<>(new BadRequest(200, "Survey with id " + surveyId + " is unpublished successfully"), HttpStatus.OK);
-                 }
+            return new ResponseEntity<>(new BadRequest(200, "Survey with id " + surveyId + " is unpublished successfully"), HttpStatus.OK);
+        }
 
 
     }
 
 
-
-
-    public void activateSurveyLink(Survey survey){
+    public void activateSurveyLink(Survey survey) {
         List<SurveyLinks> surveyLinks = surveyLinksRepository.getSurveyLinksBySurvey(survey);
-        for(SurveyLinks link : surveyLinks){
+        for (SurveyLinks link : surveyLinks) {
             link.setActivated(true);
             surveyLinksRepository.save(link);
         }
@@ -304,7 +298,7 @@ public class SurveyController {
     @JsonView(View.SurveyView.class)
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getGeneralAndOpenSurvey() {
-        
+
         List<Survey> surveys = surveyRepository.getGeneralAndOpenSurvey();
         return new ResponseEntity<>(surveys, HttpStatus.OK);
 
@@ -316,9 +310,9 @@ public class SurveyController {
         List<Survey> completedSurveysForUser = surveyRepository.getCompletedSurveysForUser(Integer.parseInt(userId));
         List<Survey> incompletedSurveysForUser = surveyRepository.getinCompletedSurveysForUser(Integer.parseInt(userId));
 
-        HashMap<String,List<Survey>> map = new HashMap<>();
+        HashMap<String, List<Survey>> map = new HashMap<>();
         map.put("completed", completedSurveysForUser);
-        map.put("incompleted",incompletedSurveysForUser);
+        map.put("incompleted", incompletedSurveysForUser);
         //result.put("completed", completedSurveysForUser);
 //        json.put("incompleted",incompletedSurveysForUser);
         return new ResponseEntity<>(map, HttpStatus.OK);
@@ -330,33 +324,45 @@ public class SurveyController {
     @GetMapping(value = "/surveystats/{surveyid}", produces = "application/json")
     public ResponseEntity<?> getStatsForSurvey(@PathVariable("surveyid") int surveyId) {
         Optional<Survey> surveyOpt = surveyRepository.findById(surveyId);
-        Map<String,String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>();
         if (surveyOpt.isPresent()) {
-            Survey survey = surveyOpt.get();
-            int participants = surveyRepository.getParticipantsForSurvey(surveyId);
-            int invitedUsers = surveyRepository.getInvitedUsersForSurvey(surveyId);
-            int participationRate = 0;
-            if (invitedUsers != 0) {
-                participationRate = (participants / invitedUsers) * 100;
-                map.put("start_date", survey.getStartTime().toString());
-                map.put("end_date", survey.getStartTime().toString());
-                map.put("participants", String.valueOf(participants));
-                map.put("participationRate", String.valueOf(participationRate));
+            Optional<SurveyCount> surveyCountOpt = surveyCountRepository.findById(surveyId);
+
+            if (surveyCountOpt.isPresent()) {
+                SurveyCount sc = surveyCountOpt.get();
+                Survey survey = surveyOpt.get();
+                int participants = surveyRepository.getParticipantsForSurvey(surveyId);
+                int invitedUsers = surveyRepository.getInvitedUsersForSurvey(surveyId);
+                int participationRate = 0;
+                if (sc.getCount() > 2) {
+                    if (invitedUsers != 0) {
+                        participationRate = (participants / invitedUsers) * 100;
+                        map.put("start_date", survey.getStartTime().toString());
+                        map.put("end_date", survey.getStartTime().toString());
+                        map.put("participants", String.valueOf(participants));
+                        map.put("participationRate", String.valueOf(participationRate));
+                    }
+                    return new ResponseEntity<>(map, HttpStatus.OK);
+                } else {
+                    return new ResponseEntity<>(new BadRequest(400, "Fewer than 1 participants available"), HttpStatus.BAD_REQUEST);
+                }
+            } else {
+                return new ResponseEntity<>(new BadRequest(400, "Fewer than 1 participants available"), HttpStatus.BAD_REQUEST);
             }
-            return new ResponseEntity<>(map, HttpStatus.OK);
+
         } else {
             return new ResponseEntity<>(new BadRequest(404, "Survey not found"), HttpStatus.OK);
         }
     }
 
 
-    @GetMapping(value = "/created/{userId}",produces="application/json")
-    public ResponseEntity<?> getCreatedAndPublishedSurveyByOwner(@PathVariable("userId")String userId){
+    @GetMapping(value = "/created/{userId}", produces = "application/json")
+    public ResponseEntity<?> getCreatedAndPublishedSurveyByOwner(@PathVariable("userId") String userId) {
         List<Survey> surveys = surveyRepository.getCreatedAndPublishedSurveyByOwner(Integer.parseInt(userId));
-        if(surveys.size()>0){
-            return new ResponseEntity<>(surveys,HttpStatus.OK);
-        }else{
-            return new ResponseEntity<>(new BadRequest(400,"No surveys found Created and Published by you"),HttpStatus.NOT_FOUND);
+        if (surveys.size() > 0) {
+            return new ResponseEntity<>(surveys, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new BadRequest(400, "No surveys found Created and Published by you"), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -365,10 +371,10 @@ public class SurveyController {
     public ResponseEntity<?> getSavedSurvey(@PathVariable("surveyId") String surveyId,
                                             @RequestParam(value = "email") String userEmail) {
 
-        Survey survey =  getSurvey(surveyId);
-        if(survey != null) {
+        Survey survey = getSurvey(surveyId);
+        if (survey != null) {
 
-            if(survey.getSurveyType() == 1 || survey.getSurveyType() == 2) {
+            if (survey.getSurveyType() == 1 || survey.getSurveyType() == 2) {
                 SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
                 if (surveyLinks.isActivated() == false || surveyLinks.isCompleted() == true) {
                     return new ResponseEntity<>(new BadRequest(404, "You can not take this survey as this survey has been already been taken"), HttpStatus.NOT_FOUND);
@@ -384,16 +390,15 @@ public class SurveyController {
                     }
                 }
 //                if (temp.size() > 0) {
-                    question.setResponses(temp);
+                question.setResponses(temp);
                 //}
             }
             //if (questions.size() > 0) {
-                survey.setQuestions(questions);
+            survey.setQuestions(questions);
             //}
-            return  new ResponseEntity<>(survey,HttpStatus.OK);
-        }
-        else{
-            return new ResponseEntity<>(new BadRequest(404, "Sorry, the requested survey with id " +surveyId + " does not exist"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(survey, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new BadRequest(404, "Sorry, the requested survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
         }
     }
 
