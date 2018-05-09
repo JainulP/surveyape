@@ -65,7 +65,8 @@ class Dashboard extends Component {
                 noParticipants: 30,
                 participationRate: 20,
                 questions: []
-            }
+            },
+            surveyStatsLits:[]
         }
     }
 
@@ -77,6 +78,9 @@ class Dashboard extends Component {
                     self.listOfSurveys = res;
                     this.setState(self);
                 }
+                if(res.msg){
+                    alert(res.msg)
+                }
             });
     }
 
@@ -87,61 +91,60 @@ class Dashboard extends Component {
                 if (res && res.surveyName) {
                     self.surveyStats = res;
                     this.setState(self);
-                    console.log(res);
-                     const data = {};
-                    // let questionStr = res.find(i => i['question']);
-                    // let labels = [];
-                    // let values = [];
-                    // for (let i in res) {
-                    //     if (i !== 'question') {
-                    //         labels.append(i);
-                    //         values.append(res[i]);
-                    //     }
-                    // }
-                    // data['labels'] = labels;
-                    // data['datasets'][0]['data'] = values;
-                    // data['datasets'][0]['backgroundColor'] = [
-                    //     '#FF6384',
-                    //     '#36A2EB',
-                    //     '#FFCE56',
-                    //     '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
-                    //     '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
-                    // ];
-
-                    return data;
+                }
+                if(res.msg){
+                    alert(res.msg)
                 }
             });
-
+        var self = this.state;
         API.questionStats(this.state.surveyId)
             .then((res) => {
-                if (res && res.question) {
-                    // self.surveyStats = res;
-                    // this.setState(self);
-                    console.log(res);
-                    const data = {};
-
-
-                    let questionStr = res.find(i => i['question']);
-                    let labels = [];
-                    let values = [];
-                    // for (let i in res) {
-                    //     if (i !== 'question') {
-                    //         labels.append(i);
-                    //         values.append(res[i]);
-                    //     }
-                    // }
-                    // data['labels'] = labels;
-                    // data['datasets'][0]['data'] = values;
-                    // data['datasets'][0]['backgroundColor'] = [
-                    //     '#FF6384',
-                    //     '#36A2EB',
-                    //     '#FFCE56',
-                    //     '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
-                    //     '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
-                    // ];
-
-                    return data;
+                if (res) {
+                    var statsJson=[];
+                    var dataStats = [];
+                    var dataLabels = [];
+                    var questionList =[];
+                    for(var c=0;c<res.length;c++){
+                        let statstemp = res[c];
+                        for (var i in statstemp){
+                            if(i !== 'Question'){
+                                dataLabels.push(i)
+                                dataStats.push(statstemp[i]);
+                            }
+                            else {
+                                questionList.push(statstemp[i])
+                                }
+                        }
+                        var jsonTemplate  = {
+                            labels:dataLabels,
+                            datasets: [{
+                                data: dataStats,
+                                backgroundColor: [
+                                    '#FF6384',
+                                    '#36A2EB',
+                                    '#FFCE56'
+                                ],
+                                hoverBackgroundColor: [
+                                    '#FF6384',
+                                    '#36A2EB',
+                                    '#FFCE56'
+                                ]
+                            }]
+                        };
+                        console.log(dataStats);
+                        console.log(dataLabels);
+                        console.log(jsonTemplate);
+                        var lists=self.surveyStatsLits;
+                        self.surveyStatsLits.push(jsonTemplate);
+                        self.questionList = questionList;
+                        this.setState(self);
+                        dataStats = [];
+                        dataLabels = [];
+                    }
+                    console.log(this.state.surveyStatsLits);
                 }
+
+
             });
     }
 
@@ -155,6 +158,25 @@ class Dashboard extends Component {
                 let a = temp.surveyId;
                 surveyList.push(
                     <option value={a}>{temp.surveyName}</option>
+                );
+            }, this);
+        }
+
+        var pieList = [];
+        var data1 = this.state.surveyStatsLits;
+        var questionList = this.state.questionList;
+        if (data1 && data1.length > 0) {
+            data1.map(function (temp, index) {
+                let a = temp.surveyId;
+                pieList.push(
+                    <div>
+                        <div>
+                            <span className="stat-heading">
+                                QUESTION {index} : {questionList[index]}
+                            </span>
+                        </div>
+                    <Doughnut data={temp}/>
+                    </div>
                 );
             }, this);
         }
@@ -227,22 +249,11 @@ class Dashboard extends Component {
                 </div>
                 <div className="row padd-200">
                     <div className="col-md-6">
-                        <div className="stat-heading">
-                            ANSWERS CHOSEN
-                        </div>
                         <div>
-                            <Doughnut data={data1}/>
+                            {pieList}
                         </div>
                     </div>
-                    <div className="col-md-6">
-                        <div className="stat-heading">
-                            ANSWERS GIVEN
-                        </div>
-                        <div>
-                            <HorizontalBar data={data2}/>
-                        </div>
-                    </div>
-                </div>
+            </div>
             </div>
         );
     }
