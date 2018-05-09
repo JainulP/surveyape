@@ -89,11 +89,17 @@ class CreateSurvey extends Component {
             API.publishSurvey(this.state.createSurveyResponse.surveyId)
                 .then((res) => {
                     console.log(res)
-                    window.location = "http://localhost:3000/"
+                    if(res.code==400){
+                        alert("Please add questions to this survey before publishing!")
+                    }
+                    else{
+                        window.location = "http://localhost:3000/"
+                    }
+
                 });
         }
         else{
-            alert("No questions added")
+
         }
     }
     renderSurveyTypeSwitch(param) {
