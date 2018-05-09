@@ -32,7 +32,9 @@ class TakeSurvey extends Component {
                 answerType: null,
                 questionType: null,
                 visualStyle: null,
-                options: null
+                options: null,
+                size:0.,
+                blank:""
             },
             currentIndex : 0
         }
@@ -59,6 +61,7 @@ class TakeSurvey extends Component {
                 }*/
                 self.surveyDetails=res;
                 self.currentQuestion = res.questions[0];
+                self.size = res.questions.length;
                 if(this.state.surveyDetails.questions.length > 1){
                     document.getElementById("nextClicked").disabled = false;
                 }
@@ -133,7 +136,7 @@ class TakeSurvey extends Component {
                     </div>
                     <button type="button" className="surveyape-button" name="prevClicked" id = "prevClicked" onClick={()=>this.prevClicked()}>PREVIOUS</button>
                     <button type="button" className="surveyape-button" name="nextClicked" id = "nextClicked" onClick={()=>this.nextClicked()}>NEXT</button>
-                    <ResponseComponent accessCode={this.state.accessCode} data={this.state.currentQuestion} number={this.state.currentIndex} surveyId={this.state.surveyId}/>
+                    <ResponseComponent answerTemp={this.state.blank} surveyid={this.state.surveyId} size={this.state.size} accessCode={this.state.accessCode} data={this.state.currentQuestion} number={this.state.currentIndex} surveyId={this.state.surveyId}/>
 
                 </div>
             </div>

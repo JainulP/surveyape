@@ -156,6 +156,23 @@ export const publishSurvey = (payload) =>
         });
 
 
+export const completeSurvey = (payload) =>
+    fetch(`${api}/responses/`+payload.surveyId+`?email=`+payload.email, {
+        method: 'POST',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        credentials:'include'})
+        .then(res => {
+            return res.json();
+        })
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
+
+
 export const getAll02Surveys = () =>
     fetch(`${api}/survey/`, {
         method: 'GET',

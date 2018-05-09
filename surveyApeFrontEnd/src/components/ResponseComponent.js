@@ -8,16 +8,32 @@ class ResponseComponent extends Component {
     constructor(props){
         super(props);
         this.state = {
-            answer:null,
+            answer:this.props.answerTemp,
             checked : null,
             questionId : this.props.data.questionId,
             email : localStorage.getItem("email"),
             userid : localStorage.getItem("userId"),
             surveyid:this.props.surveyId,
             responseId:null,
+            emailtaken :null,
+            responseIds:[]
         }
     }
+componentWillMount(){
+    var email = null;
 
+    if(this.props.accessCode) {
+        try {
+            var self = this.state;
+            email = atob(this.props.accessCode);
+            self.email = email;
+            this.setState(self);
+        }
+        catch (err) {
+            alert("invalid link")
+        }
+    }
+}
     onStarClick(nextValue, prevValue, name) {
         this.setState({answer: nextValue});
     }
@@ -59,35 +75,29 @@ class ResponseComponent extends Component {
         }
     }
     saveResponse = () =>{
-        var email = null;
-        if(this.props.accessCode) {
-            try {
-                email = atob(this.props.accessCode);
-            }
-            catch (err) {
-                alert("invalid link")
-            }
-        }
-        if(this.state.responseId === null) {
+        if(!this.state.responseIds[this.props.number]) {
             var self = this.state;
             self.questionId = this.props.data.questionId;
-            self.email =email;
             API.saveResponse(self)
                 .then((res) => {
                     console.log(res)
-                    self.responseId = res.resId;
+                    var responses = self.responseIds;
+                    responses[this.props.number] = res.resId;
+                    self.answer = "";
                     this.setState(self);
+                    alert("Response Saved")
 
                 });
         }
         else{
             var self = this.state;
             self.questionId = this.props.data.questionId;
-            self.email =email;
+            self.responseId = this.state.responseIds[this.props.number]
             API.updateResponse(self)
                 .then((res) => {
                     console.log(res)
-
+                    self.answer = "";
+                    alert("Response Saved")
                 });
         }
     }
@@ -121,6 +131,17 @@ class ResponseComponent extends Component {
             }, this);
             return optionsList;
         }
+    }
+    submitSurvey = () =>{
+        var data={
+            surveyId : this.props.surveyid,
+            email : this.state.email || this.state.emailtaken
+        }
+        API.completeSurvey(data)
+            .then((res) => {
+                console.log(res)
+
+            });
     }
     renderCheckboxMultiple = (data) =>{
         var optionsList = [];
@@ -167,11 +188,8 @@ class ResponseComponent extends Component {
   render() {
     return (
       <div className="row margin-70 margin-none">
-          <div className="form-group resizedTextbox">
+          <div className="form-group resizedTextbox col-md-6">
                     <span>
-                        <div>
-                            {this.state.answer}
-                        </div>
                         {this.props.data.questionStr}
                     </span>
         <div>
@@ -301,9 +319,29 @@ class ResponseComponent extends Component {
                 </div>
               }
         </div>
+              <button type="button" className="surveyape-button" id = "saveResponse" onClick={()=>this.saveResponse()}>SAVE RESPONSE</button>
+              {
+                  (!this.state.email && this.props.size === this.props.number + 1) ?
+                      <div>
+                          <span>Enter your email id to recieve a confirmation mail</span>
+                          <input type="text" className="form-control surveyape-input" id="questionStr"
+                                 aria-describedby="questionStr" placeholder="Response"
+                                 value={this.state.emailtaken}
+                                 onChange={(event) => {
+                                     this.setState({
+                                         emailtaken: event.target.value
+                                     });
+                                 }}
+                          />
+                      </div>
+                      : null
+              }
 
-              <button type="button" className="surveyape-button" id = "saveResponse" onClick={()=>this.saveResponse()}>SAVE</button>
-
+              <div>
+              {(this.props.size === this.props.number + 1)?
+                  <button type="button" className="surveyape-button" id = "submitSurvey" onClick={()=>this.submitSurvey()}>SUBMIT SURVEY</button>
+                  :null}
+              </div>
           </div>
       </div>
     );
