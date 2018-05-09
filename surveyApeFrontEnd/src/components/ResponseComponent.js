@@ -340,13 +340,15 @@ componentWillMount(){
               {(this.props.data.questionType === 0)?
                         <div>
                             {
-                                (this.props.data.choiceType === 0)?
+                                (this.props.data.choiceType === "0")?
 
                                 <div>
 
                                     {(this.props.data.answerType === "0") ?
+
                                         /*  Single*/
                                         <div>
+
                                             {(this.props.data.visualStyle === "0") ?
                                                 <div>
                                                     <select className="form-control surveyape-input" name="cards" id="visualStyle"
@@ -372,6 +374,7 @@ componentWillMount(){
                                                         <div>
                                                             {(this.props.data.visualStyle === "2") ?
                                                                 <div>
+
                                                                     {this.renderCheckboxSingle(this.props.data.options)}
                                                                 </div>
                                                                 :
