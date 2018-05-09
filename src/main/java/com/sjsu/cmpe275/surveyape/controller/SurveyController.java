@@ -67,12 +67,12 @@ public class SurveyController {
             survey = surveyRepository.save(new Survey(surveyName, sdf.parse(endTime),Integer.parseInt(surveyType), user));
             if(Integer.parseInt(surveyType) == 0 ){//generate predefined url for general and open unique surveys
                 int surveyId = survey.getSurveyId();
-                String url = "127.0.0.1:3000/" + surveyId;
+                String url = "127.0.0.1:3000/survey/" + surveyId;
                 surveyLinksRepository.save(new SurveyLinks(survey,url));
             }
             if( Integer.parseInt(surveyType) == 2){//generate predefined url for general and open unique surveys
                 int surveyId = survey.getSurveyId();
-                String url = "127.0.0.1:3000/" + surveyId + "/open";
+                String url = "127.0.0.1:3000/survey/" + surveyId + "/open";
                 surveyLinksRepository.save(new SurveyLinks(survey,url));
             }
         } catch (ParseException e) {
@@ -338,8 +338,9 @@ public class SurveyController {
             int participationRate = 0;
             if (invitedUsers != 0) {
                 participationRate = (participants / invitedUsers) * 100;
-                map.put("start_date", survey.getStartTime().toString());
-                map.put("end_date", survey.getStartTime().toString());
+                map.put("surveyName",survey.getSurveyName());
+                map.put("startDate", survey.getStartTime().toString());
+                map.put("endDate", survey.getEndTime().toString());
                 map.put("participants", String.valueOf(participants));
                 map.put("participationRate", String.valueOf(participationRate));
             }
@@ -370,8 +371,10 @@ public class SurveyController {
 
             if(survey.getSurveyType() == 1 || survey.getSurveyType() == 2) {
                 SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
-                if (surveyLinks.isActivated() == false || surveyLinks.isCompleted() == true) {
-                    return new ResponseEntity<>(new BadRequest(404, "You can not take this survey as this survey has been already been taken"), HttpStatus.NOT_FOUND);
+                if(surveyLinks != null) {
+                    if (surveyLinks.isActivated() == false || surveyLinks.isCompleted() == true) {
+                        return new ResponseEntity<>(new BadRequest(404, "You can not take this survey as this survey has been already been taken"), HttpStatus.NOT_FOUND);
+                    }
                 }
             }
             List<Question> questions = survey.getQuestions();
@@ -396,31 +399,5 @@ public class SurveyController {
             return new ResponseEntity<>(new BadRequest(404, "Sorry, the requested survey with id " +surveyId + " does not exist"), HttpStatus.NOT_FOUND);
         }
     }
-
-//    @RequestMapping(value = "/validate/{surveyId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-//    public ResponseEntity<?> validateSurveyLink(@PathVariable("surveyId") String surveyId,
-//                                            @RequestParam(value = "email",required = false) String userEmail) {
-//
-//        Optional<Survey> surveyOptional = surveyRepository.findById(Integer.parseInt(surveyId));
-//        if(surveyOptional.isPresent()){
-//            Survey survey = surveyOptional.get();
-//            if(survey.getSurveyType() == 1 || survey.getSurveyType() == 2) {
-//                SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
-//                if (surveyLinks.isActivated() == false || surveyLinks.isCompleted() == true) {
-//                    return new ResponseEntity<>(new BadRequest(404, "You can not take this survey as this survey has been already been taken"), HttpStatus.NOT_FOUND);
-//                } else {
-//                    return new ResponseEntity<>(new BadRequest(200, "You can not take this survey as this survey has been already been taken"), HttpStatus.NOT_FOUND);
-//
-//                }
-//            }
-//
-//        }
-//        else
-//        {
-//            return new ResponseEntity<>(new BadRequest(404, "Invalid link"), HttpStatus.NOT_FOUND);
-//
-//        }
-//        return  null;
-//    }
 
 }

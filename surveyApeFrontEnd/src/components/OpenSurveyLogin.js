@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from '../logo.svg';
 import '../App.css';
 import Ionicon from 'react-ionicons';
+import * as  API from '../api/API';
 
 class OpenSurveyLogin extends Component {
     constructor(props) {
@@ -15,16 +16,32 @@ componentWillMount(){
 
 }
     GoTosignup = () =>{
-        this.props.history.push("/signup");
+        window.location = "http://localhost:3000/signup";
     }
     GoTosignin = () =>{
-        this.props.history.push("/signin");
+        window.location = "http://localhost:3000/signin";
     }
     continue =() =>{
-        localStorage.setItem("guestemail", this.state.email);
-        var link = localStorage.getItem("openSurveyLink");
+    //    localStorage.setItem("guestemail", this.state.email);
+        var data={
+            surveyId : localStorage.getItem("surveyId"),
+            email: this.state.email
+        }
+        API.sendLinkForOpenUniqueSurvey(data)
+            .then((res) => {
+                console.log(res)
+                if(res.code==400){
+                    alert(res.msg)
+                }
+                else{
+                    alert(res.msg)
+                    window.location = "http://localhost:3000/"
+                }
+
+            });
+        //var link = localStorage.getItem("openSurveyLink");
         localStorage.removeItem("openSurveyLink");
-        window.location = "http://localhost:3000"+link;
+      //  window.location = "http://localhost:3000";
     }
   render() {
     return (
@@ -34,7 +51,7 @@ componentWillMount(){
               TO PROCEED
           </div>
           <div>
-        <span className="surveyname-head" onClick={this.GoTosignup}>
+        <span className="surveyname-head" onClick={this.GoTosignin}>
             SIGN IN
         </span>
           </div>
@@ -42,7 +59,7 @@ componentWillMount(){
                 OR
           </div>
           <div>
-                <span className="surveyname-head" onClick={this.GoTosignin}>
+                <span className="surveyname-head" onClick={this.GoTosignup}>
                 SIGN UP
                  </span>
           </div>

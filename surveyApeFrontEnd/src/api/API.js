@@ -367,3 +367,20 @@ export const updateResponse = (payload) =>
             console.log("This is error");
             return error;
         });
+
+
+export const sendLinkForOpenUniqueSurvey = (payload) =>
+    fetch(`${api}/participants/open/`+payload.surveyId+`?email=`+payload.email, {
+        method: 'POST',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        credentials:'include'})
+        .then(res => {
+            return res.json();
+        })
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
