@@ -105,6 +105,21 @@ export const getSurvey = (payload) =>
             return error;
         });
 
+export const getSurveybYemail = (payload) =>
+    fetch(`${api}/survey/saved/`+payload.surveyId+`?email=`+payload.email, {
+        method: 'GET',
+        headers: {
+            ...headers,
+            'Content-Type': 'application/json'
+        },
+        credentials:'include'})
+        .then(res => {
+            return res.json();
+        })
+        .catch(error => {
+            console.log("This is error");
+            return error;
+        });
 
 export const deleteSurvey = (payload) =>
     fetch(`${api}/survey/`+payload, {

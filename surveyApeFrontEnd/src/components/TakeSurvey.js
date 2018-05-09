@@ -20,6 +20,18 @@ class TakeSurvey extends Component {
             surveyIdTemp = a[0];
             accessCodeTemp = a[1];
         }
+        var email = null
+        if(accessCodeTemp && accessCodeTemp !== "open" ) {
+            try {
+                email = atob(accessCodeTemp);
+            }
+            catch (err) {
+                alert("invalid link")
+            }
+        }
+        else{
+            email = localStorage.getItem("email");
+        }
         super(props);
         this.state = {
             surveyDetails:null,
@@ -33,22 +45,25 @@ class TakeSurvey extends Component {
                 questionType: null,
                 visualStyle: null,
                 options: null,
-                size:0.,
-                blank:""
+                size:0
             },
-            currentIndex : 0
+            currentIndex : 0,
+            currentAnswer : null,
+            email:email,
+            currentresponseId : null
         }
     }
-    componentWillMount(){
+    componentWillMount() {
         var self = this.state;
-
+        //general surveys
+        if(!this.state.accessCode){
         API.getSurvey(this.state.surveyId)
             .then((res) => {
-                if(res.surveyType === 1 && !this.state.accessCode){
+                if (res.surveyType === 1 && !this.state.accessCode) {
                     alert("NO ACCESS RIGHTS")
                     this.props.history.push("/");
-                    }
-                if(res.published === false){
+                }
+                if (res.published === false) {
                     alert("SURVEY NOT PUBLISHED YET")
                     this.props.history.push("/");
                 }
@@ -59,14 +74,56 @@ class TakeSurvey extends Component {
                     alert("SURVEY EXPIRED")
                     this.props.history.push("/");
                 }*/
-                self.surveyDetails=res;
+                self.surveyDetails = res;
                 self.currentQuestion = res.questions[0];
+                if(res.questions[0].responses.length>0){
+                    self.currentAnswer = res.questions[0].responses[0].answers;
+                    self.currentresponseId = res.questions[0].responses[0].resId;
+                }
+
                 self.size = res.questions.length;
-                if(this.state.surveyDetails.questions.length > 1){
+                if (this.state.surveyDetails.questions.length > 1) {
                     document.getElementById("nextClicked").disabled = false;
                 }
                 this.setState(self);
             });
+          }else{
+            //open-unique and closed
+            var data={
+                surveyId : this.state.surveyId,
+                email: this.state.email
+            }
+            API.getSurveybYemail(data)
+                .then((res) => {
+                    if (res.surveyType === 1 && !this.state.accessCode) {
+                        alert("NO ACCESS RIGHTS")
+                        this.props.history.push("/");
+                    }
+                    if (res.published === false) {
+                        alert("SURVEY NOT PUBLISHED YET")
+                        this.props.history.push("/");
+                    }
+                    var d1 = new Date();
+                    var d2 = new Date(res.endTime);
+                    console.log(d1.getTime() > d2.getTime());
+                    /*if(d1.getTime() > d2.getTime()){
+                        alert("SURVEY EXPIRED")
+                        this.props.history.push("/");
+                    }*/
+                    self.surveyDetails = res;
+                    self.currentQuestion = res.questions[0];
+
+                    self.size = res.questions.length;
+                    if(res.questions[0].responses.length>0){
+                        self.currentAnswer = res.questions[0].responses[0].answers;
+                        self.currentresponseId = res.questions[0].responses[0].resId;
+                    }
+                    if (this.state.surveyDetails.questions.length > 1) {
+                        document.getElementById("nextClicked").disabled = false;
+                    }
+                    this.setState(self);
+                });
+        }
     }
     componentDidMount(){
         document.getElementById("prevClicked").disabled = true;
@@ -79,6 +136,14 @@ class TakeSurvey extends Component {
                 document.getElementById("nextClicked").disabled = false;
                 self.currentIndex = self.currentIndex + 1;
                 self.currentQuestion = self.surveyDetails.questions[self.currentIndex];
+                if(self.surveyDetails.questions[self.currentIndex].responses && self.surveyDetails.questions[self.currentIndex].responses.length>0) {
+                    self.currentAnswer = self.surveyDetails.questions[self.currentIndex].responses[0].answers;
+                    self.currentresponseId = self.surveyDetails.questions[self.currentIndex].responses[0].resId;
+                }
+                else{
+                    self.currentAnswer = null;
+                    self.currentresponseId = null;
+                }
                 this.setState(self);
             }
             else{
@@ -106,6 +171,14 @@ class TakeSurvey extends Component {
                 document.getElementById("prevClicked").disabled = false;
                 self.currentIndex = self.currentIndex - 1;
                 self.currentQuestion = self.surveyDetails.questions[self.currentIndex];
+                if(self.surveyDetails.questions[self.currentIndex].responses && self.surveyDetails.questions[self.currentIndex].responses.length>0) {
+                    self.currentAnswer = self.surveyDetails.questions[self.currentIndex].responses[0].answers;
+                    self.currentresponseId = self.surveyDetails.questions[self.currentIndex].responses[0].resId;
+                }
+                else{
+                    self.currentAnswer = null;
+                    self.currentresponseId = null;
+                }
                 this.setState(self);
             }
             else{
@@ -136,7 +209,7 @@ class TakeSurvey extends Component {
                     </div>
                     <button type="button" className="surveyape-button" name="prevClicked" id = "prevClicked" onClick={()=>this.prevClicked()}>PREVIOUS</button>
                     <button type="button" className="surveyape-button" name="nextClicked" id = "nextClicked" onClick={()=>this.nextClicked()}>NEXT</button>
-                    <ResponseComponent answerTemp={this.state.blank} surveyid={this.state.surveyId} size={this.state.size} accessCode={this.state.accessCode} data={this.state.currentQuestion} number={this.state.currentIndex} surveyId={this.state.surveyId}/>
+                    <ResponseComponent responseId={this.state.currentresponseId} answer={this.state.currentAnswer} surveyid={this.state.surveyId} size={this.state.size} accessCode={this.state.accessCode} data={this.state.currentQuestion} number={this.state.currentIndex} surveyId={this.state.surveyId}/>
 
                 </div>
             </div>

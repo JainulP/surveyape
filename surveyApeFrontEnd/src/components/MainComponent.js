@@ -26,8 +26,12 @@ class MainComponent extends Component {
                 }
             });
     }
-    surveyclicked = (surveyId) =>{
-        this.props.history.push("/survey/"+surveyId);
+    surveyclicked = (surveyId, type) =>{
+        if(type === 2){
+            this.props.history.push("/survey/"+surveyId+"/open");
+        }else{
+            this.props.history.push("/survey/"+surveyId);
+        }
     }
     render() {
         var TypeSurvey0 = [];
@@ -38,7 +42,7 @@ class MainComponent extends Component {
                 TypeSurvey0.push(
                    <div>
                        <span onClick={() => {
-                           this.surveyclicked(temp.surveyId)
+                           this.surveyclicked(temp.surveyId, temp.surveyType)
                        }}>
                            <span className="surveyname-head">
                            {temp.surveyName}
@@ -54,7 +58,7 @@ class MainComponent extends Component {
                 TypeSurvey1.push(
                     <div>
                        <span onClick={() => {
-                           this.surveyclicked(temp.surveyId)
+                           this.surveyclicked(temp.surveyId, temp.surveyType)
                        }}>
                             <span className="surveyname-head">
                            {temp.surveyName}
