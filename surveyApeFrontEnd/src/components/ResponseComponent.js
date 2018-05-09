@@ -353,10 +353,10 @@ componentWillMount(){
                                                 <div>
                                                     <select className="form-control surveyape-input" name="cards" id="visualStyle"
                                                             aria-describedby="Visual style" placeholder="Visual style"
-                                                            value={this.state.visualStyle}
+                                                            value={this.state.answer}
                                                             onChange={(event) => {
                                                                 this.setState({
-                                                                    visualStyle: event.target.value
+                                                                    answer: event.target.value
                                                                 });
                                                             }}
                                                     >

@@ -20,7 +20,7 @@ class ResponseComponentReadOnly extends Component {
         if (data && data.length > 0) {
             data.map(function (temp, index) {
                 optionsList.push(
-                    <option value={temp}>{temp}</option>
+                    <option disabled={true} selected={this.props.data.responses[0].answers === temp?"selected":""} value={temp}>{temp}</option>
                 );
             }, this);
             return optionsList;
@@ -34,7 +34,9 @@ class ResponseComponentReadOnly extends Component {
                     <span>
                     <input type="radio" name={this.props.data.questionId}
                            value={temp}
-                           checked={this.props.data.answer === temp?true:false}
+                           readonly
+                           disabled={true}
+                           checked={this.props.data.responses[0].answers === temp?true:false}
                     />{temp}
                     </span>
             )
@@ -51,7 +53,9 @@ class ResponseComponentReadOnly extends Component {
                     <span>
                     <input type="radio" name={this.props.data.questionId}
                            value={temp}
-                           checked={this.props.data.answer === temp?true:false}
+                           readonly
+                           disabled={true}
+                           checked={this.props.data.responses[0].answers === temp?true:false}
                     /><img className="img-height" src={temp}></img>
                     </span>
                 )
@@ -70,8 +74,10 @@ class ResponseComponentReadOnly extends Component {
                         name={temp}
                         id={temp}
                         type="checkbox"
+                        readonly
                         value={temp}
-                        checked={this.props.data.answer === temp?true:false}
+                        disabled={true}
+                        checked={this.props.data.responses[0].answers === temp?true:false}
                     />{temp}
                     </span>
                 );
@@ -91,8 +97,10 @@ class ResponseComponentReadOnly extends Component {
                         name={temp}
                         id={temp}
                         type="checkbox"
+                        readonly
                         value={temp}
-                        checked={this.props.data.answer === temp?true:false}
+                        disabled={true}
+                        checked={this.props.data.responses[0].answers === temp?true:false}
                     /><img className="img-height" src={temp}></img>
                     </span>
                 );
@@ -110,8 +118,10 @@ class ResponseComponentReadOnly extends Component {
                     <input
                         name={index}
                         type="checkbox"
+                        readonly
                         value={temp}
-
+                        checked={(this.props.data.responses[0].answers.indexOf(temp)>-1)?true:false}
+                        disabled={true}
                     />{temp}
                     </span>
                 );
@@ -124,12 +134,16 @@ class ResponseComponentReadOnly extends Component {
         var optionsList = [];
         if (data && data.length > 0) {
             data.map(function (temp, index) {
+                {}
                 optionsList.push(
                     <span>
                     <input
                         name={index}
                         type="checkbox"
+                        readonly
+                        disabled={true}
                         value={temp}
+                        checked={(this.props.data.responses[0].answers.indexOf(temp)>-1)?true:false}
                     /><img className="img-height" src={temp}></img>
                     </span>
                 );
@@ -146,10 +160,13 @@ class ResponseComponentReadOnly extends Component {
                         {this.props.data.questionStr}
                     </span>
         <div>
+            <div>
+                RESPONSES RECORDED:
+            </div>
               {(this.props.data.questionType === 0)?
                         <div>
                             {
-                                (this.props.data.choiceType === 0)?
+                                (this.props.data.choiceType === "0")?
 
                                 <div>
 
@@ -160,12 +177,9 @@ class ResponseComponentReadOnly extends Component {
                                                 <div>
                                                     <select className="form-control surveyape-input" name="cards" id="visualStyle"
                                                             aria-describedby="Visual style" placeholder="Visual style"
-                                                            value={this.state.visualStyle}
-                                                            onChange={(event) => {
-                                                                this.setState({
-                                                                    visualStyle: event.target.value
-                                                                });
-                                                            }}
+                                                            value={this.props.data.responses[0].answers}
+                                                            readonly
+                                                            disabled={true}
                                                     >
                                                         <option value=""> </option>
                                                         {this.renderOptions(this.props.data.options)}
@@ -265,9 +279,11 @@ class ResponseComponentReadOnly extends Component {
 
                       <div>
                           <input type="radio" name="question-radio-1" value="yes"
-                                 checked={this.props.data.answer === "yes"?true:false}/>YES
+                                 readonly
+                                 checked={this.props.data.responses[0].answers === "yes"?true:false}/>YES
                           <input type="radio" name="question-radio-1" value="no"
-                                 checked={this.props.data.answer === "no"?true:false}/>NO
+                                 readonly
+                                 checked={this.props.data.responses[0].answers === "no"?true:false}/>NO
                       </div>
                       :
                       <div>
@@ -276,7 +292,8 @@ class ResponseComponentReadOnly extends Component {
                                   <div>
                                       <input type="text" className="form-control surveyape-input" id="questionStr"
                                              aria-describedby="questionStr" placeholder="Response"
-                                             value={this.props.data.answer}
+                                             value={this.props.data.responses[0].answers}
+                                             disabled={true}
                                       />
                                   </div>
                                   :
@@ -285,7 +302,7 @@ class ResponseComponentReadOnly extends Component {
                                           (this.props.data.questionType === 3) ?
                                               <Calendar id="surveyEndTime" aria-describedby="Survey End Time"
                                                         placeholder="Survey End Time"
-                                                        value={this.props.data.answer}
+                                                        value={this.props.data.responses[0].answers}
                                               />
                                               :
                                               /*question 4*/
@@ -295,8 +312,8 @@ class ResponseComponentReadOnly extends Component {
                                                           <StarRatingComponent
                                                               name="rate1"
                                                               starCount={5}
-                                                              value={this.props.data.answer}
-                                                              onStarClick={this.onStarClick.bind(this)}
+                                                              editing={false}
+                                                              value={this.props.data.responses[0].answers}
                                                           />
                                                       </div>
 

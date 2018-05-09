@@ -57,7 +57,7 @@ class ViewSurvey extends Component {
     }
     render() {
         var surveyListC = [];
-        var data1 = this.state.surveysCreatedIncomplete;
+        var data1 = this.state.surveysCreatedComplete;
         if (data1 && data1.length > 0) {
             data1.map(function (temp, index) {
                 surveyListC.push(
@@ -66,7 +66,7 @@ class ViewSurvey extends Component {
             }, this);
         }
         var surveyListI = [];
-        var data2 = this.state.surveysCreatedComplete;
+        var data2 = this.state.surveysCreatedIncomplete;
         if (data2 && data2.length > 0) {
             data2.map(function (temp, index) {
                 surveyListI.push(
