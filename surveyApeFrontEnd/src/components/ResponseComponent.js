@@ -97,7 +97,7 @@ componentWillMount(){
             API.updateResponse(self)
                 .then((res) => {
                     console.log(res)
-                    self.answer = "";
+                    //self.answer = "";
                     alert("Response Saved")
                 });
         }
@@ -109,7 +109,7 @@ componentWillMount(){
                     console.log(res)
                     var responses = self.responseIds;
                     responses[this.props.number] = res.resId;
-                    self.answer = "";
+                    //self.answer = "";
                     this.setState(self);
                     alert("Response Saved")
 
@@ -330,12 +330,12 @@ componentWillMount(){
     return (
       <div className="row margin-70 margin-none">
           <div className="form-group resizedTextbox col-md-6">
-              <div>
-                  {this.props.answer}
-              </div>
-              <div>
-                  {this.props.responseId}
-              </div>
+
+              {(this.props.answer)?
+                  <div>
+                      PREVIOUS ANSWER: {this.props.answer}
+                  </div>:null
+              }
                     <span>
                         {this.props.data.questionStr}
                     </span>

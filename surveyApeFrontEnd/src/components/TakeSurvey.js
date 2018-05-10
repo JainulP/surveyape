@@ -140,12 +140,17 @@ class TakeSurvey extends Component {
 
     openclosesurveydetails = () =>{
         //open-unique and closed
+        var self = this.state;
+        var emails = this.state.email;
+        if(localStorage.getItem("email")){
+emails = localStorage.getItem("email");
+        }
         var data={
             surveyId : this.state.surveyId,
-            email: this.state.email
+            email: emails
 
         }
-        var self = this.state;
+
         API.getSurveybYemail(data)
             .then((res) => {
                 if (res.code == 404) {
