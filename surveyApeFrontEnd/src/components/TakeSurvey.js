@@ -78,12 +78,14 @@ class TakeSurvey extends Component {
                     this.props.history.push("/");
                 }
                 var d1 = new Date();
-                var d2 = new Date(res.endTime);
-                console.log(d1.getTime() > d2.getTime());
-                /*if(d1.getTime() > d2.getTime()){
+                var dayeTemp= res.endTime;
+              //  dayeTemp = dayeTemp.substr(0,10)+ "T" +dayeTemp.substr(11);
+                var d2 = new Date(parseInt(dayeTemp.substr(0,4)),parseInt(dayeTemp.substr(5,7))-1,parseInt(dayeTemp.substr(8,10)));
+                console.log(d1.getTime() > d2);
+                if(d1.getTime() > d2){
                     alert("SURVEY EXPIRED")
                     this.props.history.push("/");
-                }*/
+                }
                 self.surveyDetails = res;
                 self.currentQuestion = res.questions[0];
                 if(res.questions[0].responses.length>0 && self.email != null ){

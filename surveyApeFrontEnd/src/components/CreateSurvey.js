@@ -14,6 +14,13 @@ import  Moment from 'react-moment'
 class CreateSurvey extends Component {
     constructor(props){
         super(props);
+        var date = new Date();
+
+        var today = date.getFullYear() +
+            '-' + ((date.getMonth() + 1 >= 10)?(date.getMonth() + 1):("0"+(date.getMonth() + 1 )))+
+            '-' + ((date.getDate() >= 10)?date.getDate():("0" + date.getDate())) +
+            'T' + ((date.getHours()<10)?("0"+date.getHours()):date.getHours())+
+            ':' + (date.getMinutes());
         this.state = {
             surveyId: null,
             participants : '',
@@ -23,7 +30,7 @@ class CreateSurvey extends Component {
             createSurveyResponse:null,
             surveyData:{
                 surveyName:null,
-                endTime:null,
+                endTime:today,
                 userId:null,
                 surveyType:null
             },
@@ -74,8 +81,12 @@ class CreateSurvey extends Component {
         // date format required yyyy-MM-dd-HH
 
         var data = this.state;
-        data.surveyData.endTime = data.date.getYear() + "-" + data.date.getMonth() + "-" +
-                                     data.date.getDate() + "-" + data.date.getHours();
+        var dateTemp = null;
+        dateTemp=this.state.surveyData.endTime;
+        dateTemp = dateTemp.substr(0,dateTemp.indexOf(":"));
+        var s =dateTemp.indexOf("T");
+        dateTemp = dateTemp.substr(0,s) + "-" + dateTemp.substr(s+1);
+        data.surveyData.endTime = dateTemp;
         this.setState(data);
         var self = this.state;
         API.createSurvey(this.state.surveyData)
@@ -153,12 +164,15 @@ class CreateSurvey extends Component {
 
                             <div className="form-group resizedTextbox">
                                 <span>Survey End Time: </span>
-                                <span>{this.state.date.toString()}</span>
-                                <Calendar id="surveyEndTime" aria-describedby="Survey End Time" placeholder="Survey End Time"
-                                          onChange={this.onChange}
-                                          value={this.state.data}
-                                />
-
+                                <input id="surveyEndTime" type="datetime-local" name="partydate"  onChange={(event) => {
+                                    var surveyDataTemp = this.state.surveyData;
+                                    surveyDataTemp.endTime = event.target.value;
+                                    this.setState({
+                                        surveyData: surveyDataTemp
+                                    });
+                                }}
+                                       defaultValue={this.state.surveyData.endTime}>
+                                </input>
                             </div>
                             <span> <span>* </span>Survey Type : </span>
                             <div className="form-group resizedTextbox">
