@@ -56,10 +56,13 @@ componentWillMount(){
         if(localStorage.getItem("email")){
             self.email = localStorage.getItem("email");
         }
-        /*if(localStorage.getItem("guestemail")){
-            self.email = localStorage.getItem("guestemail");
-            localStorage.removeItem("guestemail");
-        }*/
+        if(this.props.accessCode && this.props.accessCode == "open" && this.props.emailtmp ) {
+                self.email = this.props.emailtmp;
+        }
+        // /*if(localStorage.getItem("guestemail")){
+        //     self.email = localStorage.getItem("guestemail");
+        //     localStorage.removeItem("guestemail");
+        // }*/
         this.setState(self);
     }
 }
