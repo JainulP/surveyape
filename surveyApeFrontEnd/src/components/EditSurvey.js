@@ -64,12 +64,17 @@ class EditSurvey extends Component {
 
     editSurvey = () =>{
         alert(this.state.surveyId)
+        var data={
+            surveyId : this.state.surveyId,
+            email: localStorage.getItem("email")
+
+        }
         var self = this.state;
-        API.getSurvey(this.state.surveyId)
+        API.getSurveybYemail(data)
             .then((res) => {
                 if(res && res.surveyId){
                     self.surveyDetails = res;
-                   self.questions = res.questions;
+                    self.questions = res.questions;
                     this.setState(self);
                 }
                 else{
@@ -113,7 +118,7 @@ class EditSurvey extends Component {
     }
     addParticipants = () =>{
         var data = {
-            surveyId :this.state.createSurveyResponse.surveyId,
+            surveyId :this.state.surveyId,
             participants : this.state.participants
         }
         var self = this.state;

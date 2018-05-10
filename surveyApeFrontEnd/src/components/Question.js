@@ -134,15 +134,15 @@ saveQuestion = () =>{
     }
     renderQuestionTypeSwitch(param) {
         switch(param) {
-            case '0':
+            case 0:
                 return 'Multiple Choice';
             case 1:
                 return 'Yes/No';
-            case '2':
+            case 2:
                 return 'Short Answer';
-            case '3':
+            case 3:
                 return 'Date/Time';
-            case '4':
+            case 4:
                 return 'Star Rating';
             default:
                 return '';
@@ -368,7 +368,7 @@ saveQuestion = () =>{
                             <div className="col-md-8">
                             <div>
                                 <span>
-                                    Question :
+                                    Question |
                                 </span>
                                 <span>
                                     {this.state.questionStr}
@@ -376,17 +376,17 @@ saveQuestion = () =>{
                             </div>
                             <div>
                                 <span>
-                                    Question Type
+                                    Question Type -
                                 </span>
                                 <span>
                                     {this.renderQuestionTypeSwitch(this.state.questionType)}
                                    </span>
                             </div>
                             {
-                                (this.state.choiceType !== null || this.state.choiceType !== "null") ?
+                                (this.state.choiceType) ?
                                     <div>
                                 <span>
-                                   Choice type
+                                   Choice type -
                                 </span>
                                         <span>
                                             {this.renderChoiceSwitch(this.state.choiceType)}
@@ -398,7 +398,7 @@ saveQuestion = () =>{
                                 (this.state.answerType !== null)?
                                     <div>
                                 <span>
-                                    Answer type
+                                    Answer type -
                                 </span>
                                 <span>
                                     {this.renderAnswerTypeSwitch(this.state.answerType)}
@@ -410,7 +410,7 @@ saveQuestion = () =>{
                                 (this.state.visualStyle !== null)?
                                     <div>
                                     <span>
-                                    Visual style
+                                    Visual style -
                                     </span>
                                     <span>
                                         {this.renderVisualTypeSwitch(this.state.visualStyle)}
@@ -422,7 +422,7 @@ saveQuestion = () =>{
                                     (this.state.options !== null)?
                                         <div>
                                     <span>
-                                    Options
+                                    Options -
                                     </span>
                                             <span>
                                         {this.renderOptions(this.state.options)}

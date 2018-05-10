@@ -117,7 +117,7 @@ class CreateSurvey extends Component {
                 });
         }
         else{
-
+            alert("Please add questions to this survey before publishing!")
         }
     }
     renderSurveyTypeSwitch(param) {
