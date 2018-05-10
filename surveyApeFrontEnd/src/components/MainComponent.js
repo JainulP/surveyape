@@ -77,9 +77,15 @@ class MainComponent extends Component {
                 {/*<img className="back-img" src="http://localhost:3000/wc.png" ></img>*/}
                 <div className="row margin-70">
                     <div className="col-md-5 box-shadow-surveyape div-head">
+                        <div className="stat-heading">
+                            GENERAL SURVEYS
+                        </div>
                         {TypeSurvey0}
                     </div>
                     <div className="col-md-5 box-shadow-surveyape div-head">
+                        <div className="stat-heading">
+                            OPEN UNIQUE
+                        </div>
                         {TypeSurvey1}
                     </div>
                 </div>

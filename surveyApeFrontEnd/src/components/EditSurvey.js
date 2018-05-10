@@ -234,7 +234,7 @@ class EditSurvey extends Component {
                               </select>
                           </div>
                       </form>
-                      <button type="button" className="surveyape-button" id = "saveUsrInfo" onClick={()=>this.createBasicSurvey()}>CREATE SURVEY</button>
+                      <button type="button" className="surveyape-button" id = "saveUsrInfo" onClick={()=>this.createBasicSurvey()}>SAVE</button>
                   </div>
                   <div className="col-md-6">
                   </div>
