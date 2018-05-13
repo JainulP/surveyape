@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -250,16 +249,14 @@ public class SurveyController {
                 survey.setPublished(true);
                 if (survey.getSurveyType() == 0) {//general open survey
                     List<String> emails = surveyLinksRepository.getEmailsBySurvey(Integer.toString(survey.getSurveyId()));
-                    String url = emailService.sendUniqueInvitationForGeneralSurveyUsers(emails, null, "survey/" + surveyId);
-                    emailService.sendInvitationViaQRCodeForMultipleUsers("survey/"+surveyId,emails);
+                   String url = emailService.sendUniqueInvitationForGeneralSurveyUsers(emails,"survey/" + surveyId);
+                    //emailService.sendInvitationViaQRCodeForMultipleUsers("survey/"+surveyId,emails);
 
                 } else if (survey.getSurveyType() == 1) {//closed surveey
                     List<String> emails = surveyLinksRepository.getEmailsBySurvey(Integer.toString(survey.getSurveyId()));
-                    List<String> urls = emailService.sendUniqueInvitationForClosedSurveyUsers(emails, null, "survey/" + surveyId);
+                    List<String> urls = emailService.sendUniqueInvitationForClosedSurveyUsers(emails,"survey/" + surveyId);
                 }
             } catch (ParseException e) {
-                e.printStackTrace();
-            } catch (MessagingException e){
                 e.printStackTrace();
             }
             //}

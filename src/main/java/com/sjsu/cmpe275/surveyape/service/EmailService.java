@@ -1,6 +1,7 @@
 package com.sjsu.cmpe275.surveyape.service;
 
-import com.google.zxing.WriterException;
+import net.glxn.qrgen.QRCode;
+import net.glxn.qrgen.image.ImageType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,9 @@ import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -31,76 +33,119 @@ public class EmailService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public void sendInvitationForUser(String to, String subject, String text) {
-        try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(to);
-            message.setSubject(subject);
-            message.setText(text);
-            emailSender.send(message);
-        } catch (MailException exception) {
-            exception.printStackTrace();
-        }
+        sendSimpleMessage(to, subject, text);
     }
 
-    public String sendUniqueInvitationForGeneralSurveyUsers(List<String> emails, String text, String surveyId) {
+    public String sendUniqueInvitationForGeneralSurveyUsers(List<String> emails, String surveyId) {
         try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setSubject("Invitation to the survey");
-            String url = "127.0.0.1:3000/" + surveyId;
+            //  SimpleMailMessage message = new SimpleMailMessage();
+            MimeMessage mimeMessage = emailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setSubject("Invitation to the survey");
+            String url = "http://127.0.0.1:3000/" + surveyId;
+            create_QR(url);
             for (String email : emails) {
-                message.setText(url);
-                message.setTo(email);
-                emailSender.send(message);
+                //message.setText(url);
+                helper.setTo(email);
+                helper.setText("<html>"
+                        + "<body>"
+                        + "<div>" + "Please use this url to take the survey " + url + "</div>"
+                        + "<div>or use the qrcode to take the survey</div>"
+                        + "<img src='cid:image' style='float:left;width:200px;height:200px;'/>"
+                        + "</body>"
+                        + "</html>", true);
+                helper.addInline("image", new File("src/main/resources/QRCodes/image.png"));
+                emailSender.send(mimeMessage);
             }
             return url;
         } catch (MailException exception) {
             logger.debug("Unable to send uniqueMessage for users");
             exception.printStackTrace();
+        } catch (MessagingException exception) {
+            logger.debug("unable to send unique Message");
         }
         return null;
     }
 
 
-    public List<String> sendUniqueInvitationForClosedSurveyUsers(List<String> emails, String text, String surveyId) {
+    public List<String> sendUniqueInvitationForClosedSurveyUsers(List<String> emails, String surveyId) {
         List<String> urls = new ArrayList<>();
         try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setSubject("Invitation to the survey");
-            for (String email : emails) {
-                String url = "127.0.0.1:3000/" + surveyId + "/" + Base64.getEncoder().encodeToString(email.getBytes());
+            MimeMessage mimeMessage = emailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 
-                message.setText(url);
-                message.setTo(email);
-                emailSender.send(message);
+            helper.setSubject("Invitation to the survey");
+            for (String email : emails) {
+                String url = "http://127.0.0.1:3000/" + surveyId + "/" + Base64.getEncoder().encodeToString(email.getBytes());
+                helper.setTo(email);
+                helper.setText("<html>"
+                        + "<body>"
+                        + "<div>" + "Please use this url to take the survey " + url + "</div>"
+                        + "<div>or use the qrcode to take the survey</div>"
+                        + "<img src='cid:image' style='float:left;width:200px;height:200px;'/>"
+                        + "</body>"
+                        + "</html>", true);
+                helper.addInline("image", new File("src/main/resources/QRCodes/image.png"));
+                emailSender.send(mimeMessage);
                 urls.add(url);
             }
         } catch (MailException exception) {
             logger.debug("Unable to send uniqueMessage for users");
             exception.printStackTrace();
+        } catch (MessagingException exception) {
+            logger.debug("Unable to send mail for closed survey users");
         }
         return urls;
     }
 
-    public List<String> sendUniqueInvitationForOpenUniqueSurveyUsers(String email, String text, String surveyId) {
+
+    public List<String> sendUniqueInvitationForOpenUniqueSurveyUsers(String email, String surveyId) {
         List<String> urls = new ArrayList<>();
         try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setSubject("Invitation to the survey");
+            MimeMessage mimeMessage = emailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setSubject("Invitation to the survey");
 
-            String url = "127.0.0.1:3000/survey/" + surveyId + "/open/" + Base64.getEncoder().encodeToString(email.getBytes());
-            message.setText(url);
-            message.setTo(email);
-            emailSender.send(message);
+            String url = "http://127.0.0.1:3000/survey/" + surveyId + "/open/" + Base64.getEncoder().encodeToString(email.getBytes());
+            helper.setTo(email);
+            helper.setText("<html>"
+                    + "<body>"
+                    + "<div>" + "Please use this url to take the survey " + url + "</div>"
+                    + "<div>or use the QRCode to take the survey</div>"
+                    + "<img src='cid:image' style='float:left;width:200px;height:200px;'/>"
+                    + "</body>"
+                    + "</html>", true);
+            helper.addInline("image", new File("src/main/resources/QRCodes/image.png"));
+            emailSender.send(mimeMessage);
             urls.add(url);
 
         } catch (MailException exception) {
             logger.debug("Unable to send uniqueMessage for users");
             exception.printStackTrace();
+        } catch (MessagingException exception) {
+            logger.debug("unable to send mail to open unique survey users");
         }
         return urls;
     }
 
     public void sendConfirmationForCompletion(String to, String subject, String text) {
+        sendSimpleMessage(to, subject, text);
+    }
+
+
+    public void create_QR(String content) {
+        ByteArrayOutputStream out = QRCode.from(content).to(ImageType.PNG).stream();
+        try {
+            FileOutputStream fOut = new FileOutputStream(new File("src/main/resources/QRCodes/image.png"));
+            fOut.write(out.toByteArray());
+            fOut.flush();
+            fOut.close();
+        } catch (Exception e) {
+            logger.debug("caught");
+        }
+    }
+
+    private void sendSimpleMessage(String to, String subject, String text) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(to);
@@ -108,12 +153,11 @@ public class EmailService {
             message.setText(text);
             emailSender.send(message);
         } catch (MailException exception) {
-            exception.printStackTrace();
+            logger.debug("unable to send simple message");
         }
     }
 
-
-    public void sendInvitationViaQRCode(String to, String from, String subject) throws MessagingException {
+   /* public void sendInvitationViaQRCode(String to, String from, String subject) throws MessagingException {
 
         try {
             MimeMessage message = emailSender.createMimeMessage();
@@ -139,9 +183,9 @@ public class EmailService {
             e.printStackTrace();
         }
 
-    }
+    }*/
 
-    public void sendInvitationViaQRCodeForMultipleUsers(String encodedlink, List<String> emails) throws MessagingException {
+    /*public void sendInvitationViaQRCodeForMultipleUsers(String encodedLink, List<String> emails) throws MessagingException {
 
         try {
 
@@ -150,7 +194,7 @@ public class EmailService {
 
             MimeMessage mimeMessage = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            qrCodeService.generateQRCodeImage(encodedlink, 60, 60, "QRCodes/image.png");
+            qrCodeService.generateQRCodeImage(encodedLink, 60, 60, "/Users/havok/Desktop/Ideaprojects/SpringProjects/surveyape/src/main/resources/QRCodes/work.png");
             for (String email : emails) {
                 helper.setSubject("Invitation via QRcode");
                 helper.setTo(email);
@@ -176,5 +220,12 @@ public class EmailService {
         }
 
     }
+*/
+
 
 }
+
+
+
+
+
