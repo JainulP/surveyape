@@ -9,7 +9,7 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-@Component
+@Service
 public class EmailService {
 
     @Autowired
@@ -50,7 +50,7 @@ public class EmailService {
                 helper.setText("<html>"
                         + "<body>"
                         + "<div>" + "Please use this url to take the survey " + url + "</div>"
-                        + "<div>or use the qrcode to take the survey</div>"
+                        + "<div>or use the QRCode to take the survey</div>"
                         + "<img src='cid:image' style='float:left;width:200px;height:200px;'/>"
                         + "</body>"
                         + "</html>", true);
@@ -62,7 +62,7 @@ public class EmailService {
             logger.debug("Unable to send uniqueMessage for users");
             exception.printStackTrace();
         } catch (MessagingException exception) {
-            logger.debug("unable to send unique Message");
+            logger.debug("unable to send unique Invitation for general survey users");
         }
         return null;
     }
@@ -81,7 +81,7 @@ public class EmailService {
                 helper.setText("<html>"
                         + "<body>"
                         + "<div>" + "Please use this url to take the survey " + url + "</div>"
-                        + "<div>or use the qrcode to take the survey</div>"
+                        + "<div>or use the QRCode to take the survey</div>"
                         + "<img src='cid:image' style='float:left;width:200px;height:200px;'/>"
                         + "</body>"
                         + "</html>", true);
@@ -141,7 +141,7 @@ public class EmailService {
             fOut.flush();
             fOut.close();
         } catch (Exception e) {
-            logger.debug("caught");
+            logger.debug("Creating QRCode failed");
         }
     }
 
@@ -153,7 +153,7 @@ public class EmailService {
             message.setText(text);
             emailSender.send(message);
         } catch (MailException exception) {
-            logger.debug("unable to send simple message");
+            logger.debug("Unable to send simple message");
         }
     }
 
