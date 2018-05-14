@@ -1,6 +1,8 @@
 package com.sjsu.cmpe275.surveyape.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.sjsu.cmpe275.surveyape.utils.View;
 
 import javax.persistence.*;
 import java.util.List;

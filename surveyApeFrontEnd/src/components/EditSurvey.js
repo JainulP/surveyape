@@ -63,7 +63,7 @@ class EditSurvey extends Component {
     }
 
     editSurvey = () =>{
-        alert(this.state.surveyId)
+        //alert(this.state.surveyId)
         var data={
             surveyId : this.state.surveyId,
             email: localStorage.getItem("email")
@@ -100,7 +100,7 @@ class EditSurvey extends Component {
             });
     }
     publishSurvey = () =>{
-        if(this.state.questions.length > 0){
+        //if(this.state.questions.length > 0){
             API.publishSurvey(this.state.surveyId)
                 .then((res) => {
                     if(res){
@@ -111,10 +111,10 @@ class EditSurvey extends Component {
                         alert("Please try again")
                     }
                 });
-        }
-        else{
-            alert("No questions added")
-        }
+        // }
+        // else{
+        //     alert("No questions added")
+        // }
     }
     addParticipants = () =>{
         var data = {

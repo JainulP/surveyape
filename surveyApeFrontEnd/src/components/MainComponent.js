@@ -76,13 +76,13 @@ class MainComponent extends Component {
             <div >
                 {/*<img className="back-img" src="http://localhost:3000/wc.png" ></img>*/}
                 <div className="row margin-70">
-                    <div className="col-md-5 box-shadow-surveyape div-head">
+                    <div className="col-md-4 box-shadow-surveyape div-head">
                         <div className="stat-heading">
                             GENERAL SURVEYS
                         </div>
                         {TypeSurvey0}
                     </div>
-                    <div className="col-md-5 box-shadow-surveyape div-head">
+                    <div className="col-md-4 box-shadow-surveyape div-head">
                         <div className="stat-heading">
                             OPEN UNIQUE
                         </div>
