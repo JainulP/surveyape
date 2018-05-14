@@ -148,37 +148,46 @@ public class SurveyController {
 
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateSurveyEndTime(@RequestParam(value = "surveyId") String surveyId,
-                                                 @RequestParam(value = "endTime") String endTime) {
+                                                 @RequestParam(value = "endTime",required = false) String endTime,
+                                                 @RequestParam(value = "surveyName",required = false) String surveyName) {
 
         Survey survey = surveyRepository.findById(Integer.parseInt(surveyId)).get();
+        Survey updated = survey;
         if (survey != null) {
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
-            try {
-                Date date1 = null;
-                if (survey.getEndTime() != null) {
-                    date1 = sdf.parse(sdf.format(survey.getEndTime()));
-                }
+            if(endTime != null) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
+                try {
+                    Date date1 = null;
+                    if (survey.getEndTime() != null) {
+                        date1 = sdf.parse(sdf.format(survey.getEndTime()));
+                    }
 
-                Date date2 = sdf.parse(sdf.format(new Date()));
+                    Date date2 = sdf.parse(sdf.format(new Date()));
 
-                if (date1 == null || date1.compareTo(date2) > 0) {
-                    survey.setEndTime(sdf.parse(endTime));
+                    if (date1 == null || date1.compareTo(date2) > 0) {
+                        survey.setEndTime(sdf.parse(endTime));
 //                    //Now create the time and schedule it
 //                    Timer timer = new Timer();
 //
 //                    //Use this if you want to execute it once
 //                    timer.schedule(new CloseSurveyAtEndTime(survey), sdf.parse(endTime));
-                    Survey updatedSurvey = surveyRepository.save(survey);
-                    return new ResponseEntity<>(updatedSurvey, HttpStatus.OK);
-                } else {
-                    return new ResponseEntity<>(new BadRequest(400, "Sorry, the survey has already been expired"), HttpStatus.BAD_REQUEST);
+                       updated = surveyRepository.save(survey);
+                        //return new ResponseEntity<>(updatedSurvey, HttpStatus.OK);
+                    } else {
+                        return new ResponseEntity<>(new BadRequest(400, "Sorry, the survey has already been expired"), HttpStatus.BAD_REQUEST);
 
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return new ResponseEntity<>(new BadRequest(400, "Invalid Date"), HttpStatus.BAD_REQUEST);
                 }
-            } catch (ParseException e) {
-                e.printStackTrace();
-                return new ResponseEntity<>(new BadRequest(400, "Invalid Date"), HttpStatus.BAD_REQUEST);
             }
+            if(surveyName != null && !surveyName.isEmpty()){
+                survey.setSurveyName(surveyName);
+                updated = surveyRepository.save(survey);
+            }
+            return new ResponseEntity<>(updated, HttpStatus.OK);
 
         } else {
             return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
@@ -408,6 +417,9 @@ public class SurveyController {
                         return new ResponseEntity<>(new BadRequest(404, "You can not take this survey as this survey has been already been taken"), HttpStatus.NOT_FOUND);
                     }
                 }
+            }
+            if (survey.getSurveyType() == 0 ) {
+                SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
             }
             List<Question> questions = survey.getQuestions();
             for (Question question : questions) {

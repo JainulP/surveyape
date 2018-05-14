@@ -305,6 +305,18 @@ public class ResponseController {
                 // For counting survey completion
             } else if (survey.getSurveyType() == 0) {
                 if (!userEmail.isEmpty() && userEmail != null) {
+                    SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
+                    if (surveyLinks != null) {
+                        surveyLinks.setCompleted(true);
+                        surveyLinksRepository.save(surveyLinks);
+                    }
+                    else{
+                        String url = "127.0.0.1:3000/survey/" + surveyId;
+                        SurveyLinks surveyLinks1 = new SurveyLinks(survey,userEmail,url);
+                        surveyLinks1.setCompleted(true);
+                        surveyLinksRepository.save(surveyLinks1);
+                    }
+
                     // For calculating the count of successfully completed surveys
                     Optional<SurveyCount> surveyCountOptional = surveyCountRepository.findById(Integer.parseInt(surveyId));
                     if (surveyCountOptional.isPresent()) {
