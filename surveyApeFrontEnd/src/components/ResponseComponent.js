@@ -101,7 +101,7 @@ componentWillMount(){
                     var answers= self.answers;
                     answers[this.props.number] = self.answer;
                     this.setState(self);
-                    alert("Response Saved. Please click next button!")
+                    alert("Response Saved. Please click next to proceed.")
                 });
         }
         else{
@@ -114,7 +114,7 @@ componentWillMount(){
                     responses[this.props.number] = res.resId;
                     self.answer = "";
                     this.setState(self);
-                    alert("Response Saved. Please click next button!")
+                    alert("Response Saved. Please click next to proceed.")
 
                 });
         }

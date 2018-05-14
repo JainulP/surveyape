@@ -236,7 +236,7 @@ class TakeSurvey extends Component {
             }
 
             if( self.currentIndex > 0){
-              //  document.getElementById("prevClicked").disabled = false;
+               // document.getElementById("prevClicked").disabled = false;
                 self.currentIndex = self.currentIndex - 1;
                 self.currentQuestion = self.surveyDetails.questions[self.currentIndex];
                 if(self.surveyDetails.surveyType !== 0 && self.surveyDetails.questions[self.currentIndex].responses && self.surveyDetails.questions[self.currentIndex].responses.length>0 && self.email != null) {
@@ -250,9 +250,7 @@ class TakeSurvey extends Component {
                 this.setState(self);
             }
             else{
-                //
-                //
-                // document.getElementById("prevClicked").disabled = true;
+              //  document.getElementById("prevClicked").disabled = true;
             }
         }
     render() {
