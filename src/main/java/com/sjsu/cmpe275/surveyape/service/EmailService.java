@@ -143,14 +143,14 @@ public class EmailService {
 
     public void sendInvitationViaQRCodeForMultipleUsers(String encodedlink, List<String> emails) throws MessagingException {
 
-        try {
+//        try {
 
 
             MimeMessage message = emailSender.createMimeMessage();
 
             MimeMessage mimeMessage = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
-            qrCodeService.generateQRCodeImage(encodedlink, 60, 60, "QRCodes/image.png");
+            //qrCodeService.generateQRCodeImage(encodedlink, 60, 60, "QRCodes/image.png");
             for (String email : emails) {
                 helper.setSubject("Invitation via QRcode");
                 helper.setTo(email);
@@ -167,13 +167,13 @@ public class EmailService {
             //helper.addInline("Image",new File("QRCodes/image.png"));
             // helper.setText(inlineImage, true);
 
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (WriterException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        } catch (MessagingException e) {
+//            e.printStackTrace();
+//        } catch (WriterException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
