@@ -15,6 +15,7 @@ import TakeSurvey from './TakeSurvey.js';
 import ViewSurvey from './ViewSurvey.js';
 import EditSurvey from './EditSurvey.js';
 import OpenSurveyLogin from './OpenSurveyLogin.js';
+import Home from './Home.js';
 
 class HomePage extends Component {
     constructor(props) {
@@ -70,6 +71,15 @@ class HomePage extends Component {
         return (
             <div>
                 <Route exact path="/" render={() =>
+                    (
+                        <div>
+                            <TopMenu/>
+                            <Home/>
+                            <div className="grey-content"></div>
+                            <Footer/>
+                        </div>
+                    )}/>
+                <Route exact path="/surveys" render={() =>
                     (
                         <div>
                             <TopMenu/>

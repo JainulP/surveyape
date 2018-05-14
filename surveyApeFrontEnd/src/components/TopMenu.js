@@ -38,6 +38,9 @@ class TopMenu extends Component {
     GoTosignup = () =>{
         this.props.history.push("/signup");
     }
+    GoTotakeSurveys = () =>{
+        this.props.history.push("/surveys");
+    }
     GoToLogout = () =>{
         var self = this.state;
         self.loggedout = false;
@@ -86,6 +89,11 @@ class TopMenu extends Component {
                         <a className="s padding-left-25 cursor-pointer" onClick={() => {
                             this.goToHome()
                         }}>HOME</a>
+                    </span>
+                                    <span>
+                        <a className="s padding-left-25 cursor-pointer" onClick={() => {
+                            this.GoTotakeSurveys()
+                        }}>SURVEYS</a>
                     </span>
                                 <span>
                         <a className="s padding-left-25 cursor-pointer" onClick={() => {
