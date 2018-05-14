@@ -288,8 +288,8 @@ class EditSurvey extends Component {
           </div>
                   </div>
               :null}
-          <button type="button" className="surveyape-button" id = "addQuestion" onClick={()=>this.deleteSurvey()}>DELETE</button>
-          <button type="button" className="surveyape-button" id = "addQuestion" onClick={()=>this.publishSurvey()}>PUBLISH</button>
+          <button type="button" className="surveyape-button margin-70" id = "addQuestion" onClick={()=>this.deleteSurvey()}>DELETE</button>
+          <button type="button" className="surveyape-button margin-70" id = "addQuestion" onClick={()=>this.publishSurvey()}>PUBLISH</button>
 
       </div>
     );

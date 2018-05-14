@@ -123,7 +123,7 @@ class ViewSurvey extends Component {
                     </div>
                 </div>
                 <div>
-                    <button type="button" className="surveyape-button" id="generateStats"
+                    <button type="button" className="surveyape-button margin-70" id="generateStats"
                             onClick={() => this.viewSurvey()}>VIEW
                     </button>
                 </div>

@@ -30,6 +30,7 @@
 .surveyape-button{
     color: white;
     background-color: black;
+    padding: 8px;
 }
 
 .margin-20{
@@ -129,4 +130,8 @@
 
 .height-fixed{
     height: 800px;
+}
+
+.pad-8{
+    padding: 8px;
 }
