@@ -172,7 +172,7 @@ class Dashboard extends Component {
                     <div>
                         <div>
                             <span className="stat-heading">
-                                QUESTION {index} : {questionList[index]}
+                                QUESTION {index+1} : {questionList[index]}
                             </span>
                         </div>
                     <Doughnut data={temp}/>

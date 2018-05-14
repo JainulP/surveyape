@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.sjsu.cmpe275.surveyape.model.*;
 import com.sjsu.cmpe275.surveyape.repository.*;
 import com.sjsu.cmpe275.surveyape.service.EmailService;
+import com.sjsu.cmpe275.surveyape.service.JSON_Writer;
 import com.sjsu.cmpe275.surveyape.utils.View;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +44,8 @@ public class SurveyController {
     @Autowired
     private EmailService emailService;
 
+//    @Autowired
+//    private JSON_Writer json_writer;
 
     @RequestMapping(method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createSurvey(@RequestParam(value = "surveyName") String surveyName,
@@ -92,7 +96,10 @@ public class SurveyController {
     public ResponseEntity<?> getSurveyJson(@PathVariable("surveyId") String surveyId,
                                            @RequestParam(value = "email", required = false) String userEmail) {
         Survey survey = getSurvey(surveyId);
+//        HashMap<String,Survey> map = new HashMap<>();
+//        map.put("survey",survey);
 
+       // json_writer.convertToFile( survey,"jsonfileeee",surveyId);
         if (survey == null) {
             return new ResponseEntity<>(new BadRequest(404, "Sorry, the requested survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
         } else {
@@ -249,16 +256,21 @@ public class SurveyController {
                 survey.setPublished(true);
                 if (survey.getSurveyType() == 0) {//general open survey
                     List<String> emails = surveyLinksRepository.getEmailsBySurvey(Integer.toString(survey.getSurveyId()));
+
                    String url = emailService.sendUniqueInvitationForGeneralSurveyUsers(emails,"survey/" + surveyId);
                     //emailService.sendInvitationViaQRCodeForMultipleUsers("survey/"+surveyId,emails);
 
                 } else if (survey.getSurveyType() == 1) {//closed surveey
                     List<String> emails = surveyLinksRepository.getEmailsBySurvey(Integer.toString(survey.getSurveyId()));
+
                     List<String> urls = emailService.sendUniqueInvitationForClosedSurveyUsers(emails,"survey/" + surveyId);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+//            catch (MessagingException e){
+//                e.printStackTrace();
+//            }
             //}
             surveyRepository.save(survey);
 

@@ -262,7 +262,7 @@ class CreateSurvey extends Component {
                     </div>
                         :null
                     }
-<div className="row margin-70">
+<div className="row margin-none">
     <button type="button" className="surveyape-button" id = "publishSurvey" onClick={()=>this.publishSurvey()}>PUBLISH</button>
 </div>
                 </div>

@@ -187,14 +187,18 @@ public class EmailService {
 
     /*public void sendInvitationViaQRCodeForMultipleUsers(String encodedLink, List<String> emails) throws MessagingException {
 
-        try {
+//        try {
 
 
             MimeMessage message = emailSender.createMimeMessage();
 
             MimeMessage mimeMessage = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
+<<<<<<< HEAD
+            //qrCodeService.generateQRCodeImage(encodedlink, 60, 60, "QRCodes/image.png");
+=======
             qrCodeService.generateQRCodeImage(encodedLink, 60, 60, "/Users/havok/Desktop/Ideaprojects/SpringProjects/surveyape/src/main/resources/QRCodes/work.png");
+>>>>>>> 5c5f21b8674b54c281b625d3d485313e8a9ccf7f
             for (String email : emails) {
                 helper.setSubject("Invitation via QRcode");
                 helper.setTo(email);
@@ -211,13 +215,13 @@ public class EmailService {
             //helper.addInline("Image",new File("QRCodes/image.png"));
             // helper.setText(inlineImage, true);
 
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (WriterException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        } catch (MessagingException e) {
+//            e.printStackTrace();
+//        } catch (WriterException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
     }
 */
