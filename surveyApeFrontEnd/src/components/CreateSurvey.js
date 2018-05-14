@@ -146,7 +146,7 @@ class CreateSurvey extends Component {
 <div>
         {
             (this.state.questionData.surveyId === null)?
-                <div className="row">
+                <div className="row height-fixed">
                     <div className="col-md-6 margin-70">
                         <form>
                             <div className="form-group resizedTextbox">
@@ -198,7 +198,7 @@ class CreateSurvey extends Component {
                     </div>
                 </div>
                 :
-                <div>
+                <div className="height-fixed">
                     <div className="row">
                         <div className="col-md-10 margin-70">
                             <div>SURVEY DETAILS</div>
@@ -263,7 +263,7 @@ class CreateSurvey extends Component {
                         :null
                     }
 <div className="row margin-none">
-    <button type="button" className="surveyape-button" id = "publishSurvey" onClick={()=>this.publishSurvey()}>PUBLISH</button>
+    <button type="button" className="surveyape-button margin-70" id = "publishSurvey" onClick={()=>this.publishSurvey()}>PUBLISH</button>
 </div>
                 </div>
              }

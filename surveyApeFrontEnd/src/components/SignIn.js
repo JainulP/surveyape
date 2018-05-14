@@ -81,7 +81,7 @@ class Login extends Component {
 
     render() {
         return (
-            <div>
+            <div className="height-fixed">
                 <div className="row">
                     <div className="row pad-top-bottom-150">
                     <div className="col-md-4">

@@ -86,7 +86,7 @@ class ViewSurvey extends Component {
             }
         }
         return (
-            <div className="row margin-none">
+            <div className="row margin-none height-fixed">
                 <div className="row margin-70 margin-none">
                     <div className="surveyname-head col-md-4">
                         <div>

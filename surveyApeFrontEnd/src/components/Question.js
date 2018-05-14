@@ -195,7 +195,7 @@ saveQuestion = () =>{
     }
     render() {
         return (
-            <div id="mainDiv" name="mainDiv">
+            <div id="mainDiv" name="mainDiv" className="height-fixed">
                {
                     (this.state.questionId === null || this.state.editMode)?
                     <div className="row">

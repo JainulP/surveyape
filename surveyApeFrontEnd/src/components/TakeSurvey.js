@@ -264,7 +264,7 @@ emails = localStorage.getItem("email");
         }
         }
         return (
-            <div> Survey Name:
+            <div className="height-fixed"> Survey Name:
                 {
                     (this.state.surveyDetails)?
                         this.state.surveyDetails.surveyName:null

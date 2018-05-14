@@ -126,3 +126,7 @@
 .img-height{
     height: 100px;
 }
+
+.height-fixed{
+    height: 800px;
+}

@@ -73,8 +73,7 @@ class MainComponent extends Component {
         },this);
 
         return (
-            <div >
-                {/*<img className="back-img" src="http://localhost:3000/wc.png" ></img>*/}
+            <div className="height-fixed">
                 <div className="row margin-70">
                     <div className="col-md-4 box-shadow-surveyape div-head">
                         <div className="stat-heading">

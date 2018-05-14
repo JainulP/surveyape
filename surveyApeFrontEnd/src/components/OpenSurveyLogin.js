@@ -45,7 +45,7 @@ componentWillMount(){
     }
   render() {
     return (
-      <div className="row margin-none">
+      <div className="row margin-none height-fixed">
           <div className="margin-70 col-md-6">
           <div>
               TO PROCEED
