@@ -181,7 +181,7 @@ class Dashboard extends Component {
             }, this);
         }
         return (
-            <div className="height-fixed">
+            <div className="">
                 <div className="row">
                     <div className="col-md-6 margin-70">
                         <div className="form-group resizedTextbox">

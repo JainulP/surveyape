@@ -142,6 +142,29 @@ class EditSurvey extends Component {
                 return '';
         }
     }
+    updateBasicSurvey = () =>{
+        API.updateSurvey(this.state)
+            .then((res) => {
+                if(res){
+                   //make changes
+                }
+                else{
+                    alert("Please try again")
+                }
+            });
+    }
+    unpublishSurvey = () =>{
+        API.unpublishSurvey(this.state.surveyId)
+            .then((res) => {
+                if(res){
+                    alert("The survey is unpublished")
+                    window.location = "http://localhost:3000/";
+                }
+                else{
+                    alert("Please try again")
+                }
+            });
+    }
     render() {
         var questionList = [];
         var data =  this.state.questions;
@@ -163,7 +186,7 @@ class EditSurvey extends Component {
           },this);
       }
     return (
-      <div className="height-fixed">
+      <div className="">
           <div className="row">
               <div className="col-md-6 margin-70">
                   <div className="form-group resizedTextbox">
@@ -223,13 +246,7 @@ class EditSurvey extends Component {
                           <span> <span>* </span>Survey Type : </span>
                           <div className="form-group resizedTextbox">
                               <select className="form-control surveyape-input" name="cards"  id="surveyType" aria-describedby="Survey Type" placeholder="Survey Type"
-                                      onChange={(event) => {
-                                          var surveyDataTemp = this.state.surveyDetails;
-                                          surveyDataTemp.surveyType = event.target.value;
-                                          this.setState({
-                                              surveyDetails: surveyDataTemp
-                                          });
-                                      }}
+                                      disabled
                                       value={this.state.surveyDetails.surveyType}
                               >
                                   <option value=""></option>
@@ -239,7 +256,7 @@ class EditSurvey extends Component {
                               </select>
                           </div>
                       </form>
-                      <button type="button" className="surveyape-button" id = "saveUsrInfo" onClick={()=>this.createBasicSurvey()}>SAVE</button>
+                      <button type="button" className="surveyape-button" id = "saveUsrInfo" onClick={()=>this.updateBasicSurvey()}>SAVE</button>
                   </div>
                   <div className="col-md-6">
                   </div>
@@ -286,10 +303,14 @@ class EditSurvey extends Component {
                   </div>
               </div>
           </div>
+                      <button type="button" className="surveyape-button margin-70" id = "addQuestion" onClick={()=>this.deleteSurvey()}>DELETE</button>
+                      {(this.state.surveyDetails.published)?
+                          <button type="button" className="surveyape-button margin-70" id = "addQuestion" onClick={()=>this.unpublishSurvey()}>UNPUBLISH</button>
+                          :
+                          <button type="button" className="surveyape-button margin-70" id = "addQuestion" onClick={()=>this.publishSurvey()}>PUBLISH</button>
+                      }
                   </div>
               :null}
-          <button type="button" className="surveyape-button margin-70" id = "addQuestion" onClick={()=>this.deleteSurvey()}>DELETE</button>
-          <button type="button" className="surveyape-button margin-70" id = "addQuestion" onClick={()=>this.publishSurvey()}>PUBLISH</button>
 
       </div>
     );

@@ -71,7 +71,7 @@ class TopMenu extends Component {
                             <a className="s padding-left-25 cursor-pointer" onClick={ () =>{this.GoToCreateSurvey()}}>CREATE</a>
                         </span>
                         <span>
-                            <a className="s padding-left-25 cursor-pointer" onClick={ () =>{this.GoToViewSurvey()}}>VIEW</a>
+                            <a className="s padding-left-25 cursor-pointer" onClick={ () =>{this.GoToViewSurvey()}}>TAKEN</a>
                         </span>
                         <span>
                             <a className="s padding-left-25 cursor-pointer" onClick={ () =>{this.GoToEditSurvey()}}>EDIT</a>

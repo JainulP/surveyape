@@ -79,16 +79,19 @@ class TakeSurvey extends Component {
                 }
                 var d1 = new Date();
                 var dayeTemp= res.endTime;
-              //  dayeTemp = dayeTemp.substr(0,10)+ "T" +dayeTemp.substr(11);
                 var d2 = new Date(parseInt(dayeTemp.substr(0,4)),parseInt(dayeTemp.substr(5,7))-1,parseInt(dayeTemp.substr(8,10)));
                 console.log(d1.getTime() > d2);
                 if(d1.getTime() > d2){
                     alert("SURVEY EXPIRED")
                     this.props.history.push("/");
                 }
-                self.surveyDetails = res;
+                var surveyDataaa = res;
+                if(res.surveyType === 0){
+                    surveyDataaa.responses = [];
+                }
+                self.surveyDetails = surveyDataaa;
                 self.currentQuestion = res.questions[0];
-                if(res.questions[0].responses.length>0 && self.email != null ){
+                if(res.surveyType !== 0 && res.questions[0].responses.length>0 && self.email != null ){
                     self.currentAnswer = res.questions[0].responses[0].answers;
                     self.currentresponseId = res.questions[0].responses[0].resId;
                 }
@@ -143,7 +146,7 @@ class TakeSurvey extends Component {
         var self = this.state;
         var emails = this.state.email;
         if(localStorage.getItem("email")){
-emails = localStorage.getItem("email");
+        emails = localStorage.getItem("email");
         }
         var data={
             surveyId : this.state.surveyId,
@@ -176,7 +179,7 @@ emails = localStorage.getItem("email");
                     self.currentQuestion = res.questions[0];
 
                     self.size = res.questions.length;
-                    if (res.questions[0].responses.length > 0) {
+                    if (res.surveyType !== 0 && res.questions[0].responses.length > 0) {
                         if(self.email != null) {
                             self.currentAnswer = res.questions[0].responses[0].answers;
                             self.currentresponseId = res.questions[0].responses[0].resId;
@@ -201,7 +204,7 @@ emails = localStorage.getItem("email");
                 document.getElementById("nextClicked").disabled = false;
                 self.currentIndex = self.currentIndex + 1;
                 self.currentQuestion = self.surveyDetails.questions[self.currentIndex];
-                if(self.surveyDetails.questions[self.currentIndex].responses && self.surveyDetails.questions[self.currentIndex].responses.length>0 && self.email != null) {
+                if( self.surveyDetails.surveyType !== 0 && self.surveyDetails.questions[self.currentIndex].responses && self.surveyDetails.questions[self.currentIndex].responses.length>0 && self.email != null) {
                     self.currentAnswer = self.surveyDetails.questions[self.currentIndex].responses[0].answers;
                     self.currentresponseId = self.surveyDetails.questions[self.currentIndex].responses[0].resId;
                 }
@@ -236,7 +239,7 @@ emails = localStorage.getItem("email");
                 document.getElementById("prevClicked").disabled = false;
                 self.currentIndex = self.currentIndex - 1;
                 self.currentQuestion = self.surveyDetails.questions[self.currentIndex];
-                if(self.surveyDetails.questions[self.currentIndex].responses && self.surveyDetails.questions[self.currentIndex].responses.length>0 && self.email != null) {
+                if(self.surveyDetails.surveyType !== 0 && self.surveyDetails.questions[self.currentIndex].responses && self.surveyDetails.questions[self.currentIndex].responses.length>0 && self.email != null) {
                     self.currentAnswer = self.surveyDetails.questions[self.currentIndex].responses[0].answers;
                     self.currentresponseId = self.surveyDetails.questions[self.currentIndex].responses[0].resId;
                 }

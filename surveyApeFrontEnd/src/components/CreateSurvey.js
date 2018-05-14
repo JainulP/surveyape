@@ -198,7 +198,7 @@ class CreateSurvey extends Component {
                     </div>
                 </div>
                 :
-                <div className="height-fixed">
+                <div>
                     <div className="row">
                         <div className="col-md-10 margin-70">
                             <div>SURVEY DETAILS</div>
