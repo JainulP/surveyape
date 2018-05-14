@@ -3,6 +3,7 @@ package com.sjsu.cmpe275.surveyape;
 
 import com.sjsu.cmpe275.surveyape.model.User;
 import com.sjsu.cmpe275.surveyape.repository.UserRepository;
+import com.sjsu.cmpe275.surveyape.service.EmailService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.transaction.Transactional;
 import java.util.Optional;
 
 import static junit.framework.TestCase.assertEquals;
@@ -19,13 +19,16 @@ import static junit.framework.TestCase.assertEquals;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = SurveyapeApplication.class)
-@Transactional
+
 public class UserRepositoryTest {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    EmailService emailService;
 
     @Test
     public void findByEmailTest() {
@@ -41,8 +44,13 @@ public class UserRepositoryTest {
             logger.info("user {} {}",userOptional.get().getEmail(),userOptional.get().getPassword());
         } else{
             logger.info("not found");
-        }
-        //userOptional.ifPresent(user -> logger.debug("Scott"+user.getEmail()+user.getPassword()));
+        }//userOptional.ifPresent(user -> logger.debug("Scott"+user.getEmail()+user.getPassword()));
+    }
+
+
+    @Test
+    public void betterQR(){
+        emailService.create_QR("poda");
     }
 
 }

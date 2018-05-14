@@ -8,9 +8,7 @@ import com.sjsu.cmpe275.surveyape.model.SurveyLinks;
 import com.sjsu.cmpe275.surveyape.repository.SurveyLinksRepository;
 import com.sjsu.cmpe275.surveyape.repository.SurveyRepository;
 import com.sjsu.cmpe275.surveyape.service.EmailService;
-//import com.sjsu.cmpe275.surveyape.service.QRCodeService;
 import com.sjsu.cmpe275.surveyape.service.QRCodeService;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+
+//import com.sjsu.cmpe275.surveyape.service.QRCodeService;
 
 @RestController
 @RequestMapping(value = "/participants")
@@ -75,7 +75,7 @@ public class AddParticipantsController {
                             e.printStackTrace();
                         }
                     }
-                    emailService.sendUniqueInvitationForGeneralSurveyUsers(emails, null, surveyId);
+                    emailService.sendUniqueInvitationForGeneralSurveyUsers(emails, surveyId);
                     surveyController.activateSurveyLink(survey);
 
                 }
@@ -90,7 +90,7 @@ public class AddParticipantsController {
 
                 }
                 if(survey.getPublished() == true){
-                    emailService.sendUniqueInvitationForClosedSurveyUsers(emails, null, surveyId);
+                    emailService.sendUniqueInvitationForClosedSurveyUsers(emails, surveyId);
                     surveyController.activateSurveyLink(survey);
                 }
 
@@ -128,7 +128,7 @@ public class AddParticipantsController {
             links.setActivated(true);
             links.setCompleted(false);
             surveyLinksRepository.save(links);
-            emailService.sendUniqueInvitationForOpenUniqueSurveyUsers(email, null, surveyId);
+            emailService.sendUniqueInvitationForOpenUniqueSurveyUsers(email,  surveyId);
             return new ResponseEntity<>(new BadRequest(200, "Unique invitation link has been sent to the email id provided by you."), HttpStatus.OK);
         }
     }
