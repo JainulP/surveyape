@@ -34,7 +34,8 @@ class ResponseComponent extends Component {
             surveyid:this.props.surveyId,
             responseId:this.props.responseId,
             emailtaken :null,
-            responseIds:[]
+            responseIds:[],
+            answers : []
         }
     }
 componentWillMount(){
@@ -90,15 +91,17 @@ componentWillMount(){
     }
     saveResponse = () =>{
         if(this.props.responseId ||  this.state.responseIds[this.props.number]) {
-
             var self = this.state;
             self.questionId = this.props.data.questionId;
             self.responseId = this.props.responseId || this.state.responseIds[this.props.number]
             API.updateResponse(self)
                 .then((res) => {
                     console.log(res)
-                    //self.answer = "";
-                    alert("Response Saved")
+                    self.answer = "";
+                    var answers= self.answers;
+                    answers[this.props.number] = self.answer;
+                    this.setState(self);
+                    alert("Response Saved. Please click next button!")
                 });
         }
         else{
@@ -109,9 +112,9 @@ componentWillMount(){
                     console.log(res)
                     var responses = self.responseIds;
                     responses[this.props.number] = res.resId;
-                    //self.answer = "";
+                    self.answer = "";
                     this.setState(self);
-                    alert("Response Saved")
+                    alert("Response Saved. Please click next button!")
 
                 });
         }

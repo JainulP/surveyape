@@ -194,7 +194,7 @@ class TakeSurvey extends Component {
             });
     }
     componentDidMount(){
-        document.getElementById("prevClicked").disabled = true;
+        //document.getElementById("prevClicked").disabled = true;
         document.getElementById("nextClicked").disabled = true;
     }
         nextClicked = () =>{
@@ -219,10 +219,10 @@ class TakeSurvey extends Component {
             }
 
             if( self.currentIndex > 0){
-                document.getElementById("prevClicked").disabled = false;
+               // document.getElementById("prevClicked").disabled = false;
             }
             else{
-                document.getElementById("prevClicked").disabled = true;
+               // document.getElementById("prevClicked").disabled = true;
             }
         }
         prevClicked = () =>{
@@ -236,7 +236,7 @@ class TakeSurvey extends Component {
             }
 
             if( self.currentIndex > 0){
-                document.getElementById("prevClicked").disabled = false;
+              //  document.getElementById("prevClicked").disabled = false;
                 self.currentIndex = self.currentIndex - 1;
                 self.currentQuestion = self.surveyDetails.questions[self.currentIndex];
                 if(self.surveyDetails.surveyType !== 0 && self.surveyDetails.questions[self.currentIndex].responses && self.surveyDetails.questions[self.currentIndex].responses.length>0 && self.email != null) {
@@ -250,7 +250,9 @@ class TakeSurvey extends Component {
                 this.setState(self);
             }
             else{
-                document.getElementById("prevClicked").disabled = true;
+                //
+                //
+                // document.getElementById("prevClicked").disabled = true;
             }
         }
     render() {
@@ -275,8 +277,8 @@ class TakeSurvey extends Component {
                 <div>
                     <div className="pad-top-20">
                     </div>
-                    <button type="button" className="surveyape-button" name="prevClicked" id = "prevClicked" onClick={()=>this.prevClicked()}>PREVIOUS</button>
-                    <button type="button" className="surveyape-button" name="nextClicked" id = "nextClicked" onClick={()=>this.nextClicked()}>NEXT</button>
+                    {/*<button type="button" className="surveyape-button" name="prevClicked" id = "prevClicked" onClick={()=>this.prevClicked()}>PREVIOUS</button>
+                   */} <button type="button" className="surveyape-button" name="nextClicked" id = "nextClicked" onClick={()=>this.nextClicked()}>NEXT</button>
                     <ResponseComponent emailtmp = {this.state.email} responseId={this.state.currentresponseId} answer={this.state.currentAnswer} surveyid={this.state.surveyId} size={this.state.size} accessCode={this.state.accessCode} data={this.state.currentQuestion} number={this.state.currentIndex} surveyId={this.state.surveyId}/>
 
                 </div>
