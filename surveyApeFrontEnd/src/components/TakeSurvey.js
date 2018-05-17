@@ -88,8 +88,8 @@ class TakeSurvey extends Component {
                 }
 
                 self.size = res.questions.length;
-                if (this.state.surveyDetails.questions.length > 1) {
-                    document.getElementById("nextClicked").disabled = false;
+                if (surveyDataaa.questions.length > 1 && surveyDataaa.questions[0].responses[0]) {
+                    self.answer = surveyDataaa.questions[0].responses[0].answers;
                 }
                 this.setState(self);
             });
@@ -168,6 +168,9 @@ class TakeSurvey extends Component {
                     }*/
                     self.surveyDetails = res;
                     self.questionCount = res.questions.length;
+                    if (res.questions.length > 1 && res.questions[0].responses[0]) {
+                        self.answer = res.questions[0].responses[0].answers;
+                    }
                     self.size = res.questions.length;
                     if (res.surveyType !== 0 && res.questions[0].responses.length > 0) {
                         if(self.email != null) {
