@@ -308,12 +308,14 @@ public class ResponseController {
                     SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
                     if (surveyLinks != null) {
                         surveyLinks.setCompleted(true);
+                        surveyLinks.setActivated(false);
                         surveyLinksRepository.save(surveyLinks);
                     }
                     else{
                         String url = "127.0.0.1:3000/survey/" + surveyId;
                         SurveyLinks surveyLinks1 = new SurveyLinks(survey,userEmail,url);
                         surveyLinks1.setCompleted(true);
+                        surveyLinks.setActivated(false);
                         surveyLinksRepository.save(surveyLinks1);
                     }
 
