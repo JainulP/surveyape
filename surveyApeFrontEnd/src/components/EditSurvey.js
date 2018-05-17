@@ -156,9 +156,13 @@ class EditSurvey extends Component {
     unpublishSurvey = () =>{
         API.unpublishSurvey(this.state.surveyId)
             .then((res) => {
-                if(res){
-                    alert("The survey is unpublished")
+                if( res.code && (res.code == 400 || res.code == 404)){
+                    alert(res.msg)
                     window.location = "http://localhost:3000/";
+                    //window.location = "http://localhost:3000/";
+                }
+                else if(res){
+                    alert("Survey has been unpublished successfully")
                 }
                 else{
                     alert("Please try again")
@@ -267,7 +271,11 @@ class EditSurvey extends Component {
                                 QUESTIONS
                             </span>
                       <div>
+                          {(this.state.surveyDetails.published == false)?
                           <button type="button" className="surveyape-button" id = "addQuestion" onClick={()=>this.addQuestion()}>ADD QUESTION</button>
+                              :
+                              <button type="button"  className="surveyape-button" id = "addQuestion" onClick={()=>alert("Survey must be unpublished to add more questions to it!")}>ADD QUESTION</button>
+                          }
                       </div>
                       <div>
                           {questionList}
@@ -304,7 +312,7 @@ class EditSurvey extends Component {
               </div>
           </div>
                       <button type="button" className="surveyape-button margin-70" id = "addQuestion" onClick={()=>this.deleteSurvey()}>DELETE</button>
-                      {(this.state.surveyDetails.published)?
+                      {(this.state.surveyDetails.published == true)?
                           <button type="button" className="surveyape-button margin-70" id = "addQuestion" onClick={()=>this.unpublishSurvey()}>UNPUBLISH</button>
                           :
                           <button type="button" className="surveyape-button margin-70" id = "addQuestion" onClick={()=>this.publishSurvey()}>PUBLISH</button>
