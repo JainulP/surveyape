@@ -66,7 +66,7 @@ class TakeSurvey extends Component {
     componentWillMount() {
         var self = this.state;
         //general surveys
-        if(!this.state.accessCode){
+        if(!this.state.accessCode && this.state.email == null ){
         API.getSurvey(this.state.surveyId)
             .then((res) => {
                 if (res.surveyType === 1 && !this.state.accessCode) {

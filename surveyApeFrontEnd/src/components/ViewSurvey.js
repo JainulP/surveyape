@@ -44,11 +44,12 @@ class ViewSurvey extends Component {
         }
         var data={
             surveyId : surveyId,
-            email: localStorage.getItem("email")
+            email: localStorage.getItem("email"),
+            view:true
 
         }
         var self = this.state;
-        API.getSurveybYemail(data)
+        API.getViewSurveybYemail(data)
             .then((res) => {
             console.log(res)
                self.surveyTemp = res;
