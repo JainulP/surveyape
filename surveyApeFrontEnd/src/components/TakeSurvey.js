@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import logo from '../logo.svg';
 import { Route, withRouter,BrowserRouter } from 'react-router-dom';
 import '../App.css';
-import Ionicon from 'react-ionicons';
 import * as  API from '../api/API';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {GetComponent} from '../actions/actionsAll';
-import ResponseComponent from "./ResponseComponent";
 import StarRatingComponent from 'react-star-rating-component';
 import Calendar from 'react-calendar';
 
