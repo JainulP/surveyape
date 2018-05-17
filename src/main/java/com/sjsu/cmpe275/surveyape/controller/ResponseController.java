@@ -313,9 +313,9 @@ public class ResponseController {
                     }
                     else{
                         String url = "127.0.0.1:3000/survey/" + surveyId;
-                        SurveyLinks surveyLinks1 = new SurveyLinks(survey,userEmail,url);
+                        SurveyLinks surveyLinks1 = surveyLinksRepository.save(new SurveyLinks(survey,userEmail,url));
                         surveyLinks1.setCompleted(true);
-                        surveyLinks.setActivated(false);
+                        surveyLinks1.setActivated(false);
                         surveyLinksRepository.save(surveyLinks1);
                     }
 

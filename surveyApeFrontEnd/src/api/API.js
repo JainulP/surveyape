@@ -122,7 +122,7 @@ export const getSurveybYemail = (payload) =>
         });
 
 export const getViewSurveybYemail = (payload) =>
-    fetch(`${api}/survey/saved/`+payload.surveyId+`?email=`+payload.email+`?view=`+payload.view, {
+    fetch(`${api}/survey/saved/`+payload.surveyId+`?email=`+payload.email+`&view=`+payload.view, {
         method: 'GET',
         headers: {
             ...headers,

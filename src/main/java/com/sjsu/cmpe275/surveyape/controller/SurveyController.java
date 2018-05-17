@@ -418,7 +418,7 @@ public class SurveyController {
         Survey survey = getSurvey(surveyId);
 
         if (survey != null) {
-            if(view != null && !view.equals("null")) {
+            if(view == null || view.equals("null") || view.isEmpty()) {
                 if (survey.getSurveyType() == 1 || survey.getSurveyType() == 2) {
                     SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
                     if (surveyLinks != null) {
