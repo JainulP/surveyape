@@ -104,6 +104,14 @@ public class SurveyController {
             return new ResponseEntity<>(new BadRequest(404, "Sorry, the requested survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
         } else {
             if (survey.getSurveyType() == 1 || survey.getSurveyType() == 2) {
+
+                SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
+                if (surveyLinks.isActivated() == false || surveyLinks.isCompleted() == true) {
+                    return new ResponseEntity<>(new BadRequest(404, "You can not take this survey as this survey has been already been taken"), HttpStatus.NOT_FOUND);
+                }
+            }
+            if (survey.getSurveyType() == 0  && userEmail != null && !userEmail.isEmpty() && !userEmail.equals("null")) {
+
                 SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
                 if (surveyLinks.isActivated() == false || surveyLinks.isCompleted() == true) {
                     return new ResponseEntity<>(new BadRequest(404, "You can not take this survey as this survey has been already been taken"), HttpStatus.NOT_FOUND);
@@ -405,22 +413,31 @@ public class SurveyController {
 
     @RequestMapping(value = "/saved/{surveyId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getSavedSurvey(@PathVariable("surveyId") String surveyId,
-                                            @RequestParam(value = "email") String userEmail) {
+                                            @RequestParam(value = "email") String userEmail,
+                                            @RequestParam(value = "view", required = false) String view) {
 
         Survey survey = getSurvey(surveyId);
-        if (survey != null) {
 
-            if (survey.getSurveyType() == 1 || survey.getSurveyType() == 2) {
-                SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
-                if(surveyLinks != null) {
-                    if (surveyLinks.isActivated() == false || surveyLinks.isCompleted() == true) {
-                        return new ResponseEntity<>(new BadRequest(404, "You can not take this survey as this survey has been already been taken"), HttpStatus.NOT_FOUND);
+        if (survey != null) {
+            if(view != null && !view.equals("null")) {
+                if (survey.getSurveyType() == 1 || survey.getSurveyType() == 2) {
+                    SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
+                    if (surveyLinks != null) {
+                        if (surveyLinks.isActivated() == false || surveyLinks.isCompleted() == true) {
+                            return new ResponseEntity<>(new BadRequest(404, "You can not take this survey as this survey has been already been taken"), HttpStatus.NOT_FOUND);
+                        }
+                    }
+                }
+                if (survey.getSurveyType() == 0 && userEmail != null && !userEmail.isEmpty() && !userEmail.equals("null")) {
+                    SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
+                    if (surveyLinks != null) {
+                        if (surveyLinks.isActivated() == false || surveyLinks.isCompleted() == true) {
+                            return new ResponseEntity<>(new BadRequest(404, "You can not take this survey as this survey has been already been taken"), HttpStatus.NOT_FOUND);
+                        }
                     }
                 }
             }
-            if (survey.getSurveyType() == 0 ) {
-                SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
-            }
+
             List<Question> questions = survey.getQuestions();
             for (Question question : questions) {
                 List<Responses> responses = question.getResponses();
