@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.sjsu.cmpe275.surveyape.model.*;
 import com.sjsu.cmpe275.surveyape.repository.*;
 import com.sjsu.cmpe275.surveyape.service.EmailService;
-import com.sjsu.cmpe275.surveyape.service.JSON_Writer;
 import com.sjsu.cmpe275.surveyape.utils.View;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
