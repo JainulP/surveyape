@@ -8,6 +8,8 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {GetComponent} from '../actions/actionsAll';
 import ResponseComponent from "./ResponseComponent";
+import StarRatingComponent from 'react-star-rating-component';
+import Calendar from 'react-calendar';
 
 class TakeSurvey extends Component {
     constructor(props){
@@ -37,27 +39,17 @@ class TakeSurvey extends Component {
             if(localStorage.getItem("email") && accessCodeTemp == "open") {
                 email = atob(accessCodeTemp);
             }
-
         }
         super(props);
         this.state = {
             surveyDetails:null,
             surveyId:surveyIdTemp,
             accessCode:accessCodeTemp,
-            currentQuestion : {
-                questionId: null,
-                questionStr: null,
-                choiceType: null,
-                answerType: null,
-                questionType: null,
-                visualStyle: null,
-                options: null,
-                size:0
-            },
             currentIndex : 0,
-            currentAnswer : null,
             email:email,
-            currentresponseId : null
+            questionCount:0,
+            currentresponseId : null,
+            answer:null
         }
     }
     componentWillUnmount(){
@@ -90,9 +82,8 @@ class TakeSurvey extends Component {
                     surveyDataaa.responses = [];
                 }
                 self.surveyDetails = surveyDataaa;
-                self.currentQuestion = res.questions[0];
+                self.questionCount = surveyDataaa.questions.length;
                 if(res.surveyType !== 0 && res.questions[0].responses.length>0 && self.email != null ){
-                    self.currentAnswer = res.questions[0].responses[0].answers;
                     self.currentresponseId = res.questions[0].responses[0].resId;
                 }
 
@@ -176,83 +167,307 @@ class TakeSurvey extends Component {
                         this.props.history.push("/");
                     }*/
                     self.surveyDetails = res;
-                    self.currentQuestion = res.questions[0];
-
+                    self.questionCount = res.questions.length;
                     self.size = res.questions.length;
                     if (res.surveyType !== 0 && res.questions[0].responses.length > 0) {
                         if(self.email != null) {
-                            self.currentAnswer = res.questions[0].responses[0].answers;
                             self.currentresponseId = res.questions[0].responses[0].resId;
                         }
                     }
                     this.setState(self);
-                    if (self.surveyDetails.questions.length > 1) {
-                        document.getElementById("nextClicked").disabled = false;
-                    }
-
                 }
             });
     }
     componentDidMount(){
-        //document.getElementById("prevClicked").disabled = true;
-        document.getElementById("nextClicked").disabled = true;
     }
         nextClicked = () =>{
             var self = this.state;
-
-            if( self.currentIndex < self.surveyDetails.questions.length - 1){
-                document.getElementById("nextClicked").disabled = false;
+            if(self.currentIndex < self.questionCount - 1) {
                 self.currentIndex = self.currentIndex + 1;
-                self.currentQuestion = self.surveyDetails.questions[self.currentIndex];
-                if( self.surveyDetails.surveyType !== 0 && self.surveyDetails.questions[self.currentIndex].responses && self.surveyDetails.questions[self.currentIndex].responses.length>0 && self.email != null) {
-                    self.currentAnswer = self.surveyDetails.questions[self.currentIndex].responses[0].answers;
-                    self.currentresponseId = self.surveyDetails.questions[self.currentIndex].responses[0].resId;
+                var answer = "";
+                if(self.surveyDetails.questions[this.state.currentIndex].responses[0]){
+                    answer = self.surveyDetails.questions[this.state.currentIndex].responses[0].answers;
                 }
-                else{
-                    self.currentAnswer = null;
-                    self.currentresponseId = null;
-                }
-                this.setState(self);
+                self.answer = answer;
             }
             else{
-                document.getElementById("nextClicked").disabled = true;
+                alert("You are viewing the last question")
             }
-
-            if( self.currentIndex > 0){
-               // document.getElementById("prevClicked").disabled = false;
-            }
-            else{
-               // document.getElementById("prevClicked").disabled = true;
-            }
+            this.setState(self);
         }
         prevClicked = () =>{
             var self = this.state;
-
-            if( self.currentIndex < self.surveyDetails.questions.length - 1){
-                document.getElementById("nextClicked").disabled = false;
-            }
-            else{
-                document.getElementById("nextClicked").disabled = true;
-            }
-
             if( self.currentIndex > 0){
-               // document.getElementById("prevClicked").disabled = false;
                 self.currentIndex = self.currentIndex - 1;
-                self.currentQuestion = self.surveyDetails.questions[self.currentIndex];
-                if(self.surveyDetails.surveyType !== 0 && self.surveyDetails.questions[self.currentIndex].responses && self.surveyDetails.questions[self.currentIndex].responses.length>0 && self.email != null) {
-                    self.currentAnswer = self.surveyDetails.questions[self.currentIndex].responses[0].answers;
-                    self.currentresponseId = self.surveyDetails.questions[self.currentIndex].responses[0].resId;
+                var answer = "";
+                if(self.surveyDetails.questions[this.state.currentIndex].responses[0]){
+                    answer = self.surveyDetails.questions[this.state.currentIndex].responses[0].answers;
                 }
-                else{
-                    self.currentAnswer = null;
-                    self.currentresponseId = null;
-                }
-                this.setState(self);
+                self.answer = answer;
             }
             else{
-              //  document.getElementById("prevClicked").disabled = true;
+                alert("You are viewing the first question")
             }
+            this.setState(self);
         }
+
+    //response component functions
+    onStarClick(nextValue, prevValue, name) {
+        this.setState({answer: nextValue});
+    }
+
+    onChange = date => {
+        this.setState({
+            answer : date
+        });
+        alert(this.state.answer)
+    }
+
+    renderOptions = (data) => {
+        var optionsList = [];
+        if (data && data.length > 0) {
+            data.map(function (temp, index) {
+                optionsList.push(
+                    <option value={temp}>{temp}</option>
+                );
+            }, this);
+            return optionsList;
+        }
+    }
+    renderRadio = (data, questionid) =>{
+        var optionsList = [];
+        if (data && data.length > 0) {
+            data.map(function (temp, index) {
+                optionsList.push(
+                    <span>
+                    <input type="radio" name={questionid} value={temp}
+                           onChange={(event) => {
+                               this.setState({
+                                   answer: event.target.value
+                               });
+                           }}/>{temp}
+                    </span>
+                )
+            }, this);
+            return optionsList;
+        }
+    }
+
+    renderRadioImages = (data, questionid) =>{
+        var optionsList = [];
+        if (data && data.length > 0) {
+            data.map(function (temp, index) {
+                optionsList.push(
+                    <span>
+                    <input type="radio" name={questionid} value={temp}
+                           onChange={(event) => {
+                               this.setState({
+                                   answer: event.target.value
+                               });
+                           }}/><img className="img-height" src={temp}></img>
+                    </span>
+                )
+            }, this);
+            return optionsList;
+        }
+    }
+
+    renderCheckboxSingle = (data) =>{
+        var optionsList = [];
+        if (data && data.length > 0) {
+            data.map(function (temp, index) {
+                optionsList.push(
+                    <span>
+                    <input
+                        name={temp}
+                        id={temp}
+                        type="checkbox"
+                        value={temp}
+                        onChange={(event) => {
+                            var temp = this.props.data.options;
+                            var val = event.target.value;
+                            for (let i = 0; i < temp.length; i++) {
+                                if (temp[i] !== val) {
+                                    document.getElementById(temp[i]).checked = false;
+                                }
+                            }
+                            this.setState({
+                                answer: event.target.value
+                            });
+                            //console.log(this.state.answer)
+                        }}
+                    />{temp}
+                    </span>
+                );
+            }, this);
+            return optionsList;
+        }
+    }
+
+
+    renderCheckboxSingleImages = (data) =>{
+        var optionsList = [];
+        if (data && data.length > 0) {
+            data.map(function (temp, index) {
+                optionsList.push(
+                    <span>
+                    <input
+                        name={temp}
+                        id={temp}
+                        type="checkbox"
+                        value={temp}
+                        onChange={(event) => {
+                            var temp = data;
+                            var val = event.target.value;
+                            for (let i = 0; i < temp.length; i++) {
+                                if (temp[i] !== val) {
+                                    document.getElementById(temp[i]).checked = false;
+                                }
+                            }
+                            this.setState({
+                                answer: event.target.value
+                            });
+                            //console.log(this.state.answer)
+                        }}
+                    /><img className="img-height" src={temp}></img>
+                    </span>
+                );
+            }, this);
+            return optionsList;
+        }
+    }
+
+    renderCheckboxMultiple = (data) =>{
+        var optionsList = [];
+        if (data && data.length > 0) {
+            data.map(function (temp, index) {
+                optionsList.push(
+                    <span>
+                    <input
+                        name={index}
+                        type="checkbox"
+                        value={temp}
+                        onChange={(event) => {
+                            var temp = this.state.answer;
+                            var val =  event.target.value;
+                            var changed = false;
+                            if(temp === null || temp.length === 0){
+                                temp=[];
+                                temp.push(val);
+                            }
+                            else {
+                                for (let i = 0; i < temp.length; i++) {
+                                    if (temp[i] === val) {
+                                        temp.splice(i, 1);
+                                        changed = true;
+                                    }
+
+                                }
+                                if(!changed){
+                                    temp.push(val);
+                                }
+                            }
+                            // console.log(temp)
+                            this.setState({
+                                answer:temp
+                            });
+                        }}
+                    />{temp}
+                    </span>
+                );
+            }, this);
+            return optionsList;
+        }
+    }
+
+    renderCheckboxMultipleImages = (data) =>{
+        var optionsList = [];
+        if (data && data.length > 0) {
+            data.map(function (temp, index) {
+                optionsList.push(
+                    <span>
+                    <input
+                        name={index}
+                        type="checkbox"
+                        value={temp}
+                        onChange={(event) => {
+                            var temp = this.state.mcqarray;
+                            var val =  event.target.value;
+                            var changed = false;
+                            if(!temp || temp === null || temp.length === 0){
+                                temp=[];
+                                temp.push(val);
+                            }
+                            else {
+                                for (let i = 0; i < temp.length; i++) {
+                                    if (temp[i] === val) {
+                                        temp.splice(i, 1);
+                                        changed = true;
+                                    }
+
+                                }
+                                if(!changed){
+                                    temp.push(val);
+                                }
+                            }
+                            var imgtemp=null;
+                            if(temp.length>0){
+                                imgtemp = temp[0];
+                            }
+                            for(var i=1;i < temp.length;i++){
+                                imgtemp = imgtemp + "," + temp[i];
+                            }
+                            // console.log(temp)
+                            this.setState({
+                                answer:imgtemp,
+                                mcqarray:temp
+                            });
+                        }}
+                    /><img className="img-height" src={temp}></img>
+                    </span>
+                );
+            }, this);
+            return optionsList;
+        }
+    }
+
+    saveResponse = () =>{
+        if(this.state.surveyDetails.questions[this.state.currentIndex] && this.state.surveyDetails.questions[this.state.currentIndex].responses[0] && this.state.surveyDetails.questions[this.state.currentIndex].responses[0].resId) {
+            var self = this.state;
+            var queryData = {
+                questionId :this.state.surveyDetails.questions[this.state.currentIndex].questionId,
+                email:localStorage.getItem("email"),
+                userid:localStorage.getItem("userId"),
+                surveyid:this.state.surveyId,
+                answer:this.state.answer,
+                responseId:this.state.surveyDetails.questions[this.state.currentIndex].responses[0].resId
+            }
+            API.updateResponse(queryData)
+                .then((res) => {
+                    console.log(res)
+                    self.surveyDetails.questions[this.state.currentIndex].responses[0] = res;
+                    this.setState(self);
+                    alert("Response Saved. Please click next to proceed.")
+                });
+        }
+        else{
+            var queryData = {
+                questionId :this.state.surveyDetails.questions[this.state.currentIndex].questionId,
+                email:localStorage.getItem("email"),
+                userid:localStorage.getItem("userId"),
+                surveyid:this.state.surveyId,
+                answer:this.state.answer
+            }
+            var self = this.state;
+            API.saveResponse(queryData)
+                .then((res) => {
+                    console.log(res)
+                    self.surveyDetails.questions[this.state.currentIndex].responses[0] = res;
+                    this.setState(self);
+                    alert("Response Saved. Please click next to proceed.")
+                });
+        }
+    }
     render() {
         var questionList = [];
         if(this.state.surveyDetails){
@@ -261,7 +476,223 @@ class TakeSurvey extends Component {
             data.map(function (temp, index) {
                 temp.surveyId = this.state.surveyId;
                 questionList.push(
-                    <ResponseComponent accessCode={this.state.accessCode} data={temp} number={index} surveyId={this.state.surveyId}/>
+                    <div className="row margin-70 margin-none">
+                        <div className="form-group resizedTextbox col-md-6">
+                            <span>
+                        {temp.questionStr}
+                    </span>
+                            <div>
+                                {(temp.questionType === 0)?
+                                    <div>
+                                        {
+                                            (temp.choiceType === "0")?
+
+                                                <div>
+
+                                                    {(temp.answerType === "0") ?
+
+                                                        /*  Single*/
+                                                        <div>
+
+                                                            {(temp.visualStyle === "0") ?
+                                                                <div>
+                                                                    <select className="form-control surveyape-input" name="cards" id="visualStyle"
+                                                                            aria-describedby="Visual style" placeholder="Visual style"
+                                                                            value={this.state.answer}
+                                                                            onChange={(event) => {
+                                                                                this.setState({
+                                                                                    answer: event.target.value
+                                                                                });
+                                                                            }}
+                                                                    >
+                                                                        <option value=""> </option>
+                                                                        {this.renderOptions(temp.options)}
+                                                                    </select>
+                                                                </div>
+                                                                :
+                                                                <div>
+                                                                    {(temp.visualStyle === "1") ?
+                                                                        <div>
+                                                                            {this.renderRadio(temp.options, temp.questionId)}
+                                                                        </div>
+                                                                        :
+                                                                        <div>
+                                                                            {(temp.visualStyle === "2") ?
+                                                                                <div>
+
+                                                                                    {this.renderCheckboxSingle(temp.options)}
+                                                                                </div>
+                                                                                :
+                                                                                null
+                                                                            }
+                                                                        </div>
+                                                                    }
+                                                                </div>
+                                                            }
+                                                        </div>
+                                                        :
+                                                        /* Multiple*/
+                                                        <div>
+                                                            <div>
+                                                                {(temp.visualStyle === "2") ?
+                                                                    <div>
+                                                                        {this.renderCheckboxMultiple(temp.options)}
+                                                                    </div>
+                                                                    :
+                                                                    null
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    }
+
+                                                </div>
+
+                                                :
+                                                /*For Images*/
+
+                                                <div>
+
+                                                    {(temp.answerType === "0") ?
+                                                        /*  Single*/
+                                                        <div>
+
+                                                            <div>
+                                                                {(temp.visualStyle === "1") ?
+                                                                    <div>
+                                                                        {this.renderRadioImages(temp.options, temp.questionId)}
+                                                                    </div>
+                                                                    :
+                                                                    <div>
+                                                                        {(temp.visualStyle === "2") ?
+                                                                            <div>
+                                                                                {this.renderCheckboxSingleImages(temp.options)}
+                                                                            </div>
+                                                                            :
+                                                                            null
+                                                                        }
+                                                                    </div>
+                                                                }
+                                                            </div>
+
+                                                        </div>
+                                                        :
+                                                        /* Multiple*/
+                                                        <div>
+                                                            <div>
+                                                                {(temp.visualStyle === "2") ?
+                                                                    <div>
+                                                                        {this.renderCheckboxMultipleImages(temp.options)}
+                                                                    </div>
+                                                                    :
+                                                                    null
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    }
+
+
+                                                </div>
+                                        }
+
+
+
+                                    </div>
+                                    :
+                                    <div>
+                                        {
+                                            (temp.questionType === 1) ?
+
+                                                <div>
+                                                    <input type="radio" name="question-radio-1" value="yes"
+                                                           checked={this.state.answer === "yes"?true:false}
+                                                           onChange={(event) => {
+                                                               this.setState({
+                                                                   answer: event.target.value
+                                                               });
+                                                           }}/>YES
+                                                    <input type="radio" name="question-radio-1" value="no"
+                                                           checked={this.state.answer === "no"?true:false}
+                                                           onChange={(event) => {
+                                                               this.setState({
+                                                                   answer: event.target.value
+                                                               });
+                                                           }}/>NO
+                                                </div>
+                                                :
+                                                <div>
+                                                    {
+                                                        (temp.questionType === 2) ?
+                                                            <div>
+                                                                <input type="text" className="form-control surveyape-input" id="questionStr"
+                                                                       aria-describedby="questionStr" placeholder="Response"
+                                                                       value={this.state.answer}
+                                                                       onChange={(event) => {
+                                                                           this.setState({
+                                                                               answer: event.target.value
+                                                                           });
+                                                                       }}
+                                                                />
+                                                            </div>
+                                                            :
+                                                            <div>
+                                                                {
+                                                                    (temp.questionType === 3) ?
+                                                                        <Calendar id="surveyEndTime" aria-describedby="Survey End Time"
+                                                                                  placeholder="Survey End Time"
+                                                                                  onChange={this.onChange}
+                                                                                  value={this.state.answer}
+                                                                        />
+                                                                        :
+                                                                        /*question 4*/
+                                                                        <div>
+                                                                            {(temp.questionType === 4) ?
+                                                                                <div>
+                                                                                    <StarRatingComponent
+                                                                                        name="rate1"
+                                                                                        starCount={5}
+                                                                                        value={this.state.answer}
+                                                                                        onStarClick={this.onStarClick.bind(this)}
+                                                                                    />
+                                                                                </div>
+
+                                                                                : null
+
+                                                                            }
+                                                                        </div>
+                                                                }
+                                                            </div>
+                                                    }
+                                                </div>
+                                        }
+
+                                    </div>
+                                }
+                            </div>
+                            <button type="button" className="surveyape-button" id = "saveResponse" onClick={()=>this.saveResponse()}>SAVE RESPONSE</button>
+                            {
+                                (!this.state.email && data.length === index + 1) ?
+                                    <div>
+                                        <span>Enter your email id to recieve a confirmation mail</span>
+                                        <input type="text" className="form-control surveyape-input" id="questionStr"
+                                               aria-describedby="questionStr" placeholder="Response"
+                                               value={this.state.emailtaken}
+                                               onChange={(event) => {
+                                                   this.setState({
+                                                       emailtaken: event.target.value
+                                                   });
+                                               }}
+                                        />
+                                    </div>
+                                    : null
+                            }
+
+                            <div>
+                                {(data.length === index + 1)?
+                                    <button type="button" className="surveyape-button" id = "submitSurvey" onClick={()=>this.submitSurvey()}>SUBMIT SURVEY</button>
+                                    :null}
+                            </div>
+                        </div>
+                    </div>
                 );
             }, this);
         }
@@ -275,10 +706,9 @@ class TakeSurvey extends Component {
                 <div>
                     <div className="pad-top-20">
                     </div>
-                    {/*<button type="button" className="surveyape-button" name="prevClicked" id = "prevClicked" onClick={()=>this.prevClicked()}>PREVIOUS</button>
-                   */} <button type="button" className="surveyape-button" name="nextClicked" id = "nextClicked" onClick={()=>this.nextClicked()}>NEXT</button>
-                    <ResponseComponent emailtmp = {this.state.email} responseId={this.state.currentresponseId} answer={this.state.currentAnswer} surveyid={this.state.surveyId} size={this.state.size} accessCode={this.state.accessCode} data={this.state.currentQuestion} number={this.state.currentIndex} surveyId={this.state.surveyId}/>
-
+                    <button type="button" className="surveyape-button" name="prevClicked" id = "prevClicked" onClick={()=>this.prevClicked()}>PREVIOUS</button>
+                    <button type="button" className="surveyape-button" name="nextClicked" id = "nextClicked" onClick={()=>this.nextClicked()}>NEXT</button>
+                    {questionList[this.state.currentIndex]}
                 </div>
             </div>
         );
