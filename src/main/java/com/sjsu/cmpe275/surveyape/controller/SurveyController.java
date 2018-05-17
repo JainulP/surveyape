@@ -293,7 +293,7 @@ public class SurveyController {
             //activate links for participants added
             activateSurveyLink(survey);
 
-            return new ResponseEntity<>(new BadRequest(200, "Survey with id " + surveyId + " is published successfully"), HttpStatus.OK);
+            return new ResponseEntity<>(new BadRequest(200, "Survey " + surveyId + " is published successfully"), HttpStatus.OK);
 
         } else {
 
@@ -302,7 +302,7 @@ public class SurveyController {
 
             for (Question question : questions) {
                 if (question.getResponses().size() > 0) {
-                    return new ResponseEntity<>(new BadRequest(400, "Survey with id " + surveyId + " can not be unpublished as it has been already responded by some participants"), HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(new BadRequest(400, "Survey  " + surveyId + " can not be unpublished as it has been already responded by some participants"), HttpStatus.BAD_REQUEST);
 
                 }
             }
@@ -312,7 +312,7 @@ public class SurveyController {
             survey.setPublished(false);
             surveyRepository.save(survey);
 
-            return new ResponseEntity<>(new BadRequest(200, "Survey with id " + surveyId + " is unpublished successfully"), HttpStatus.OK);
+            return new ResponseEntity<>(new BadRequest(200, "Survey " + surveyId + " is unpublished successfully"), HttpStatus.OK);
         }
 
 
