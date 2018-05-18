@@ -44,5 +44,9 @@ public interface ResponsesRepository extends JpaRepository<Responses, Integer> {
     int getVisualTypeForQuestion(@Param("qid") int question_id);
 
 
+    @Query(value = "SELECT question_id from question where survey_survey_id = :sid and question_type=2",nativeQuery = true)
+    List <Integer> getTextReponsesForSurvey (@Param("sid") int surveyId);
+
+
 
 }

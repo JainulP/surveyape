@@ -268,8 +268,8 @@ public class ResponseController {
         if (survey == null) {
             return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
         } else {
-            if(survey.getSurveyType() == 2 && !userEmail.isEmpty() && userEmail != null && !userEmail.equals("") ){
-                SurveyLinks surveyLinks =  surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
+            if (survey.getSurveyType() == 2 && !userEmail.isEmpty() && userEmail != null && !userEmail.equals("")) {
+                SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
                 surveyLinks.setActivated(false);
                 surveyLinks.setCompleted(true);
                 surveyLinksRepository.save(surveyLinks);
@@ -310,10 +310,9 @@ public class ResponseController {
                         surveyLinks.setCompleted(true);
                         surveyLinks.setActivated(false);
                         surveyLinksRepository.save(surveyLinks);
-                    }
-                    else{
+                    } else {
                         String url = "127.0.0.1:3000/survey/" + surveyId;
-                        SurveyLinks surveyLinks1 = surveyLinksRepository.save(new SurveyLinks(survey,userEmail,url));
+                        SurveyLinks surveyLinks1 = surveyLinksRepository.save(new SurveyLinks(survey, userEmail, url));
                         surveyLinks1.setCompleted(true);
                         surveyLinks1.setActivated(false);
                         surveyLinksRepository.save(surveyLinks1);
@@ -342,6 +341,51 @@ public class ResponseController {
             }
             emailService.sendConfirmationForCompletion(userEmail, "Survey Confirmation", "Thank you for submitting this survey. Your response has been successfully recorded.");
             return new ResponseEntity<>(new BadRequest(200, "Survey is completed successfully"), HttpStatus.OK);
+        }
+
+
+    }
+
+
+    /**
+     * get all the text question responses for a survey
+     *
+     * @param surveyId
+     * @return
+     */
+
+    /*
+    API response format
+    {
+  "Describe life": [
+    "worst",
+    "wonderful"
+  ],
+  "Describe SJSU": [
+    "Not bad",
+    "Pretty Okay"
+  ]
+}
+    */
+    @GetMapping("/surveystats/textquestion")
+    public ResponseEntity<?> getAllAnswerTextForQuestion(@RequestParam String surveyId) {
+
+        // get list of question ids which are just short answer questions
+        List<Integer> questions = responsesRepository.getTextReponsesForSurvey(Integer.parseInt(surveyId));
+
+        Map<String, List<String>> masterMap = new HashMap<>();
+
+        // Get list of responses for each of these text questions and add it to the map
+        if (questions.size() > 0) {
+            for (Integer question : questions) {
+                String questionStr = questionRepository.getQuestionNameByQuestionId(question);
+                List<String> responses = responsesRepository.getAnswersByQuestionId(question);
+                if (responses.size() > 0)
+                    masterMap.put(questionStr, responses);
+            }
+            return new ResponseEntity<>(masterMap, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new BadRequest(400, "No short text questions found for this survey"), HttpStatus.NOT_FOUND);
         }
 
 
