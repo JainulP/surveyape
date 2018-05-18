@@ -367,7 +367,7 @@ public class ResponseController {
   ]
 }
     */
-    @GetMapping("/surveystats/textquestion")
+    @GetMapping(value = "/surveystats/textquestion", produces = "application/json")
     public ResponseEntity<?> getAllAnswerTextForQuestion(@RequestParam String surveyId) {
 
         // get list of question ids which are just short answer questions
@@ -387,10 +387,13 @@ public class ResponseController {
         } else {
             return new ResponseEntity<>(new BadRequest(400, "No short text questions found for this survey"), HttpStatus.NOT_FOUND);
         }
-
-
     }
 
+
+    /*
+    For Response rate among total # of submissions.
+    the same api for participation rate should work
+     */
 
 }
 

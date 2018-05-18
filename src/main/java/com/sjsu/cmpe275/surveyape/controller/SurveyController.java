@@ -5,7 +5,6 @@ import com.sjsu.cmpe275.surveyape.model.*;
 import com.sjsu.cmpe275.surveyape.repository.*;
 import com.sjsu.cmpe275.surveyape.service.EmailService;
 import com.sjsu.cmpe275.surveyape.utils.View;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -378,7 +377,7 @@ public class SurveyController {
                         map.put("participationRate", String.valueOf(participationRate));
                     }
                     else{
-                        participationRate = (participants / 1) * 100;
+                       // participationRate = (participants / 1) * 100;
                         map.put("surveyName",survey.getSurveyName());
                         map.put("startDate", survey.getStartTime().toString());
                         map.put("endDate", survey.getEndTime().toString());
