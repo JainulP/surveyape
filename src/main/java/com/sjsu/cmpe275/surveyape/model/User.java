@@ -1,8 +1,7 @@
 package com.sjsu.cmpe275.surveyape.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.sjsu.cmpe275.surveyape.utils.View;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.List;
@@ -28,9 +27,11 @@ public class User {
     private String age;
 
     @Column
+    @JsonIgnore
     private boolean isActivated;
 
     @Column
+    @JsonIgnore
     private String verificationCode;
 
     @JsonBackReference
