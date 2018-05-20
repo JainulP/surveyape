@@ -46,7 +46,7 @@ class TakeSurvey extends Component {
             email:email,
             questionCount:0,
             currentresponseId : null,
-            answer:null
+            answer:""
         }
     }
     componentWillUnmount(){
@@ -228,7 +228,7 @@ class TakeSurvey extends Component {
         if (data && data.length > 0) {
             data.map(function (temp, index) {
                 optionsList.push(
-                    <option value={temp}>{temp}</option>
+                    <option selected={this.state.surveyDetails.questions[this.state.currentIndex].responses[0].answers === temp?"selected":""}  value={temp}>{temp}</option>
                 );
             }, this);
             return optionsList;
@@ -241,6 +241,7 @@ class TakeSurvey extends Component {
                 optionsList.push(
                     <span>
                     <input type="radio" name={questionid} value={temp}
+                           checked={this.state.answer === temp?true:false}
                            onChange={(event) => {
                                this.setState({
                                    answer: event.target.value
@@ -260,6 +261,7 @@ class TakeSurvey extends Component {
                 optionsList.push(
                     <span>
                     <input type="radio" name={questionid} value={temp}
+                           checked={this.state.answer === temp?true:false}
                            onChange={(event) => {
                                this.setState({
                                    answer: event.target.value
@@ -283,8 +285,9 @@ class TakeSurvey extends Component {
                         id={temp}
                         type="checkbox"
                         value={temp}
+                        checked={this.state.answer === temp?true:false}
                         onChange={(event) => {
-                            var temp = this.props.data.options;
+                            var temp = this.state.surveyDetails.questions[this.state.currentIndex].options;
                             var val = event.target.value;
                             for (let i = 0; i < temp.length; i++) {
                                 if (temp[i] !== val) {
@@ -316,6 +319,7 @@ class TakeSurvey extends Component {
                         id={temp}
                         type="checkbox"
                         value={temp}
+                        checked={this.state.answer === temp?true:false}
                         onChange={(event) => {
                             var temp = data;
                             var val = event.target.value;
@@ -347,6 +351,7 @@ class TakeSurvey extends Component {
                         name={index}
                         type="checkbox"
                         value={temp}
+                        checked={(this.state.answer.indexOf(temp)>-1)?true:false}
                         onChange={(event) => {
                             var temp = this.state.answer;
                             var val =  event.target.value;
@@ -389,6 +394,7 @@ class TakeSurvey extends Component {
                     <input
                         name={index}
                         type="checkbox"
+                        checked={(this.state.answer.indexOf(temp)>-1)?true:false}
                         value={temp}
                         onChange={(event) => {
                             var temp = this.state.mcqarray;
@@ -430,7 +436,19 @@ class TakeSurvey extends Component {
             return optionsList;
         }
     }
+    submitSurvey = () =>{
+        var data={
+            surveyId : this.state.surveyId,
+            email : this.state.email || this.state.emailtaken
+        }
+        API.completeSurvey(data)
+            .then((res) => {
+                console.log(res)
+                alert("Thank you for submitting your response!")
+                window.location = "http://localhost:3000/"
 
+            });
+    }
     saveResponse = () =>{
         if(this.state.surveyDetails.questions[this.state.currentIndex] && this.state.surveyDetails.questions[this.state.currentIndex].responses[0] && this.state.surveyDetails.questions[this.state.currentIndex].responses[0].resId) {
             var self = this.state;
@@ -639,11 +657,13 @@ class TakeSurvey extends Component {
                                                             <div>
                                                                 {
                                                                     (temp.questionType === 3) ?
-                                                                        <Calendar id="surveyEndTime" aria-describedby="Survey End Time"
-                                                                                  placeholder="Survey End Time"
-                                                                                  onChange={this.onChange}
-                                                                                  value={this.state.answer}
-                                                                        />
+                                                                        <input id="surveyEndTime" type="datetime-local" name="partydate"  onChange={(event) => {
+                                                                            this.setState({
+                                                                                answer: event.target.value
+                                                                            });
+                                                                        }}
+
+                                                                              />
                                                                         :
                                                                         /*question 4*/
                                                                         <div>

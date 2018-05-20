@@ -108,6 +108,7 @@ saveQuestion = () =>{
                         self.options=res.options;
                         self.visualStyle=res.visualStyle;
                         self.questionId=res.questionId;
+                        self.editMode = false;
                     this.setState(self);
                 });
         }
@@ -186,9 +187,18 @@ saveQuestion = () =>{
         var optionsList = [];
         if(param && param.length>0) {
             param.map(function (temp, index) {
-                optionsList.push(
-                    <div><img className="img-height margin-10" src={temp}></img></div>
-                );
+                var a = "";
+if(temp.indexOf('http') >= 0){
+    optionsList.push(
+        <div><img className="img-height margin-10" src={temp}></img></div>
+
+    );
+}
+else {
+    optionsList.push(
+                    <span>{temp}</span>
+    );
+}
             }, this);
         }
         return optionsList;
@@ -197,7 +207,7 @@ saveQuestion = () =>{
         return (
             <div id="mainDiv" name="mainDiv">
                {
-                    (this.state.questionId === null || this.state.editMode)?
+                    (this.state.questionId === null || this.state.editMode === true)?
                     <div className="row">
                     <div className="col-md-8 margin-70">
                     <form>
@@ -368,7 +378,7 @@ saveQuestion = () =>{
                             <div className="col-md-8">
                             <div>
                                 <span>
-                                    Question |
+                                    Question -
                                 </span>
                                 <span>
                                     {this.state.questionStr}
