@@ -142,3 +142,26 @@
 .pad-8{
     padding: 8px;
 }
+.text-center{
+    text-align: center;
+}
+
+.margin-10{
+    margin: 10px;
+}
+
+.margin-20{
+    margin: 20px;
+}
+
+.border-question{
+    border: 2px solid #d5d5d5 !important;
+    border-radius: 0 !important;
+    -webkit-appearance: none !important;
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    -webkit-transition: none;
+
+}

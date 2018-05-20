@@ -477,7 +477,9 @@ class TakeSurvey extends Component {
                 temp.surveyId = this.state.surveyId;
                 questionList.push(
                     <div className="row margin-70 margin-none">
-                        <div className="form-group resizedTextbox col-md-6">
+                        <div className="col-md-4">
+                        </div>
+                        <div className="form-group border-question resizedTextbox text-center col-md-4">
                             <span>
                         {temp.questionStr}
                     </span>
@@ -668,7 +670,7 @@ class TakeSurvey extends Component {
                                     </div>
                                 }
                             </div>
-                            <button type="button" className="surveyape-button" id = "saveResponse" onClick={()=>this.saveResponse()}>SAVE RESPONSE</button>
+                            <button type="button" className="surveyape-button margin-20" id = "saveResponse" onClick={()=>this.saveResponse()}>SAVE RESPONSE</button>
                             {
                                 (!this.state.email && data.length === index + 1) ?
                                     <div>
@@ -688,9 +690,11 @@ class TakeSurvey extends Component {
 
                             <div>
                                 {(data.length === index + 1)?
-                                    <button type="button" className="surveyape-button" id = "submitSurvey" onClick={()=>this.submitSurvey()}>SUBMIT SURVEY</button>
+                                    <button type="button" className="surveyape-button margin-20" id = "submitSurvey" onClick={()=>this.submitSurvey()}>SUBMIT SURVEY</button>
                                     :null}
                             </div>
+                        </div>
+                        <div className="col-md-4">
                         </div>
                     </div>
                 );
@@ -703,11 +707,11 @@ class TakeSurvey extends Component {
                     (this.state.surveyDetails)?
                         this.state.surveyDetails.surveyName:null
                 }
-                <div>
+                <div className="text-center">
                     <div className="pad-top-20">
                     </div>
-                    <button type="button" className="surveyape-button" name="prevClicked" id = "prevClicked" onClick={()=>this.prevClicked()}>PREVIOUS</button>
-                    <button type="button" className="surveyape-button" name="nextClicked" id = "nextClicked" onClick={()=>this.nextClicked()}>NEXT</button>
+                    <button type="button" className="surveyape-button margin-10" name="prevClicked" id = "prevClicked" onClick={()=>this.prevClicked()}>PREVIOUS</button>
+                    <button type="button" className="surveyape-button margin-10" name="nextClicked" id = "nextClicked" onClick={()=>this.nextClicked()}>NEXT</button>
                     {questionList[this.state.currentIndex]}
                 </div>
             </div>
