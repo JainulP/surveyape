@@ -4,7 +4,10 @@ import com.sjsu.cmpe275.surveyape.service.EmailService;
 import com.sjsu.cmpe275.surveyape.service.QRCodeService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
@@ -33,6 +36,11 @@ public class UserControllerTest {
 
     @Autowired
     private EmailService emailService;
+
+    @Value("${hostname}")
+    private String hostname;
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Test
     @DirtiesContext
@@ -73,6 +81,11 @@ public class UserControllerTest {
     public void sendUniqueInvitationForClosedSurveyUsersTest() throws Exception{
         String [] emails = {"aravindhansai@gmail.com","havok.aravind@gmail.com"};
         emailService.sendUniqueInvitationForClosedSurveyUsers(Arrays.asList(emails),"4");
+    }
+
+    @Test
+    public void propertiesFileTest(){
+        logger.info("{} props from file",hostname);
     }
 
 
