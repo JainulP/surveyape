@@ -91,61 +91,61 @@ class Dashboard extends Component {
                 if (res && res.surveyName) {
                     self.surveyStats = res;
                     this.setState(self);
+                    API.questionStats(self.surveyId)
+                        .then((res) => {
+                            if (res) {
+                                var statsJson=[];
+                                var dataStats = [];
+                                var dataLabels = [];
+                                var questionList =[];
+                                for(var c=0;c<res.length;c++){
+                                    let statstemp = res[c];
+                                    for (var i in statstemp){
+                                        if(i !== 'Question'){
+                                            dataLabels.push(i)
+                                            dataStats.push(statstemp[i]);
+                                        }
+                                        else {
+                                            questionList.push(statstemp[i])
+                                        }
+                                    }
+                                    var jsonTemplate  = {
+                                        labels:dataLabels,
+                                        datasets: [{
+                                            data: dataStats,
+                                            backgroundColor: [
+                                                '#FF6384',
+                                                '#36A2EB',
+                                                '#FFCE56'
+                                            ],
+                                            hoverBackgroundColor: [
+                                                '#FF6384',
+                                                '#36A2EB',
+                                                '#FFCE56'
+                                            ]
+                                        }]
+                                    };
+                                    console.log(dataStats);
+                                    console.log(dataLabels);
+                                    console.log(jsonTemplate);
+                                    var lists=self.surveyStatsLits;
+                                    self.surveyStatsLits.push(jsonTemplate);
+                                    self.questionList = questionList;
+                                    this.setState(self);
+                                    dataStats = [];
+                                    dataLabels = [];
+                                }
+                                console.log(this.state.surveyStatsLits);
+                            }
+
+
+                        });
                 }
                 if(res.msg){
                     alert(res.msg)
                 }
             });
-        var self = this.state;
-        API.questionStats(this.state.surveyId)
-            .then((res) => {
-                if (res) {
-                    var statsJson=[];
-                    var dataStats = [];
-                    var dataLabels = [];
-                    var questionList =[];
-                    for(var c=0;c<res.length;c++){
-                        let statstemp = res[c];
-                        for (var i in statstemp){
-                            if(i !== 'Question'){
-                                dataLabels.push(i)
-                                dataStats.push(statstemp[i]);
-                            }
-                            else {
-                                questionList.push(statstemp[i])
-                                }
-                        }
-                        var jsonTemplate  = {
-                            labels:dataLabels,
-                            datasets: [{
-                                data: dataStats,
-                                backgroundColor: [
-                                    '#FF6384',
-                                    '#36A2EB',
-                                    '#FFCE56'
-                                ],
-                                hoverBackgroundColor: [
-                                    '#FF6384',
-                                    '#36A2EB',
-                                    '#FFCE56'
-                                ]
-                            }]
-                        };
-                        console.log(dataStats);
-                        console.log(dataLabels);
-                        console.log(jsonTemplate);
-                        var lists=self.surveyStatsLits;
-                        self.surveyStatsLits.push(jsonTemplate);
-                        self.questionList = questionList;
-                        this.setState(self);
-                        dataStats = [];
-                        dataLabels = [];
-                    }
-                    console.log(this.state.surveyStatsLits);
-                }
 
-
-            });
     }
 
     render() {

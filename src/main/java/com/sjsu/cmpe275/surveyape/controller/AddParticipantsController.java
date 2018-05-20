@@ -46,26 +46,27 @@ public class AddParticipantsController {
     public ResponseEntity<?> addParticipants(@PathVariable("surveyId") String surveyId,
                                              @RequestParam(value = "emails") List<String> emails) {
         List<SurveyLinks> surveyLinks = new ArrayList<>();
-        Survey survey = surveyRepository.findById(Integer.parseInt(surveyId)).get();
-        if(survey != null) {
-            if(survey.getSurveyType() == 0){//general open survey
-                 String url = "127.0.0.1:3000/survey/"+surveyId;
+        Optional<Survey> surveyOptional = surveyRepository.findById(Integer.parseInt(surveyId));
+        if (surveyOptional.isPresent()) {
+            Survey survey = surveyOptional.get();
+            if (survey.getSurveyType() == 0) {//general open survey
+                String url = "127.0.0.1:3000/survey/" + surveyId;
 
-                for(String email : emails) {
-                    SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey,email,url));
-                       try {
-                           String QR_CODE_IMAGE_PATH = "/Users/jainulpatel/Documents/CMPE275/surveyape/src/main/resources/QRCodes/"+ email + surveyId+"MyQRCode.png" ;
-                           qrCodeService.generateQRCodeImage(url,350,350,QR_CODE_IMAGE_PATH);
-                       } catch (WriterException e) {
-                           e.printStackTrace();
-                       } catch (IOException e) {
-                           e.printStackTrace();
-                       }
+                for (String email : emails) {
+                    SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey, email, url));
+                    try {
+                        String QR_CODE_IMAGE_PATH = "/Users/jainulpatel/Documents/CMPE275/surveyape/src/main/resources/QRCodes/" + email + surveyId + "MyQRCode.png";
+                        qrCodeService.generateQRCodeImage(url, 350, 350, QR_CODE_IMAGE_PATH);
+                    } catch (WriterException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     surveyLinks.add(links);
 
                 }
-                if(survey.getPublished() == true){
-                    for(String email : emails) {
+                if (survey.getPublished() == true) {
+                    for (String email : emails) {
                         try {
                             String QR_CODE_IMAGE_PATH = "/Users/jainulpatel/Documents/CMPE275/surveyape/src/main/resources/QRCodes/" + email + surveyId + "MyQRCode.png";
                             qrCodeService.generateQRCodeImage(url, 350, 350, QR_CODE_IMAGE_PATH);
@@ -82,25 +83,24 @@ public class AddParticipantsController {
 
 
                 return new ResponseEntity<>(new BadRequest(200, "Participants have been successfully added"), HttpStatus.OK);
-            }else if(survey.getSurveyType() == 1){//closed survey
-                for(String email : emails) {
-                    String url = "127.0.0.1:3000/survey/"+surveyId+"/"+ Base64.getEncoder().encodeToString(email.getBytes());
-                    SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey,email,url));
+            } else if (survey.getSurveyType() == 1) {//closed survey
+                for (String email : emails) {
+                    String url = "127.0.0.1:3000/survey/" + surveyId + "/" + Base64.getEncoder().encodeToString(email.getBytes());
+                    SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey, email, url));
                     surveyLinks.add(links);
 
                 }
-                if(survey.getPublished() == true){
+                if (survey.getPublished() == true) {
                     emailService.sendUniqueInvitationForClosedSurveyUsers(emails, surveyId);
                     surveyController.activateSurveyLink(survey);
                 }
 
                 return new ResponseEntity<>(new BadRequest(200, "Participants have been successfully added"), HttpStatus.OK);
             }
-            return  null;
+            return null;
 
 
-        }
-        else{
+        } else {
             return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
 
         }
@@ -110,12 +110,11 @@ public class AddParticipantsController {
 
     @RequestMapping(value = "/open/{surveyId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> sendInviteForOpenUniqueSurvey(@PathVariable("surveyId") String surveyId,
-                                          @RequestParam(value = "email") String email) {
+                                                           @RequestParam(value = "email") String email) {
 
         Optional<Survey> surveyOptional = surveyRepository.findById(Integer.parseInt(surveyId));
-        if(!surveyOptional.isPresent())
-        {
-            return new ResponseEntity<>(new BadRequest(400, "Survey with id " + surveyId +" does not exist"), HttpStatus.NOT_FOUND);
+        if (!surveyOptional.isPresent()) {
+            return new ResponseEntity<>(new BadRequest(400, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
 
         }
         Survey survey = surveyOptional.get();
@@ -123,17 +122,15 @@ public class AddParticipantsController {
             return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
         } else {
             // write to db
-            String url = "127.0.0.1:3000/survey/"+surveyId+"/open/"+ Base64.getEncoder().encodeToString(email.getBytes());
-            SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey,email,url));
+            String url = "127.0.0.1:3000/survey/" + surveyId + "/open/" + Base64.getEncoder().encodeToString(email.getBytes());
+            SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey, email, url));
             links.setActivated(true);
             links.setCompleted(false);
             surveyLinksRepository.save(links);
-            emailService.sendUniqueInvitationForOpenUniqueSurveyUsers(email,  surveyId);
+            emailService.sendUniqueInvitationForOpenUniqueSurveyUsers(email, surveyId);
             return new ResponseEntity<>(new BadRequest(200, "Unique invitation link has been sent to the email id provided by you."), HttpStatus.OK);
         }
     }
-
-
 
 
 }

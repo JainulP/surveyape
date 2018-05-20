@@ -55,6 +55,13 @@ public class Question {
         this.visualStyle = visualStyle;
     }
 
+    public Question( String questionStr, int questionType,List<String> options, Survey survey) {
+        this.questionStr = questionStr;
+        this.questionType = questionType;
+        this.survey = survey;
+        this.options = options;
+    }
+
     public Question( String questionStr, int questionType, Survey survey) {
         this.questionStr = questionStr;
         this.questionType = questionType;

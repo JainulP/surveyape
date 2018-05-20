@@ -5,7 +5,6 @@ import com.sjsu.cmpe275.surveyape.model.*;
 import com.sjsu.cmpe275.surveyape.repository.*;
 import com.sjsu.cmpe275.surveyape.service.EmailService;
 import com.sjsu.cmpe275.surveyape.utils.View;
-import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,14 +71,14 @@ public class SurveyController {
                 int surveyId = survey.getSurveyId();
 
                 String url = "127.0.0.1:3000/survey/" + surveyId;
-                surveyLinksRepository.save(new SurveyLinks(survey,url));
+                surveyLinksRepository.save(new SurveyLinks(survey, url));
 
             }
             if (Integer.parseInt(surveyType) == 2) {//generate predefined url for general and open unique surveys
                 int surveyId = survey.getSurveyId();
 
                 String url = "127.0.0.1:3000/survey/" + surveyId + "/open";
-                surveyLinksRepository.save(new SurveyLinks(survey,url));
+                surveyLinksRepository.save(new SurveyLinks(survey, url));
 
             }
         } catch (ParseException e) {
@@ -98,7 +97,7 @@ public class SurveyController {
 //        HashMap<String,Survey> map = new HashMap<>();
 //        map.put("survey",survey);
 
-       // json_writer.convertToFile( survey,"jsonfileeee",surveyId);
+        // json_writer.convertToFile( survey,"jsonfileeee",surveyId);
         if (survey == null) {
             return new ResponseEntity<>(new BadRequest(404, "Sorry, the requested survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
         } else {
@@ -109,7 +108,7 @@ public class SurveyController {
                     return new ResponseEntity<>(new BadRequest(404, "You can not take this survey as this survey has been already been taken"), HttpStatus.NOT_FOUND);
                 }
             }
-            if (survey.getSurveyType() == 0  && userEmail != null && !userEmail.isEmpty() && !userEmail.equals("null")) {
+            if (survey.getSurveyType() == 0 && userEmail != null && !userEmail.isEmpty() && !userEmail.equals("null")) {
 
                 SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
                 if (surveyLinks.isActivated() == false || surveyLinks.isCompleted() == true) {
@@ -143,11 +142,12 @@ public class SurveyController {
     @RequestMapping(value = "/{surveyId}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> deleteSurvey(@PathVariable("surveyId") String surveyId) {
 
-        Survey survey = surveyRepository.findById(Integer.parseInt(surveyId)).get();
-        if (survey == null) {
+        Optional<Survey> surveyOptional = surveyRepository.findById(Integer.parseInt(surveyId));
+        if (!surveyOptional.isPresent()) {
             return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
         } else {
             // write to db
+            Survey survey = surveyOptional.get();
             surveyRepository.delete(survey);
             return new ResponseEntity<>(new BadRequest(200, "Survey with id " + surveyId + " is deleted successfully"), HttpStatus.OK);
         }
@@ -155,14 +155,14 @@ public class SurveyController {
 
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateSurveyEndTime(@RequestParam(value = "surveyId") String surveyId,
-                                                 @RequestParam(value = "endTime",required = false) String endTime,
-                                                 @RequestParam(value = "surveyName",required = false) String surveyName) {
+                                                 @RequestParam(value = "endTime", required = false) String endTime,
+                                                 @RequestParam(value = "surveyName", required = false) String surveyName) {
 
         Survey survey = surveyRepository.findById(Integer.parseInt(surveyId)).get();
         Survey updated = survey;
         if (survey != null) {
 
-            if(endTime != null) {
+            if (endTime != null) {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
                 try {
                     Date date1 = null;
@@ -179,7 +179,7 @@ public class SurveyController {
 //
 //                    //Use this if you want to execute it once
 //                    timer.schedule(new CloseSurveyAtEndTime(survey), sdf.parse(endTime));
-                       updated = surveyRepository.save(survey);
+                        updated = surveyRepository.save(survey);
                         //return new ResponseEntity<>(updatedSurvey, HttpStatus.OK);
                     } else {
                         return new ResponseEntity<>(new BadRequest(400, "Sorry, the survey has already been expired"), HttpStatus.BAD_REQUEST);
@@ -190,7 +190,7 @@ public class SurveyController {
                     return new ResponseEntity<>(new BadRequest(400, "Invalid Date"), HttpStatus.BAD_REQUEST);
                 }
             }
-            if(surveyName != null && !surveyName.isEmpty()){
+            if (surveyName != null && !surveyName.isEmpty()) {
                 survey.setSurveyName(surveyName);
                 updated = surveyRepository.save(survey);
             }
@@ -207,10 +207,11 @@ public class SurveyController {
     @RequestMapping(value = "/{surveyId}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> closeSurvey(@PathVariable("surveyId") String surveyId) {
 
-        Survey survey = surveyRepository.findById(Integer.parseInt(surveyId)).get();
-        if (survey == null) {
+        Optional<Survey> surveyOptional = surveyRepository.findById(Integer.parseInt(surveyId));
+        if (!surveyOptional.isPresent()) {
             return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
         } else {
+            Survey survey = surveyOptional.get();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd-HH");
             // write to db
             Date date1 = null;
@@ -244,10 +245,12 @@ public class SurveyController {
     @RequestMapping(value = "/{surveyId}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> publishSurvey(@PathVariable("surveyId") String surveyId,
                                            @RequestParam(value = "published") String published) {
-        Survey survey = surveyRepository.findById(Integer.parseInt(surveyId)).get();
-        if (survey == null) {
+        Optional<Survey> surveyOptional = surveyRepository.findById(Integer.parseInt(surveyId));
+
+        if (!surveyOptional.isPresent()) {
             return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
         }
+        Survey survey = surveyOptional.get();
         if (survey.getEndTime() != null) {
 //                //Now create the time and schedule it
 //                Timer timer = new Timer();
@@ -273,13 +276,13 @@ public class SurveyController {
                 if (survey.getSurveyType() == 0) {//general open survey
                     List<String> emails = surveyLinksRepository.getEmailsBySurvey(Integer.toString(survey.getSurveyId()));
 
-                   String url = emailService.sendUniqueInvitationForGeneralSurveyUsers(emails,"survey/" + surveyId);
+                    String url = emailService.sendUniqueInvitationForGeneralSurveyUsers(emails, "survey/" + surveyId);
                     //emailService.sendInvitationViaQRCodeForMultipleUsers("survey/"+surveyId,emails);
 
                 } else if (survey.getSurveyType() == 1) {//closed surveey
                     List<String> emails = surveyLinksRepository.getEmailsBySurvey(Integer.toString(survey.getSurveyId()));
 
-                    List<String> urls = emailService.sendUniqueInvitationForClosedSurveyUsers(emails,"survey/" + surveyId);
+                    List<String> urls = emailService.sendUniqueInvitationForClosedSurveyUsers(emails, "survey/" + surveyId);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -371,15 +374,14 @@ public class SurveyController {
                 if (sc.getCount() > 2) {
                     if (invitedUsers != 0) {
                         participationRate = (participants / invitedUsers) * 100;
-                        map.put("surveyName",survey.getSurveyName());
+                        map.put("surveyName", survey.getSurveyName());
                         map.put("startDate", survey.getStartTime().toString());
                         map.put("endDate", survey.getEndTime().toString());
                         map.put("participants", String.valueOf(participants));
                         map.put("participationRate", String.valueOf(participationRate));
-                    }
-                    else{
-                        participationRate = (participants / 1) * 100;
-                        map.put("surveyName",survey.getSurveyName());
+                    } else {
+                        // participationRate = (participants / 1) * 100;
+                        map.put("surveyName", survey.getSurveyName());
                         map.put("startDate", survey.getStartTime().toString());
                         map.put("endDate", survey.getEndTime().toString());
                         map.put("participants", String.valueOf(participants));
@@ -418,7 +420,7 @@ public class SurveyController {
         Survey survey = getSurvey(surveyId);
 
         if (survey != null) {
-            if(view == null || view.equals("null") || view.isEmpty()) {
+            if (view == null || view.equals("null") || view.isEmpty()) {
                 if (survey.getSurveyType() == 1 || survey.getSurveyType() == 2) {
                     SurveyLinks surveyLinks = surveyLinksRepository.getSurveyLinksBySurveyAndUserEmail(survey, userEmail);
                     if (surveyLinks != null) {
