@@ -8,7 +8,7 @@ class Home extends Component {
     return (
       <div className="footer-background height-fixed-front">
           <div >
-              <img className="back-img" src="http://localhost:3000/wc.png" ></img>
+              <img className="back-img" src="http://localhost:3000/wc.jpg" ></img>
           </div>
       </div>
     );

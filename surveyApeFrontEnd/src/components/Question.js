@@ -73,7 +73,7 @@ class Question extends Component {
             if (response.body.secure_url !== '') {
                 var self = this.state;
                 var optionstemp = this.state.options;
-                this.state.optionsListS.push(<img className="img-height" src={response.body.secure_url}></img>);
+                this.state.optionsListS.push(<img className="img-height margin-10" src={response.body.secure_url}></img>);
                 if(optionstemp.length === 0) {
                     optionstemp = response.body.secure_url;
                 }
