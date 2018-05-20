@@ -38,6 +38,13 @@ class TakeSurvey extends Component {
             }
         }
         super(props);
+        var date = new Date();
+
+        var today = date.getFullYear() +
+            '-' + ((date.getMonth() + 1 >= 10)?(date.getMonth() + 1):("0"+(date.getMonth() + 1 )))+
+            '-' + ((date.getDate() >= 10)?date.getDate():("0" + date.getDate())) +
+            'T' + ((date.getHours()<10)?("0"+date.getHours()):date.getHours())+
+            ':' + (date.getMinutes());
         this.state = {
             surveyDetails:null,
             surveyId:surveyIdTemp,
@@ -46,7 +53,8 @@ class TakeSurvey extends Component {
             email:email,
             questionCount:0,
             currentresponseId : null,
-            answer:""
+            answer:"",
+            datetemp : today
         }
     }
     componentWillUnmount(){
@@ -189,6 +197,9 @@ class TakeSurvey extends Component {
                     answer = self.surveyDetails.questions[this.state.currentIndex].responses[0].answers;
                 }
                 self.answer = answer;
+                if(self.surveyDetails.questions[this.state.currentIndex].questionType === 3){
+                   /* self.answer = new Date(self.answer);*/
+                }
             }
             else{
                 alert("You are viewing the last question")
@@ -204,6 +215,16 @@ class TakeSurvey extends Component {
                     answer = self.surveyDetails.questions[this.state.currentIndex].responses[0].answers;
                 }
                 self.answer = answer;
+                if(self.surveyDetails.questions[this.state.currentIndex].questionType === 3){
+                    /*
+                    Prepopulate date
+                    var dateTemp = null;
+                    dateTemp=answer;
+                   // dateTemp = dateTemp.substr(0,dateTemp.lastIndex("-"));
+                    var s =dateTemp.lastIndex("-");
+                    dateTemp = dateTemp.substr(0,s) + "T" + dateTemp.substr(s+1);
+                    self.answer = dateTemp;*/
+                }
             }
             else{
                 alert("You are viewing the first question")
@@ -450,6 +471,15 @@ class TakeSurvey extends Component {
             });
     }
     saveResponse = () =>{
+        var answerTemp = this.state.answer;
+        if(this.state.surveyDetails.questions[this.state.currentIndex] && this.state.surveyDetails.questions[this.state.currentIndex].questionType === 3){
+           answerTemp = new Date(answerTemp);
+            var today = answerTemp.getFullYear() +
+                '-' + ((answerTemp.getMonth() + 1 >= 10)?(answerTemp.getMonth() + 1):("0"+(answerTemp.getMonth() + 1 )))+
+                '-' + ((answerTemp.getDate() >= 10)?answerTemp.getDate():("0" + answerTemp.getDate())) +
+                '-' + ((answerTemp.getHours()<10)?("0"+answerTemp.getHours()):answerTemp.getHours());
+            answerTemp = today;
+        }
         if(this.state.surveyDetails.questions[this.state.currentIndex] && this.state.surveyDetails.questions[this.state.currentIndex].responses[0] && this.state.surveyDetails.questions[this.state.currentIndex].responses[0].resId) {
             var self = this.state;
             var queryData = {
@@ -457,7 +487,7 @@ class TakeSurvey extends Component {
                 email:localStorage.getItem("email"),
                 userid:localStorage.getItem("userId"),
                 surveyid:this.state.surveyId,
-                answer:this.state.answer,
+                answer:answerTemp,
                 responseId:this.state.surveyDetails.questions[this.state.currentIndex].responses[0].resId
             }
             API.updateResponse(queryData)
@@ -474,7 +504,7 @@ class TakeSurvey extends Component {
                 email:localStorage.getItem("email"),
                 userid:localStorage.getItem("userId"),
                 surveyid:this.state.surveyId,
-                answer:this.state.answer
+                answer:answerTemp
             }
             var self = this.state;
             API.saveResponse(queryData)
@@ -662,7 +692,7 @@ class TakeSurvey extends Component {
                                                                                 answer: event.target.value
                                                                             });
                                                                         }}
-
+                                                                               defaultValue={this.state.datetemp}
                                                                               />
                                                                         :
                                                                         /*question 4*/
