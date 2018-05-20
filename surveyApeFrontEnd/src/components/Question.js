@@ -187,7 +187,7 @@ saveQuestion = () =>{
         if(param && param.length>0) {
             param.map(function (temp, index) {
                 optionsList.push(
-                    <div>{temp}</div>
+                    <div><img className="img-height margin-10" src={temp}></img></div>
                 );
             }, this);
         }
