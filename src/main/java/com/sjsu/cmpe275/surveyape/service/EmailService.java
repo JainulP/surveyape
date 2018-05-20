@@ -73,10 +73,10 @@ public class EmailService {
         try {
             MimeMessage mimeMessage = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-
             helper.setSubject("Invitation to the survey");
             for (String email : emails) {
                 String url = "http://127.0.0.1:3000/" + surveyId + "/" + Base64.getEncoder().encodeToString(email.getBytes());
+                create_QR(url);
                 helper.setTo(email);
                 helper.setText("<html>"
                         + "<body>"
@@ -105,8 +105,8 @@ public class EmailService {
             MimeMessage mimeMessage = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Invitation to the survey");
-
             String url = "http://127.0.0.1:3000/survey/" + surveyId + "/open/" + Base64.getEncoder().encodeToString(email.getBytes());
+            create_QR(url);
             helper.setTo(email);
             helper.setText("<html>"
                     + "<body>"

@@ -55,16 +55,26 @@ public class UserControllerTest {
 
 
     @Test
-    public void qrCodeBulkMail() throws Exception{
+    public void sendUniqueInvitationForGeneralSurveyUsersTest() throws Exception{
         String [] emails = {"aravindhansai@gmail.com","havok.aravind@gmail.com"};
 
         emailService.sendUniqueInvitationForGeneralSurveyUsers(Arrays.asList(emails),"4");
+
     }
 
 
     @Test
-    public void betterQR() throws Exception{
-        emailService.create_QR("poda");
+    public void genereateQrCodeTest() throws Exception{
+        emailService.create_QR("http://www.google.com");
     }
+
+
+    @Test
+    public void sendUniqueInvitationForClosedSurveyUsersTest() throws Exception{
+        String [] emails = {"aravindhansai@gmail.com","havok.aravind@gmail.com"};
+        emailService.sendUniqueInvitationForClosedSurveyUsers(Arrays.asList(emails),"4");
+    }
+
+
 }
 
