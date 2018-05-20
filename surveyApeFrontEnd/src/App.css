@@ -86,7 +86,10 @@
     width: 100%;
     height: 600px;
 }
-
+.back-img-front{
+    height: 600px;
+    width: 100%;
+}
 .stat-heading{
     font-size: 30px;
     font-weight: 600;
@@ -130,6 +133,10 @@
 
 .height-fixed{
     height: 800px;
+}
+
+.height-fixed-front{
+    height: 600px;
 }
 
 .pad-8{

@@ -6,7 +6,7 @@ import Ionicon from 'react-ionicons';
 class Home extends Component {
   render() {
     return (
-      <div className="footer-background height-fixed">
+      <div className="footer-background height-fixed-front">
           <div >
               <img className="back-img" src="http://localhost:3000/wc.png" ></img>
           </div>

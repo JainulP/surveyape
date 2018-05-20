@@ -13,8 +13,8 @@ import Dropzone from 'react-dropzone';
 import request from 'superagent';
 
 
-const CLOUDINARY_UPLOAD_PRESET = 'cmpe275';
-const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/cmpe275/upload';
+const CLOUDINARY_UPLOAD_PRESET = 'surveyapecmpe275';
+const CLOUDINARY_UPLOAD_URL = 'https://api.cloudinary.com/v1_1/dpzbggza8/upload';
 
 class Question extends Component {
     constructor(props){
