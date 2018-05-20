@@ -702,11 +702,12 @@ class TakeSurvey extends Component {
         }
         }
         return (
-            <div className="height-fixed"> Survey Name:
+            <div className="height-fixed"> <span className="survey-name-style">Survey Name:
                 {
                     (this.state.surveyDetails)?
                         this.state.surveyDetails.surveyName:null
                 }
+            </span>
                 <div className="text-center">
                     <div className="pad-top-20">
                     </div>

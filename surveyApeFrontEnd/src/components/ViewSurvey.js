@@ -56,6 +56,18 @@ class ViewSurvey extends Component {
             this.setState(self);
             });
     }
+    renderChoiceSwitch(param) {
+        switch(param) {
+            case 0:
+                return 'General Survey';
+            case 1:
+                return 'Closed invitation-only';
+            case 2:
+                return 'Open unique';
+            default:
+                return '';
+        }
+    }
     render() {
         var surveyListC = [];
         var data1 = this.state.surveysCreatedComplete;
@@ -128,21 +140,21 @@ class ViewSurvey extends Component {
                             onClick={() => this.viewSurvey()}>VIEW
                     </button>
                 </div>
-                <div className="row margin-none">
+                <div className="row margin-none font-bold">
                     <div className="col-md-5 margin-70">
                     <div>
-                        <span>NAME: </span><span>{(this.state.surveyTemp)?this.state.surveyTemp.surveyName:''}</span>
+                        <span>{(this.state.surveyTemp)?"NAME-":''} </span><span>{(this.state.surveyTemp)?this.state.surveyTemp.surveyName:''}</span>
                     </div>
                         <div>
-                            <span>START TIME: </span><span>{(this.state.surveyTemp)?this.state.surveyTemp.startTime:''}</span>
+                            <span>{(this.state.surveyTemp)?"START TIME-":''} </span><span>{(this.state.surveyTemp)?this.state.surveyTemp.startTime:''}</span>
                         </div>
                     </div>
                     <div className="col-md-5 margin-70">
                         <div>
-                            <span>TYPE: </span><span>{(this.state.surveyTemp)?this.state.surveyTemp.surveyType:''}</span>
+                            <span>{(this.state.surveyTemp)?"TYPE-":''} </span><span>{(this.state.surveyTemp)?this.renderChoiceSwitch(this.state.surveyTemp.surveyType):''}</span>
                         </div>
                         <div>
-                            <span>END TIME: </span><span>{(this.state.surveyTemp)?this.state.surveyTemp.endTime:''}</span>
+                            <span>{(this.state.surveyTemp)?"END TIME-":''}</span><span>{(this.state.surveyTemp)?this.state.surveyTemp.endTime:''}</span>
                         </div>
                     </div>
                 </div>

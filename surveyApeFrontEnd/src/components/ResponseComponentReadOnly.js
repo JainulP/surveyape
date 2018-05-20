@@ -159,7 +159,7 @@ class ResponseComponentReadOnly extends Component {
                     <span>
                         {this.props.data.questionStr}
                     </span>
-        <div>
+        <div className="margin-10">
             <div>
                 RESPONSES RECORDED:
             </div>
