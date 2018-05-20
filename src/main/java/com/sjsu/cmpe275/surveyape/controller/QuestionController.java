@@ -39,6 +39,12 @@ public class QuestionController {
                 Question question = questionRepository.save(new Question(questionStr, answerType, choiceType, Integer.parseInt(questionType), options, visual, survey));
                 return new ResponseEntity<>(question, HttpStatus.OK);
             }
+            else if(questionType.equals("1") || Integer.parseInt(questionType) == 1) {
+                options.add("yes");
+                options.add("no");
+                Question question = questionRepository.save(new Question(questionStr, Integer.parseInt(questionType), options, survey));
+                return new ResponseEntity<>(question, HttpStatus.OK);
+            }
             else{
                 Question question = questionRepository.save(new Question(questionStr, Integer.parseInt(questionType),survey));
                 return new ResponseEntity<>(question, HttpStatus.OK);
