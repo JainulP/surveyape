@@ -322,7 +322,7 @@ public class SurveyController {
     }
 
 
-    private void activateSurveyLink(Survey survey) {
+    public void activateSurveyLink(Survey survey) {
         List<SurveyLinks> surveyLinks = surveyLinksRepository.getSurveyLinksBySurvey(survey);
         for (SurveyLinks link : surveyLinks) {
             link.setActivated(true);

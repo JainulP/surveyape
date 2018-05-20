@@ -124,7 +124,7 @@ public class ResponseController {
     public ResponseEntity<?> updateResponses(@PathVariable int resId, @RequestParam String answers, @RequestParam(name = "qid") int questionId, @RequestParam(name = "email", required = false) String email, @RequestParam(name = "userid", required = false) String userId, @RequestParam(name = "surveyid") String surveyid) {
         Optional<Question> questionOptional = questionRepository.findById(questionId);
         if (questionOptional.isPresent()) {
-            Question question = questionOptional.get();
+            //Question question = questionOptional.get();
             if (userId != "" && !userId.isEmpty() && !userId.equals("null")) {
                 Optional<User> userOptional = userRepository.findById(Integer.parseInt(userId));
                 if (userOptional.isPresent()) {
@@ -143,18 +143,6 @@ public class ResponseController {
                 } else {
                     return new ResponseEntity<>(new BadRequest(404, "Invalid user"), HttpStatus.BAD_REQUEST);
                 }
-//            } else {
-//                Optional<Responses> responsesOptional = responsesRepository.findById(resId);
-//                if(responsesOptional.isPresent()){
-//                    Responses response = responsesOptional.get();
-//                    response.setAnswers(answers);
-//                    responsesRepository.save(response);
-//                    return new ResponseEntity<>(response, HttpStatus.OK);
-//                }
-//                else{
-//                    return new ResponseEntity<>(new BadRequest(200, "Error in updating your response. Please try again later"), HttpStatus.OK);
-//
-//                }
             }
         } else {
             return new ResponseEntity<>(new BadRequest(400, "Invalid question"), HttpStatus.BAD_REQUEST);

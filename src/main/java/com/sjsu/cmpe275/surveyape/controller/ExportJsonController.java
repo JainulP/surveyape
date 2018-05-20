@@ -15,25 +15,22 @@ import static com.sjsu.cmpe275.surveyape.utils.JsonReader.readJsonFromUrl;
 
 
 @RestController
-
 public class ExportJsonController {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
-
-    @PostMapping(value="/export")
-    public void exportJson(@RequestParam String surveyId){
+    @PostMapping(value = "/export")
+    public void exportJson(@RequestParam String surveyId) {
         try {
-            JSONObject json = readJsonFromUrl("http://127.0.0.1:8080/survey/"+surveyId); //https://jsonplaceholder.typicode.com/posts/1
+            JSONObject json = readJsonFromUrl("http://127.0.0.1:8080/survey/" + surveyId); //https://jsonplaceholder.typicode.com/posts/1
             System.out.println(json.toString());
-            PrintWriter out = new PrintWriter("survey"+surveyId+".txt");
+            PrintWriter out = new PrintWriter("survey" + surveyId + ".txt");
             out.println(json.toString());
             out.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
-            logger.error("IOException happened");
-        } catch (JSONException e){
-            logger.error("JSONException happened");
+            logger.error("Unable to export json due to IOException");
+        } catch (JSONException e) {
+            logger.error("Unable to export json due to JSONException");
         }
 
     }
