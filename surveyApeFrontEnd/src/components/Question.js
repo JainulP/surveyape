@@ -318,7 +318,7 @@ saveQuestion = () =>{
                                     (this.state.choiceType === "0") ?
                                         <div>
                                             <input type="text" className="form-control surveyape-input" id="options"
-                                                   aria-describedby="Options" placeholder="Options"
+                                                   aria-describedby="Options" placeholder="Add Comma Separated Options"
                                                    onChange={(event) => {
                                                        this.setState({
                                                            options: event.target.value
