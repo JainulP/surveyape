@@ -21,7 +21,7 @@ public class ExportJsonController {
     @PostMapping(value = "/export")
     public void exportJson(@RequestParam String surveyId) {
         try {
-            JSONObject json = readJsonFromUrl("http://54.186.149.149:8085/survey/" + surveyId); //https://jsonplaceholder.typicode.com/posts/1
+            JSONObject json = readJsonFromUrl("http://34.219.63.63:8085/survey/" + surveyId); //https://jsonplaceholder.typicode.com/posts/1
             System.out.println(json.toString());
             PrintWriter out = new PrintWriter("survey" + surveyId + ".txt");
             out.println(json.toString());
