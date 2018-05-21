@@ -50,32 +50,32 @@ public class AddParticipantsController {
         if (surveyOptional.isPresent()) {
             Survey survey = surveyOptional.get();
             if (survey.getSurveyType() == 0) {//general open survey
-                String url = "127.0.0.1:3000/survey/" + surveyId;
+                String url = "http://54.186.149.149:3000/survey/" + surveyId;
 
                 for (String email : emails) {
                     SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey, email, url));
-                    try {
-                        String QR_CODE_IMAGE_PATH = "/Users/jainulpatel/Documents/CMPE275/surveyape/src/main/resources/QRCodes/" + email + surveyId + "MyQRCode.png";
-                        qrCodeService.generateQRCodeImage(url, 350, 350, QR_CODE_IMAGE_PATH);
-                    } catch (WriterException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        String QR_CODE_IMAGE_PATH = "/Users/jainulpatel/Documents/CMPE275/surveyape/src/main/resources/QRCodes/" + email + surveyId + "MyQRCode.png";
+//                        qrCodeService.generateQRCodeImage(url, 350, 350, QR_CODE_IMAGE_PATH);
+//                    } catch (WriterException e) {
+//                        e.printStackTrace();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
                     surveyLinks.add(links);
 
                 }
                 if (survey.getPublished() == true) {
-                    for (String email : emails) {
-                        try {
-                            String QR_CODE_IMAGE_PATH = "/Users/jainulpatel/Documents/CMPE275/surveyape/src/main/resources/QRCodes/" + email + surveyId + "MyQRCode.png";
-                            qrCodeService.generateQRCodeImage(url, 350, 350, QR_CODE_IMAGE_PATH);
-                        } catch (WriterException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+//                    for (String email : emails) {
+//                        try {
+//                            String QR_CODE_IMAGE_PATH = "/Users/jainulpatel/Documents/CMPE275/surveyape/src/main/resources/QRCodes/" + email + surveyId + "MyQRCode.png";
+//                            qrCodeService.generateQRCodeImage(url, 350, 350, QR_CODE_IMAGE_PATH);
+//                        } catch (WriterException e) {
+//                            e.printStackTrace();
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
                     emailService.sendUniqueInvitationForGeneralSurveyUsers(emails, surveyId);
                     surveyController.activateSurveyLink(survey);
 
@@ -85,7 +85,7 @@ public class AddParticipantsController {
                 return new ResponseEntity<>(new BadRequest(200, "Participants have been successfully added"), HttpStatus.OK);
             } else if (survey.getSurveyType() == 1) {//closed survey
                 for (String email : emails) {
-                    String url = "127.0.0.1:3000/survey/" + surveyId + "/" + Base64.getEncoder().encodeToString(email.getBytes());
+                    String url = "http://54.186.149.149:3000/survey/" + surveyId + "/" + Base64.getEncoder().encodeToString(email.getBytes());
                     SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey, email, url));
                     surveyLinks.add(links);
 
@@ -122,7 +122,7 @@ public class AddParticipantsController {
             return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
         } else {
             // write to db
-            String url = "127.0.0.1:3000/survey/" + surveyId + "/open/" + Base64.getEncoder().encodeToString(email.getBytes());
+            String url = "http://54.186.149.149:3000/survey/" + surveyId + "/open/" + Base64.getEncoder().encodeToString(email.getBytes());
             SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey, email, url));
             links.setActivated(true);
             links.setCompleted(false);

@@ -15,7 +15,6 @@ class CreateSurvey extends Component {
     constructor(props){
         super(props);
         var date = new Date();
-
         var today = date.getFullYear() +
             '-' + ((date.getMonth() + 1 >= 10)?(date.getMonth() + 1):("0"+(date.getMonth() + 1 )))+
             '-' + ((date.getDate() >= 10)?date.getDate():("0" + date.getDate())) +
@@ -47,6 +46,7 @@ class CreateSurvey extends Component {
         }
     }
     componentDidMount(){
+        // document.getElementById("surveyEndTime").setAttribute("min", new Date());
 
     }
     onChange = date => {

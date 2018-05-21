@@ -54,7 +54,7 @@ public class UserController {
 
             // sending verification email
             userRepository.save(user);
-            String text = "Please click on the below link to activate and your verification code is " + activationCode + "\n" + "http://127.0.0.1:8080/activate/" + encodedEmail +"/?vCode="+ activationCode;
+            String text = "Your verification code is " + activationCode + "\n";
             emailService.sendInvitationForUser(email, "Verification email for surveyApe", text);
 
             return new ResponseEntity<>(user, HttpStatus.OK);

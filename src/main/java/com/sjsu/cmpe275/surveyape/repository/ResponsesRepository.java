@@ -21,9 +21,6 @@ public interface ResponsesRepository extends JpaRepository<Responses, Integer> {
     @Query(value = "SELECT answers from responses where qid=:qid", nativeQuery = true)
     List<Object[]> getAllAnswersByQuestionForStats(@Param("qid") int qid);
 
-    @Query(value = "SELECT answers FROM responses WHERE survey_id=:sid  AND question_id=:qid", nativeQuery = true)
-    List<String> findAllBySurveyId(int surveyId);
-
     @Query(value="SELECT DISTINCT question_id FROM responses WHERE survey_id=:sid",nativeQuery = true)
     List<Integer> getQuestionAndAnswersForSurvey(@Param("sid") int surveyId);
 

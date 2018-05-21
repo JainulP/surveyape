@@ -163,6 +163,7 @@ class EditSurvey extends Component {
                 }
                 else if(res){
                     alert("Survey has been unpublished successfully")
+                    window.location = "http://localhost:3000/";
                 }
                 else{
                     alert("Please try again")
@@ -244,6 +245,7 @@ class EditSurvey extends Component {
                               <Calendar id="surveyEndTime" aria-describedby="Survey End Time" placeholder="Survey End Time"
                                         onChange={this.onChange}
                                         value={this.state.data}
+                                        minDate={new Date()}
                               />
 
                           </div>

@@ -299,7 +299,7 @@ public class ResponseController {
                         surveyLinks.setActivated(false);
                         surveyLinksRepository.save(surveyLinks);
                     } else {
-                        String url = "127.0.0.1:3000/survey/" + surveyId;
+                        String url = "http://54.186.149.149:3000/survey/" + surveyId;
                         SurveyLinks surveyLinks1 = surveyLinksRepository.save(new SurveyLinks(survey, userEmail, url));
                         surveyLinks1.setCompleted(true);
                         surveyLinks1.setActivated(false);
