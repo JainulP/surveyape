@@ -1,5 +1,15 @@
 ### surveyape
 
+TEAM 10:
+
+Aravindhan Elayakumar (011439961)
+Jainul Patel (012463737)
+Manasa Yedire (012448566)
+
+
+The URL to access your app:  http://34.219.63.63:3000/
+
+
 Surveyape provides a platform for users to create and take survey. The user is offered a myriad of
 options to create questions for the survey. The surveyors are invited to take the survey either
 through email or QRcode. The Surveyor can see the statistics for each survey and will be analyze
@@ -10,14 +20,7 @@ activate his account. The application was developed using Spring boot for the ba
 Hibernate as the provider for persistence, MySQL for the database and ReactJS for the frontend.
 
 
-
-Launch Application:(Application has been deployed to AWS and the endpoint is as below:)
-http://34.219.63.63:3000/
-
-
-
-
-Steps to use this app:
+Build instructions: 
 
 1. Clone repository
 2. Install Node.js to location of directory SurveyApeFrontEnd
