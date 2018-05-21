@@ -70,14 +70,14 @@ public class SurveyController {
             if (Integer.parseInt(surveyType) == 0) {//generate predefined url for general and open unique surveys
                 int surveyId = survey.getSurveyId();
 
-                String url = "http://34.219.63.63:3000/survey/" + surveyId;
+                String url = "http://54.213.196.21:3000/survey/" + surveyId;
                 surveyLinksRepository.save(new SurveyLinks(survey, url));
 
             }
             if (Integer.parseInt(surveyType) == 2) {//generate predefined url for general and open unique surveys
                 int surveyId = survey.getSurveyId();
 
-                String url = "http://34.219.63.63:3000/survey/" + surveyId + "/open";
+                String url = "http://54.213.196.21:3000/survey/" + surveyId + "/open";
                 surveyLinksRepository.save(new SurveyLinks(survey, url));
 
             }

@@ -42,7 +42,7 @@ public class EmailService {
             MimeMessage mimeMessage = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Invitation to the survey");
-            String url = "http://34.219.63.63:3000/" + surveyId;
+            String url = "http://54.213.196.21:3000/" + surveyId;
             create_QR(url);
             for (String email : emails) {
                 //message.setText(url);
@@ -75,7 +75,7 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Invitation to the survey");
             for (String email : emails) {
-                String url = "http://34.219.63.63:3000/" + surveyId + "/" + Base64.getEncoder().encodeToString(email.getBytes());
+                String url = "http://54.213.196.21:3000/" + surveyId + "/" + Base64.getEncoder().encodeToString(email.getBytes());
                 create_QR(url);
                 helper.setTo(email);
                 helper.setText("<html>"
@@ -105,7 +105,7 @@ public class EmailService {
             MimeMessage mimeMessage = emailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
             helper.setSubject("Invitation to the survey");
-            String url = "http://34.219.63.63:3000/survey/" + surveyId + "/open/" + Base64.getEncoder().encodeToString(email.getBytes());
+            String url = "http://54.213.196.21:3000/survey/" + surveyId + "/open/" + Base64.getEncoder().encodeToString(email.getBytes());
             create_QR(url);
             helper.setTo(email);
             helper.setText("<html>"

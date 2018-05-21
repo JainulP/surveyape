@@ -50,7 +50,7 @@ public class AddParticipantsController {
         if (surveyOptional.isPresent()) {
             Survey survey = surveyOptional.get();
             if (survey.getSurveyType() == 0) {//general open survey
-                String url = "http://34.219.63.63:3000/survey/" + surveyId;
+                String url = "http://54.213.196.21:3000/survey/" + surveyId;
 
                 for (String email : emails) {
                     SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey, email, url));
@@ -85,7 +85,7 @@ public class AddParticipantsController {
                 return new ResponseEntity<>(new BadRequest(200, "Participants have been successfully added"), HttpStatus.OK);
             } else if (survey.getSurveyType() == 1) {//closed survey
                 for (String email : emails) {
-                    String url = "http://34.219.63.63:3000/survey/" + surveyId + "/" + Base64.getEncoder().encodeToString(email.getBytes());
+                    String url = "http://54.213.196.21:3000/survey/" + surveyId + "/" + Base64.getEncoder().encodeToString(email.getBytes());
                     SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey, email, url));
                     surveyLinks.add(links);
 
@@ -122,7 +122,7 @@ public class AddParticipantsController {
             return new ResponseEntity<>(new BadRequest(404, "Survey with id " + surveyId + " does not exist"), HttpStatus.NOT_FOUND);
         } else {
             // write to db
-            String url = "http://34.219.63.63:3000/survey/" + surveyId + "/open/" + Base64.getEncoder().encodeToString(email.getBytes());
+            String url = "http://54.213.196.21:3000/survey/" + surveyId + "/open/" + Base64.getEncoder().encodeToString(email.getBytes());
             SurveyLinks links = surveyLinksRepository.save(new SurveyLinks(survey, email, url));
             links.setActivated(true);
             links.setCompleted(false);
