@@ -1,4 +1,4 @@
-const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://54.186.149.149:8085'
+const api = process.env.REACT_APP_CONTACTS_API_URL || 'http://34.219.63.63:8085'
 
 const headers = {
     'Accept': 'application/json'
