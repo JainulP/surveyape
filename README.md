@@ -7,7 +7,7 @@ Jainul Patel (012463737)
 Manasa Yedire (012448566)
 
 
-The URL to access your app:  http://34.219.63.63:3000/
+The URL to access your app:  http://54.213.196.21:3000/
 
 
 Surveyape provides a platform for users to create and take survey. The user is offered a myriad of
