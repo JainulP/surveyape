@@ -93,7 +93,7 @@ class CreateSurvey extends Component {
             .then((res) => {
             if(res.code == 400){
                 alert(res.msg)
-                window.location = "http://localhost:3000/"
+                window.location = "http://54.213.196.21:3000/"
             }
             else {
             self.questionData.surveyId = res.surveyId;
@@ -111,7 +111,7 @@ class CreateSurvey extends Component {
                         alert("Please add questions to this survey before publishing!")
                     }
                     else{
-                        window.location = "http://localhost:3000/"
+                        window.location = "http://54.213.196.21:3000/"
                     }
 
                 });

@@ -92,7 +92,7 @@ class EditSurvey extends Component {
             .then((res) => {
                 if(res){
                     alert("deleted")
-                    window.location = "http://localhost:3000/";
+                    window.location = "http://54.213.196.21:3000/";
                 }
                 else{
                     alert("Please try again")
@@ -105,7 +105,7 @@ class EditSurvey extends Component {
                 .then((res) => {
                     if(res){
                         alert("published")
-                        window.location = "http://localhost:3000/";
+                        window.location = "http://54.213.196.21:3000/";
                     }
                     else{
                         alert("Please try again")
@@ -158,12 +158,12 @@ class EditSurvey extends Component {
             .then((res) => {
                 if( res.code && (res.code == 400 || res.code == 404)){
                     alert(res.msg)
-                    window.location = "http://localhost:3000/";
+                    window.location = "http://54.213.196.21:3000/";
                     //window.location = "http://localhost:3000/";
                 }
                 else if(res){
                     alert("Survey has been unpublished successfully")
-                    window.location = "http://localhost:3000/";
+                    window.location = "http://54.213.196.21:3000/";
                 }
                 else{
                     alert("Please try again")

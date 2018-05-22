@@ -466,7 +466,7 @@ class TakeSurvey extends Component {
             .then((res) => {
                 console.log(res)
                 alert("Thank you for submitting your response!")
-                window.location = "http://localhost:3000/"
+                window.location = "http://54.213.196.21:3000/"
 
             });
     }

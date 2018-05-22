@@ -16,10 +16,10 @@ componentWillMount(){
 
 }
     GoTosignup = () =>{
-        window.location = "http://localhost:3000/signup";
+        window.location = "http://54.213.196.21:3000/signup";
     }
     GoTosignin = () =>{
-        window.location = "http://localhost:3000/signin";
+        window.location = "http://54.213.196.21:3000/signin";
     }
     continue =() =>{
     //    localStorage.setItem("guestemail", this.state.email);
@@ -35,7 +35,7 @@ componentWillMount(){
                 }
                 else{
                     alert(res.msg)
-                    window.location = "http://localhost:3000/"
+                    window.location = "http://54.213.196.21:3000/"
                 }
 
             });
